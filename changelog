@@ -3,3 +3,4 @@ Replaced <<<option 3>>> with a weather function instead of a redundant exit func
 Added <<<status>>> to print the status of the server
 Auto-stops TX if TXing for more than 10 minutes
 Fixed auto-inserted newlines from FLDigi's RX window breaking commands
+Changed "info" to "HTML or text" in the description of option 1
