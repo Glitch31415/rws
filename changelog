@@ -4,3 +4,4 @@ Added <<<status>>> to print the status of the server
 Auto-stops TX if TXing for more than 10 minutes
 Fixed auto-inserted newlines from FLDigi's RX window breaking commands
 Changed "info" to "raw HTML or text" in the description of option 1
+Removed extra space in mesh and radio status texts
