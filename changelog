@@ -1,6 +1,8 @@
 1.3:
 Fixed typos
-
+Fixed newline remover (commands aren't mutilated anymore)
+Changed names of options to more intuitive things
+Fixed weather being almost unreadable
 
 1.2:
 Replaced <<<option 3>>> with a weather function instead of a redundant exit function (just use <<<exit>>>)
