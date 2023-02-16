@@ -1,3 +1,7 @@
+1.3:
+Fixed typos
+
+
 1.2:
 Replaced <<<option 3>>> with a weather function instead of a redundant exit function (just use <<<exit>>>)
 Added <<<status>>> to print the status of the server
