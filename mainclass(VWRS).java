@@ -442,7 +442,7 @@ public class mainclass {
 							dataoutp = "Here are the results of your search.\n-----\n";
 							searchthing = usabled;
 							usabled = usabled.replaceAll(" ", "+");
-							usabled = "https://www.w3.org/services/html2txt?url=https://www.google.com/search?q=" + usabled;
+							usabled = "https://www.w3.org/services/html2txt?url=https://duckduckgo.com/html/?q=" + usabled + "&kp=1&kz=-1&kc=-1&kav=1&kac=-1&kd=-1&ko=-2&k1=-1";
 							URLConnection connection = null;
 	                        try {
 	                            connection = new URL(usabled).openConnection();
