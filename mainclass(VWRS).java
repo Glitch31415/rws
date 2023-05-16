@@ -185,6 +185,8 @@ public class mainclass {
 		Integer rcallind = 0;
 		Integer filebytesleft = 0;
 		Integer numbuf = 0;
+		String weatherend = "";
+		String[] latLng = null;
 		
 		boolean beginning = true;
 		boolean beggood = false;
@@ -210,6 +212,7 @@ public class mainclass {
         String callsign = callinp.nextLine();
 		String cmdsoutp = "MYCALL "+callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rBW500\rCLEANTXBUFFER\r";
 		String prevdatainthing = "";
+		boolean weatherbroke = false;
 		byte[] cmdsdata = cmdsoutp.getBytes();
 		cmdsout.write(cmdsdata);
 		Thread.sleep(1000);
@@ -308,7 +311,7 @@ public class mainclass {
 					if (option == 1) {
 						if (usabled != "") {
 							if (usabled.contains("^")) {
-								dataoutp = "Here is the text from the website you provided.\n-----\n";
+								dataoutp = "Here is the text from the website you provided.\n";
 								usabled = usabled.replace("^", "");
 								usabled = usabled.replaceAll("\\r|\\n", "");
 								textscanthing = usabled;
@@ -439,7 +442,7 @@ public class mainclass {
 					}
 					if (option == 2) {
 						if (usabled != "") {
-							dataoutp = "Here are the results of your search.\n-----\n";
+							dataoutp = "Here are the results of your search.\n";
 							searchthing = usabled;
 							usabled = usabled.replaceAll(" ", "+");
 							usabled = "https://www.w3.org/services/html2txt?url=https://duckduckgo.com/html/?q=" + usabled + "&kp=1&kz=-1&kc=-1&kav=1&kac=-1&kd=-1&ko=-2&k1=-1";
@@ -540,21 +543,112 @@ public class mainclass {
 					}
 					if (option == 3) {
 						if (usabled != "") {
-							dataoutp = "Here is the weather forecast for the city you provided.\n-----\n";
+							dataoutp = "Here is the weather forecast for the location you provided.\n";
+							weatherbroke = false;
+							String address = usabled;
 							weatherthing = usabled;
-							usabled = "https://www.w3.org/services/html2txt?url=https://wttr.in/" + usabled;
-							URLConnection connection = null;
-	                        try {
-	                            connection = new URL(usabled).openConnection();
-	                            webscan = new Scanner(connection.getInputStream());
-	                            webscan.useDelimiter("\\Z");
-	                            wstext = webscan.next();
-	                            webscan.close();
-	                        }
-	                        catch (Exception ex) {
-	                            ex.printStackTrace();
-	                            wstext = ex.toString();
-	                        }
+					        String key = "AIzaSyDr8Gh1WeemI_ovbqnX_RwecVFNy9POBgk";
+					        try{
+					            String url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + URLEncoder.encode(address, "UTF-8") + "&key=" + key;
+					            URL obj = new URL(url);
+					            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+					            con.setRequestMethod("GET");
+					            con.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+					            //Response
+					            int responseCode = con.getResponseCode();
+					            BufferedReader in = new BufferedReader(
+					                    new InputStreamReader(con.getInputStream()));
+					            String inputLine;
+					            StringBuffer response = new StringBuffer();
+					            while ((inputLine = in.readLine()) != null) {
+					                response.append(inputLine);
+					            }
+					            in.close();
+
+					            Pattern pattern = Pattern.compile("\"location\" : \\{(.*?)\\}");
+					            Matcher matcher = pattern.matcher(response.toString());
+					            if (matcher.find())
+					            {
+					                String latLngString = matcher.group(1).replaceAll("\\s", "");
+					                String[] latLngArray = latLngString.split(",");
+					                String lat = latLngArray[0].split(":")[1];
+					                String lng = latLngArray[1].split(":")[1];
+					                latLng = new String[]{lat,lng};
+					            }
+					            else {
+					            	weatherbroke = true;
+					            }
+					        }catch(IOException ioe){
+					        	weatherbroke = true;
+					            System.out.println(ioe.toString());
+					        }
+					        if (weatherbroke == false) {
+					        	try{
+						            //Get Points
+						            String url = "https://api.weather.gov/points/" + latLng[0]+","+latLng[1];
+						            URL obj = new URL(url);
+						            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+						            con.setRequestMethod("GET");
+						            con.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+						            //Response
+						            int responseCode = con.getResponseCode();
+						            BufferedReader in = new BufferedReader(
+						                    new InputStreamReader(con.getInputStream()));
+						            String inputLine;
+						            StringBuffer response = new StringBuffer();
+						            while ((inputLine = in.readLine()) != null) {
+						                response.append(inputLine);
+						            }
+						            in.close();
+
+						            String gridX="";
+						            String gridY="";
+						            String gridId="";
+						            Pattern pattern = Pattern.compile("\"gridX\": (.*?),");
+						            Matcher matcher = pattern.matcher(response.toString());
+						            if (matcher.find()) {
+						                gridX = matcher.group(1);
+						            }
+						            pattern = Pattern.compile("\"gridY\": (.*?),");
+						            matcher = pattern.matcher(response.toString());
+						            if (matcher.find()) {
+						                gridY = matcher.group(1);
+						            }
+						            pattern = Pattern.compile("\"gridId\": \"(.*?)\"");
+						            matcher = pattern.matcher(response.toString());
+						            if (matcher.find()) {
+						                gridId = matcher.group(1);
+						            }
+
+						            //Get forecast
+						            url = "https://api.weather.gov/gridpoints/"+ gridId + "/" + gridX + ","+ gridY + "/forecast";
+						            obj = new URL(url);
+						            con = (HttpURLConnection) obj.openConnection();
+						            con.setRequestMethod("GET");
+						            con.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+						            //Response
+						            responseCode = con.getResponseCode();
+						            in = new BufferedReader(
+						                    new InputStreamReader(con.getInputStream()));
+						            response = new StringBuffer();
+						            while ((inputLine = in.readLine()) != null) {
+						                response.append(inputLine);
+						            }
+						            in.close();
+						            weatherend = response.toString();
+						        }catch(IOException ioe){
+						            System.out.println(ioe.toString());
+
+						        }
+					        }
+					        else {
+					        	weatherend = "Oops, I was unable to get the weather from your input. Please try again.";
+					        }
+					        
+					        wstext = weatherend;
 	                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
 	                            dataoutp = dataoutp + "Oops, your results contained material that is inappropriate for ham radio. Please try a different city.\n-----\nSay '|exit' to return to the main menu.\r";
 	                            logs = logs + rcall + " attempted to get the weather for " + weatherthing + " but was blocked\n";
@@ -749,7 +843,7 @@ public class mainclass {
 					if (usabled.contains("weather")) {
 						if (option == 0) {
 							option = 3;
-							dataoutp = "Please provide the city you would like the weather for.\r";
+							dataoutp = "Please provide the nearest large city and the state you would like the weather for.\r";
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
 							dataout.write(datadata);
