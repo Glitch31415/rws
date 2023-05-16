@@ -288,21 +288,29 @@ public class mainclass {
 							rcall = rcall + usablec.charAt(rcallind);
 							rcallind = rcallind + 1;
 						}
-						dataoutp = "";
-						dataoutp = "Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying 'html'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can return the server logs by saying 'status'. All commands are case sensitive.\r";
-						logs = logs + rcall + " connected\n";
-						System.out.println("Logs:\n-----\n" + logs + "\n-----");
-                        dataoutp = dataoutp.length() + " " + dataoutp;
-						byte[] datadata = dataoutp.getBytes();
-						dataout.write(datadata);
-						connmsg = false;
+						if (rcall != "USY") {
+							dataoutp = "";
+							dataoutp = "Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying 'website'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can return the server logs by saying 'status'. All commands are case sensitive.\r";
+							logs = logs + rcall + " connected\n";
+							System.out.println("Logs:\n-----\n" + logs + "\n-----");
+	                        dataoutp = dataoutp.length() + " " + dataoutp;
+							byte[] datadata = dataoutp.getBytes();
+							dataout.write(datadata);
+							connmsg = false;
+						}
+						else {
+							conn = false;
+							connmsg = false;
+							rcall = "";
+						}
+
 					}
 					if (option != 0) {
 						if (usabled.contains("|exit")) {
 							option = 0;
 							logs = logs + rcall + " went back to the main menu\n";
 							System.out.println("Logs:\n-----\n" + logs + "\n-----");
-							dataoutp = "You can fetch the html or text from a website by saying 'html'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can return the server logs by saying 'status'. All commands are case sensitive.\r";
+							dataoutp = "Commands: website, search, weather, download, status. All commands are case sensitive.\r";
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
 							dataout.write(datadata);
@@ -311,7 +319,7 @@ public class mainclass {
 					if (option == 1) {
 						if (usabled != "") {
 							if (usabled.contains("^")) {
-								dataoutp = "Here is the text from the website you provided.\n";
+								dataoutp = "Here is the text from the website you provided.\n-----\n";
 								usabled = usabled.replace("^", "");
 								usabled = usabled.replaceAll("\\r|\\n", "");
 								textscanthing = usabled;
@@ -335,12 +343,79 @@ public class mainclass {
 		                        } else {
 		                        	wstext = wstext.replaceAll("\\r", "");
 		                            dataoutp = dataoutp + wstext + "\n-----\nSay '|exit' to return to the main menu.\r";
-		                            logs = logs + rcall + " fetched text from URL " + usabled + "\n";
+		                            logs = logs + rcall + " fetched text from URL " + textscanthing + "\n";
 		                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        }
-		                        dataoutp = dataoutp.length() + " " + dataoutp;
-								byte[] datadata = dataoutp.getBytes();
+		                        encodedString = dataoutp;
+		                        filebytesleft = encodedString.length();
+								System.out.println(filebytesleft + " bytes to send");
+								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+		                        byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
+								dataoutp = "";
+
+									while (filebytesleft > 1024) {
+										if (getstream1.readingcmds == prevrcind) {
+											Thread.sleep(100);
+											if (getstream1.readingcmds == prevrcind) {
+												readyforreadingc = true;
+
+											}
+
+										}
+										else {
+											readyforreadingc = false;
+											prevrcind = getstream1.readingcmds;
+										}
+										if (getstream1.gcmdsin != null) {
+											if (readyforreadingc == true) {
+												if (getstream1.gcmdsin.length() > cind) {
+
+													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+													cind = getstream1.gcmdsin.length();
+													System.out.println("CMD: " + usablec);
+												} else {
+													usablec = "";
+												}
+											}
+											else {
+												usablec = "";
+											}
+
+										}
+										if (usablec.contains("BUFFER")) {
+											Integer i = 7;
+											String numbuild = "";
+
+											while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
+												numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+												i = i + 1;
+											}
+											numbuf = Integer.valueOf(numbuild);
+										}
+										if (usablec.contains("DISCONN")) {
+											filebytesleft = 0;
+											dataoutp = "";
+											option = 0;
+										}
+										if (numbuf < 4096) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+											dataoutp = dataoutp + encodedStringpart;
+					                        datadata = dataoutp.getBytes();
+											dataout.write(datadata);
+											dataoutp = "";
+											filebytesleft = filebytesleft - 1024;
+											numbuf = numbuf + 1024;
+										}
+										Thread.sleep(1000);
+									}
+									encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+									dataoutp = dataoutp + encodedStringpart;
+			                        datadata = dataoutp.getBytes();
+									dataout.write(datadata);
+									dataoutp = "";
+									filebytesleft = 0;
 							}
 							else {
 								dataoutp = "Here is the raw HTML from the website you provided.\n-----\n";
@@ -370,7 +445,7 @@ public class mainclass {
 		                        encodedString = dataoutp;
 		                        filebytesleft = encodedString.length();
 								System.out.println(filebytesleft + " bytes to send");
-								dataoutp = (encodedString.length()+25) + " Transfer started.\n-----\n\r";
+								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 		                        byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 								dataoutp = "";
@@ -442,7 +517,7 @@ public class mainclass {
 					}
 					if (option == 2) {
 						if (usabled != "") {
-							dataoutp = "Here are the results of your search.\n";
+							dataoutp = "Here are the results of your search.\n-----\n";
 							searchthing = usabled;
 							usabled = usabled.replaceAll(" ", "+");
 							usabled = "https://www.w3.org/services/html2txt?url=https://duckduckgo.com/html/?q=" + usabled + "&kp=1&kz=-1&kc=-1&kav=1&kac=-1&kd=-1&ko=-2&k1=-1";
@@ -471,7 +546,7 @@ public class mainclass {
 	                        encodedString = dataoutp;
 	                        filebytesleft = encodedString.length();
 							System.out.println(filebytesleft + " bytes to send");
-							dataoutp = (encodedString.length()+25) + " Transfer started.\n-----\n\r";
+							dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 	                        byte[] datadata = dataoutp.getBytes();
 							dataout.write(datadata);
 							dataoutp = "";
@@ -543,7 +618,7 @@ public class mainclass {
 					}
 					if (option == 3) {
 						if (usabled != "") {
-							dataoutp = "Here is the weather forecast for the location you provided.\n";
+							dataoutp = "Here is the weather forecast for the location you provided.\n-----\n";
 							weatherbroke = false;
 							String address = usabled;
 							weatherthing = usabled;
@@ -662,7 +737,7 @@ public class mainclass {
 	                        encodedString = dataoutp;
 	                        filebytesleft = encodedString.length();
 							System.out.println(filebytesleft + " bytes to send");
-							dataoutp = (encodedString.length()+25) + " Transfer started.\n-----\n\r";
+							dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 	                        byte[] datadata = dataoutp.getBytes();
 							dataout.write(datadata);
 							dataoutp = "";
@@ -743,9 +818,11 @@ public class mainclass {
 								badthing.printStackTrace();
 	                            encodedString = badthing.toString();
 							}
+							logs = logs + rcall + " downloaded " + usabled + "\n";
+							System.out.println("Logs:\n-----\n" + logs + "\n-----");
 							filebytesleft = encodedString.length();
 							System.out.println(filebytesleft + " bytes to send");
-							dataoutp = (encodedString.length()+22+280) + " Download started.-----\r";
+							dataoutp = (encodedString.length()+23+281) + " Download started.\n-----\r";
 	                        byte[] datadata = dataoutp.getBytes();
 							dataout.write(datadata);
 							dataoutp = "";
@@ -816,13 +893,13 @@ public class mainclass {
 
 							
 							dataoutp = "";
-							dataoutp = dataoutp + "-----\nYou can decode this info by copying the text between the dashes, saving the file as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nSay '|exit' to return to the main menu.\r";
+							dataoutp = dataoutp + "\n-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nSay '|exit' to return to the main menu.\r";
 	                        //dataoutp = dataoutp.length() + " " + dataoutp;
 	                        datadata = dataoutp.getBytes();
 							dataout.write(datadata);
 						}
 					}
-					if (usabled.contains("html")) {
+					if (usabled.contains("website")) {
 						if (option == 0) {
 							option = 1;
 							dataoutp = "Please provide the exact URL of the website you want to fetch. Example: 'https://www.example.com'. If you want a text-only website, please add a carat (^) behind the start of the URL. Example: '^https://www.example.com'.\nSay '|exit' to return to the main menu.\r";
@@ -843,7 +920,7 @@ public class mainclass {
 					if (usabled.contains("weather")) {
 						if (option == 0) {
 							option = 3;
-							dataoutp = "Please provide the nearest large city and the state you would like the weather for.\r";
+							dataoutp = "Please provide the city and state you would like the weather for.\r";
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
 							dataout.write(datadata);
@@ -852,7 +929,7 @@ public class mainclass {
 					if (usabled.contains("status")) {
 						if (option == 0) {
 							option = 4;
-							dataoutp = "Logs:\n-----\n" + logs + "\n-----\nYou can fetch the html or text from a website by saying 'html'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can return the server logs by saying 'status'. All commands are case sensitive.\r";
+							dataoutp = "Logs:\n-----\n" + logs + "\n-----\nCommands: website, search, weather, download, status. All commands are case sensitive.\r";
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
 							dataout.write(datadata);
