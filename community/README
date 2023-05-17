@@ -1,6 +1,13 @@
 Use this folder to upload things that will be visible to people who check the "community" option in my server!
 
 Upload your actual files and posts (posts are text without files) to community-files and community-posts, respectively.
-Then, after you upload your files and text, go back to your commit and click "Raw".
+
+If you are uploading a post:
+Go back to your commit and click "Raw".
+
+If you are uploading a file:
+If it's a picture, right click and open the image in a new tab.
+If it's something else, then replace the "github.com" with "raw.githubusercontent.com" and remove the "blob" in the URL
+
 Then, copy the URL and paste it into either the files-index or posts-index file depending on the type of addition you made and add a newline.
 The file or post that you created will now be visible to anyone connecting to the server!
