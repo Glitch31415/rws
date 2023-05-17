@@ -9,12 +9,30 @@ import java.util.Base64;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import org.eclipse.jgit.*;
+import org.eclipse.jgit.api.AddCommand;
+import org.eclipse.jgit.api.CommitCommand;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.NoFilepatternException;
+import org.eclipse.jgit.dircache.DirCache;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PushCommand;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
 
 class getstream1 implements Runnable {
 	public static String gcmdsin = "";
@@ -166,7 +184,7 @@ class getstream2 implements Runnable {
 }
 
 public class mainclass {
-	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
+	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException, NoFilepatternException, GitAPIException {
 		String usablec = "";
 		String usabled = "";
 		String wstext = "";
@@ -187,6 +205,7 @@ public class mainclass {
 		Integer numbuf = 0;
 		String weatherend = "";
 		String[] latLng = null;
+		String st = "";
 		
 		boolean beginning = true;
 		boolean beggood = false;
@@ -203,6 +222,14 @@ public class mainclass {
 		getstream2.data = new Socket("127.0.0.1", 8301);
 		OutputStream cmdsout = getstream1.cmds.getOutputStream();
 		OutputStream dataout = getstream2.data.getOutputStream();
+		String OS = System.getProperty("os.name").toLowerCase();
+		boolean windows = false;
+		if (OS.contains("windows")) {
+			windows = true;
+		}
+		else {
+			windows = false;
+		}
 		Thread object = new Thread(new getstream1());
 		object.start();
 		Thread object2 = new Thread(new getstream2());
@@ -210,10 +237,12 @@ public class mainclass {
         Scanner callinp = new Scanner(System.in);
         System.out.println("Enter exact callsign:");
         String callsign = callinp.nextLine();
-		String cmdsoutp = "MYCALL "+callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rBW500\rCLEANTXBUFFER\r";
+		String cmdsoutp = "MYCALL "+callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rCLEANTXBUFFER\r";
 		String prevdatainthing = "";
 		boolean weatherbroke = false;
 		byte[] cmdsdata = cmdsoutp.getBytes();
+		String postname = "";
+		String postbody = "";
 		cmdsout.write(cmdsdata);
 		Thread.sleep(1000);
 		while (0==0) {
@@ -245,9 +274,16 @@ public class mainclass {
 					usabled = "";
 				}
 				else {
-					usabled = getstream2.gdatain;
-					System.out.println("DATA: " + usabled);
-					prevdatainthing = getstream2.gdatain;
+					if (getstream2.gdatain.contains("&IT&") || getstream2.gdatain.contains(rcall + " <R") ) {
+						usabled = "";
+					}
+					else {
+						usabled = getstream2.gdatain;
+						System.out.println("DATA: " + usabled);
+						prevdatainthing = getstream2.gdatain;
+
+					}
+
 				}
 				if (getstream1.gcmdsin != null) {
 					if (readyforreadingc == true) {
@@ -290,7 +326,7 @@ public class mainclass {
 						}
 						if (rcall != "USY") {
 							dataoutp = "";
-							dataoutp = "Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying 'website'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can return the server logs by saying 'status'. All commands are case sensitive.\r";
+							dataoutp = "Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying 'website'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can view or create posts or files on the community folder in the github by saying 'community'. You can return the server logs by saying 'status'. All commands are case sensitive.\r";
 							logs = logs + rcall + " connected\n";
 							System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
@@ -310,7 +346,7 @@ public class mainclass {
 							option = 0;
 							logs = logs + rcall + " went back to the main menu\n";
 							System.out.println("Logs:\n-----\n" + logs + "\n-----");
-							dataoutp = "Commands: website, search, weather, download, status. All commands are case sensitive.\r";
+							dataoutp = "Commands: website, search, weather, download, community, status. All commands are case sensitive.\r";
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
 							dataout.write(datadata);
@@ -899,6 +935,329 @@ public class mainclass {
 							dataout.write(datadata);
 						}
 					}
+					if (option == 6) {
+						if (usabled != "") {
+								if (usabled.contains("view")) {
+									//view posts
+									dataoutp = "Please send the name of the post you would like to view.\n-----\n";
+									searchthing = usabled;
+									usabled = usabled.replaceAll(" ", "+");
+									usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/index";
+									URLConnection connection = null;
+			                        try {
+			                            connection = new URL(usabled).openConnection();
+			                            webscan = new Scanner(connection.getInputStream());
+			                            webscan.useDelimiter("\\Z");
+			                            wstext = webscan.next();
+			                            webscan.close();
+			                        }
+			                        catch (Exception ex) {
+			                            ex.printStackTrace();
+			                            wstext = ex.toString();
+			                        }
+			                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
+			                            dataoutp = dataoutp + "Oops, the index page contained material that is inappropriate for ham radio. Please try a different query.\n-----\nSay '|exit' to return to the main menu.\r";
+			                            logs = logs + rcall + " attempted to look at the community index page but was blocked\n";
+			                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+			                        } else {
+			                        	wstext = wstext.replaceAll("\\r", "");
+			                            dataoutp = dataoutp + wstext + "\n-----\nSay '|exit' to return to the main menu.\r";
+			                            logs = logs + rcall + " looked at the community index page\n";
+			                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+			                        }
+			                        encodedString = dataoutp;
+			                        filebytesleft = encodedString.length();
+									System.out.println(filebytesleft + " bytes to send");
+									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+			                        byte[] datadata = dataoutp.getBytes();
+									dataout.write(datadata);
+									dataoutp = "";
+
+										while (filebytesleft > 1024) {
+											if (getstream1.readingcmds == prevrcind) {
+												Thread.sleep(100);
+												if (getstream1.readingcmds == prevrcind) {
+													readyforreadingc = true;
+
+												}
+
+											}
+											else {
+												readyforreadingc = false;
+												prevrcind = getstream1.readingcmds;
+											}
+											if (getstream1.gcmdsin != null) {
+												if (readyforreadingc == true) {
+													if (getstream1.gcmdsin.length() > cind) {
+
+														usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+														cind = getstream1.gcmdsin.length();
+														System.out.println("CMD: " + usablec);
+													} else {
+														usablec = "";
+													}
+												}
+												else {
+													usablec = "";
+												}
+
+											}
+											if (usablec.contains("BUFFER")) {
+												Integer i = 7;
+												String numbuild = "";
+
+												while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
+													numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+													i = i + 1;
+												}
+												numbuf = Integer.valueOf(numbuild);
+											}
+											if (usablec.contains("DISCONN")) {
+												filebytesleft = 0;
+												dataoutp = "";
+												option = 0;
+											}
+											if (numbuf < 4096) {
+												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+												dataoutp = dataoutp + encodedStringpart;
+						                        datadata = dataoutp.getBytes();
+												dataout.write(datadata);
+												dataoutp = "";
+												filebytesleft = filebytesleft - 1024;
+												numbuf = numbuf + 1024;
+											}
+											Thread.sleep(1000);
+										}
+										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+										dataoutp = dataoutp + encodedStringpart;
+				                        datadata = dataoutp.getBytes();
+										dataout.write(datadata);
+										dataoutp = "";
+										filebytesleft = 0;
+										usabled = "";
+										option = 7;
+								}
+								if (usabled.contains("create")) {
+									//create posts
+									dataoutp = "Please send the name of the post you would like to create.\r";
+									dataoutp = dataoutp.length() + " " + dataoutp;
+									byte[] datadata = dataoutp.getBytes();
+									dataout.write(datadata);
+									option = 8;
+									usabled = "";
+								}
+						}
+					}
+					if (option == 7) {
+						if (usabled != "") {
+							dataoutp = "Here is the post you requested.\n-----\n";
+							usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/" + usabled;
+							searchthing = usabled;
+							usabled = usabled.replaceAll(" ", "+");
+							URLConnection connection = null;
+	                        try {
+	                            connection = new URL(usabled).openConnection();
+	                            webscan = new Scanner(connection.getInputStream());
+	                            webscan.useDelimiter("\\Z");
+	                            wstext = webscan.next();
+	                            webscan.close();
+	                        }
+	                        catch (Exception ex) {
+	                            ex.printStackTrace();
+	                            wstext = ex.toString();
+	                        }
+	                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
+	                            dataoutp = dataoutp + "Oops, that post contained material that is inappropriate for ham radio. Please try a different query.\n-----\nWould you like to 'view' or 'create' something in the community area?\nSay '|exit' to return to the main menu.\r";
+	                            logs = logs + rcall + " attempted to look at the post " + searchthing + "but was blocked\n";
+	                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+	                        } else {
+	                        	wstext = wstext.replaceAll("\\r", "");
+	                            dataoutp = dataoutp + wstext + "\n-----\nWould you like to 'view' or 'create' something in the community area?\nSay '|exit' to return to the main menu.\r";
+	                            logs = logs + rcall + " looked at the post " + searchthing + "\n";
+	                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+	                        }
+	                        encodedString = dataoutp;
+	                        filebytesleft = encodedString.length();
+							System.out.println(filebytesleft + " bytes to send");
+							dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+	                        byte[] datadata = dataoutp.getBytes();
+							dataout.write(datadata);
+							dataoutp = "";
+
+								while (filebytesleft > 1024) {
+									if (getstream1.readingcmds == prevrcind) {
+										Thread.sleep(100);
+										if (getstream1.readingcmds == prevrcind) {
+											readyforreadingc = true;
+
+										}
+
+									}
+									else {
+										readyforreadingc = false;
+										prevrcind = getstream1.readingcmds;
+									}
+									if (getstream1.gcmdsin != null) {
+										if (readyforreadingc == true) {
+											if (getstream1.gcmdsin.length() > cind) {
+
+												usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+												cind = getstream1.gcmdsin.length();
+												System.out.println("CMD: " + usablec);
+											} else {
+												usablec = "";
+											}
+										}
+										else {
+											usablec = "";
+										}
+
+									}
+									if (usablec.contains("BUFFER")) {
+										Integer i = 7;
+										String numbuild = "";
+
+										while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
+											numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+											i = i + 1;
+										}
+										numbuf = Integer.valueOf(numbuild);
+									}
+									if (usablec.contains("DISCONN")) {
+										filebytesleft = 0;
+										dataoutp = "";
+										option = 0;
+									}
+									if (numbuf < 4096) {
+										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+										dataoutp = dataoutp + encodedStringpart;
+				                        datadata = dataoutp.getBytes();
+										dataout.write(datadata);
+										dataoutp = "";
+										filebytesleft = filebytesleft - 1024;
+										numbuf = numbuf + 1024;
+									}
+									Thread.sleep(1000);
+								}
+								encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+								dataoutp = dataoutp + encodedStringpart;
+		                        datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+								dataoutp = "";
+								filebytesleft = 0;
+								option = 6;
+						}
+					}
+					if (option == 8) {
+						if (usabled != "") {
+							postname = usabled;
+							dataoutp = "Please send the body of the post you would like to create.\r";
+							dataoutp = dataoutp.length() + " " + dataoutp;
+							byte[] datadata = dataoutp.getBytes();
+							dataout.write(datadata);
+							option = 9;
+							usabled = "";
+						}
+					}
+					if (option == 9) {
+						if (usabled != "") {
+							st = "";
+							postbody = usabled;
+							String pathToClone = "./repo";
+					        Git git = Git.cloneRepository()
+					                .setURI("https://github.com/Glitch31415/rws.git")
+					                .setDirectory(new File(pathToClone))
+					                .call();
+					        System.out.println("remade local repo");
+					        if (windows == true) {
+						        new File(git.getRepository().getDirectory().getParent() + "\\community\\", postname);
+					        }
+					        else {
+						        new File(git.getRepository().getDirectory().getParent() + "/community/", postname);
+					        }
+				        
+					        try {
+					        	FileWriter myWriter;
+					        	if (windows == true) {
+						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "\\community\\" + postname);
+							        System.out.println("writing the file to " + git.getRepository().getDirectory().getParent() + "\\community\\" + postname);
+					        	}
+					        	else {
+						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/" + postname);
+							        System.out.println("writing the file to " + git.getRepository().getDirectory().getParent() + "/community/" + postname);
+					        	}
+
+					            myWriter.write(postbody);
+					            System.out.println("wrote " + postbody);
+					            myWriter.close();
+					          } catch (IOException e) {
+					            e.printStackTrace();
+					        }
+					        //git.add().addFilepattern(postname).call();
+					       //if (windows == true) {
+					        	//git.add().addFilepattern(".").call();
+				            //}
+				            //else {
+				            	//git.add().addFilepattern(".").call();
+				            //}
+					        try {
+					        	try {
+					        		File myObj;
+					        		if (windows == true) {
+						        	      myObj = new File(git.getRepository().getDirectory().getParent() + "\\community\\index");
+					        		}
+					        		else {
+						        	      myObj = new File(git.getRepository().getDirectory().getParent() + "/community/index");
+					        		}
+
+					        	      Scanner myReader = new Scanner(myObj);
+					        	      while (myReader.hasNextLine()) {
+					        	        st = st + myReader.nextLine() + "\n";
+					        	      }
+					        	      myReader.close();
+					        	    } catch (FileNotFoundException e) {
+					        	      e.printStackTrace();
+					        	    }
+					            System.out.println("index was read as '" + st + "'");
+					            FileWriter myWriter;
+					            if (windows == true) {
+						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "\\community\\index");
+					            }
+					            else {
+						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/index");
+					            }
+
+					            
+					            myWriter.write(st+postname+"\n");
+					            myWriter.close();
+					          } catch (IOException e) {
+					            e.printStackTrace();
+					        }
+					        //git.add().addFilepattern("/community/index").call();
+					        //if (windows == true) {
+					        	//git.add().addFilepattern("\\community\\index").call();
+				            //}
+				            //else {
+				            	//git.add().addFilepattern("/community/index").call();
+				            //}
+					        git.add().addFilepattern(".").call();
+					        git.commit().setMessage("Committed from server").call();
+					        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider("key", "")).call(); //put your own key here
+					        Path directory = Path.of(pathToClone);
+					        Files.walk(directory)
+			                .sorted(Comparator.reverseOrder())
+			                .map(Path::toFile)
+			                .forEach(File::delete);
+							dataoutp = "Your post has been uploaded!\nWould you like to 'view' or 'create' something in the community area?\nSay '|exit' to return to the main menu.\r";
+							dataoutp = dataoutp.length() + " " + dataoutp;
+							byte[] datadata = dataoutp.getBytes();
+							dataout.write(datadata);
+							option = 6;
+							usabled = "";
+						}
+					}
 					if (usabled.contains("website")) {
 						if (option == 0) {
 							option = 1;
@@ -929,7 +1288,7 @@ public class mainclass {
 					if (usabled.contains("status")) {
 						if (option == 0) {
 							option = 4;
-							dataoutp = "Logs:\n-----\n" + logs + "\n-----\nCommands: website, search, weather, download, status. All commands are case sensitive.\r";
+							dataoutp = "Logs:\n-----\n" + logs + "\n-----\nCommands: website, search, weather, download, community, status. All commands are case sensitive.\r";
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
 							dataout.write(datadata);
@@ -940,6 +1299,15 @@ public class mainclass {
 						if (option == 0) {
 							option = 5;
 							dataoutp = "Please provide the URL of the file you would like to download.\r";
+	                        dataoutp = dataoutp.length() + " " + dataoutp;
+							byte[] datadata = dataoutp.getBytes();
+							dataout.write(datadata);
+						}
+					}
+					if (usabled.contains("community")) {
+						if (option == 0) {
+							option = 6;
+							dataoutp = "Would you like to 'view' or 'create' something in the community area?\r";
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
 							dataout.write(datadata);
