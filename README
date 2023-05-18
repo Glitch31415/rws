@@ -1,4 +1,4 @@
-If you are using VARA, download the "vwrs.jar" file. If you are using FLDigi (deprecated), download the "rws1.3.jar" file.
+If you are using VARA, download the "vwrs.jar" file. If you are using FLDigi (deprecated with much less features), download the "rws1.3.jar" file.
 Install the latest Java Runtime Environment on your PC.
 Make sure you have the VARA modem or FLDigi started before running the program.
 Go into the command line, and enter "java -jar [file]" to start the program. This command works on both Windows and Linux.
