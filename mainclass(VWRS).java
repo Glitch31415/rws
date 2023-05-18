@@ -1188,24 +1188,11 @@ public class mainclass {
 					                .setDirectory(new File(pathToClone))
 					                .call();
 					        System.out.println("remade local repo");
-					        if (windows == true) {
-						        new File(git.getRepository().getDirectory().getParent() + "\\community\\", postname);
-					        }
-					        else {
 						        new File(git.getRepository().getDirectory().getParent() + "/community/", postname);
-					        }
-				        
 					        try {
 					        	FileWriter myWriter;
-					        	if (windows == true) {
-						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "\\community\\" + postname);
-							        System.out.println("writing the file to " + git.getRepository().getDirectory().getParent() + "\\community\\" + postname);
-					        	}
-					        	else {
 						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/" + postname);
 							        System.out.println("writing the file to " + git.getRepository().getDirectory().getParent() + "/community/" + postname);
-					        	}
-
 					            myWriter.write(postbody);
 					            System.out.println("wrote " + postbody);
 					            myWriter.close();
@@ -1222,12 +1209,9 @@ public class mainclass {
 					        try {
 					        	try {
 					        		File myObj;
-					        		if (windows == true) {
-						        	      myObj = new File(git.getRepository().getDirectory().getParent() + "\\community\\index");
-					        		}
-					        		else {
+
 						        	      myObj = new File(git.getRepository().getDirectory().getParent() + "/community/index");
-					        		}
+
 
 					        	      Scanner myReader = new Scanner(myObj);
 					        	      while (myReader.hasNextLine()) {
@@ -1239,12 +1223,9 @@ public class mainclass {
 					        	    }
 					            System.out.println("index was read as '" + st + "'");
 					            FileWriter myWriter;
-					            if (windows == true) {
-						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "\\community\\index");
-					            }
-					            else {
+
 						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/index");
-					            }
+
 
 					            
 					            myWriter.write(st+postname+"\n");
