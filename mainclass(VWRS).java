@@ -206,6 +206,7 @@ public class mainclass {
 		String weatherend = "";
 		String[] latLng = null;
 		String st = "";
+		String downloadcheck = "";
 		
 		boolean beginning = true;
 		boolean beggood = false;
@@ -846,18 +847,29 @@ public class mainclass {
 					}
 					if (option == 5) {
 						if (usabled != "") {
+							
 							try {
 								InputStream in = new URL(usabled).openStream();
 								Files.copy(in, Paths.get("tempdownload"), StandardCopyOption.REPLACE_EXISTING);
 								byte[] fileContent = FileUtils.readFileToByteArray(new File("tempdownload"));
-								encodedString = Base64.getEncoder().encodeToString(fileContent);
+								downloadcheck = new String(fileContent);
+								if (downloadcheck.contains("porn") || downloadcheck.contains(" sex ") || downloadcheck.contains("fuck") || downloadcheck.contains("shit") || downloadcheck.contains("bitch") || downloadcheck.contains(" ass ") || downloadcheck.contains("pussy") || downloadcheck.contains("hentai") || downloadcheck.contains("xvideos")) {
+		                            encodedString = "Oops, that file contained material that is inappropriate for ham radio.";
+		                            logs = logs + rcall + " attempted to download " + usabled + " but was blocked\n";
+		                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+		                        } else {
+									encodedString = Base64.getEncoder().encodeToString(fileContent);
+									logs = logs + rcall + " downloaded " + usabled + "\n";
+									System.out.println("Logs:\n-----\n" + logs + "\n-----");
+		                        }
+
 							}
 							catch (Exception badthing) {
 								badthing.printStackTrace();
 	                            encodedString = badthing.toString();
 							}
-							logs = logs + rcall + " downloaded " + usabled + "\n";
-							System.out.println("Logs:\n-----\n" + logs + "\n-----");
+
+
 							filebytesleft = encodedString.length();
 							System.out.println(filebytesleft + " bytes to send");
 							dataoutp = (encodedString.length()+23+281) + " Download started.\n-----\r";
