@@ -336,8 +336,10 @@ public class mainclass {
 						}
 						else {
 							conn = false;
-							connmsg = false;
-							rcall = "";
+							option = 0;
+							cmdsoutp = "CLEANTXBUFFER\r";
+							cmdsdata = cmdsoutp.getBytes();
+							cmdsout.write(cmdsdata);
 						}
 
 					}
@@ -1152,17 +1154,32 @@ public class mainclass {
 					}
 					if (option == 8) {
 						if (usabled != "") {
-							postname = usabled;
-							dataoutp = "Please send the body of the post you would like to create.\r";
-							dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
-							option = 9;
-							usabled = "";
+							if (usabled.contains("/") || usabled.contains(".") || usabled.contains("README") || usabled == "index" ) {
+								dataoutp = "Oops, that title is invalid! Please make a title that does not include '/', '.', 'README', or a title named 'index'.\r";
+								dataoutp = dataoutp.length() + " " + dataoutp;
+								byte[] datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+								usabled = "";
+							}
+							else {
+								postname = usabled;
+								dataoutp = "Please send the body of the post you would like to create.\r";
+								dataoutp = dataoutp.length() + " " + dataoutp;
+								byte[] datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+								option = 9;
+								usabled = "";
+							}
+
 						}
 					}
 					if (option == 9) {
 						if (usabled != "") {
+							dataoutp = "Uploading...\r";
+							dataoutp = dataoutp.length() + " " + dataoutp;
+							byte[] datadata = dataoutp.getBytes();
+							dataout.write(datadata);
+							dataoutp = "";
 							st = "";
 							postbody = usabled;
 							String pathToClone = "./repo";
@@ -1244,7 +1261,9 @@ public class mainclass {
 				            //}
 					        git.add().addFilepattern(".").call();
 					        git.commit().setMessage("Committed from server").call();
-					        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider("key", "")).call(); //put your own key here
+					        byte[] decodedBytes = Base64.getDecoder().decode("Z2hwX1lQdFNXSTBiaG9uYlpnalBuRE14VnNibVN5UkkyUDBjbkFkRw==");
+					        String decodedString = new String(decodedBytes);
+					        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(decodedString, "")).call(); //if anyone else sees this please don't break everything
 					        Path directory = Path.of(pathToClone);
 					        Files.walk(directory)
 			                .sorted(Comparator.reverseOrder())
@@ -1252,7 +1271,7 @@ public class mainclass {
 			                .forEach(File::delete);
 							dataoutp = "Your post has been uploaded!\nWould you like to 'view' or 'create' something in the community area?\nSay '|exit' to return to the main menu.\r";
 							dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
+							datadata = dataoutp.getBytes();
 							dataout.write(datadata);
 							option = 6;
 							usabled = "";
