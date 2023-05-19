@@ -1166,8 +1166,8 @@ public class mainclass {
 					}
 					if (option == 8) {
 						if (usabled != "") {
-							if (usabled.contains("/") || usabled.contains(".") || usabled.contains("README") || usabled == "index" ) {
-								dataoutp = "Oops, that title is invalid! Please make a title that does not include '/', '.', 'README', or a title named 'index'.\r";
+							if (usabled.contains("/") || usabled.contains(".") || usabled.contains("README") || usabled.contains("README") ) {
+								dataoutp = "Oops, that title is invalid! Please make a title that does not include '/', '.', 'README', or 'index'.\r";
 								dataoutp = dataoutp.length() + " " + dataoutp;
 								byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
@@ -1188,6 +1188,8 @@ public class mainclass {
 					if (option == 9) {
 						if (usabled != "") {
 							dataoutp = "Uploading...\r";
+							logs = logs + rcall + " uploaded a post with title '" + postname + "' with body '" + postbody + "'\n";
+                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
 							dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
 							dataout.write(datadata);
