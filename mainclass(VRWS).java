@@ -304,6 +304,22 @@ public class mainclass {
 
 				}
 				// main loop things
+				if (usablec.contains("CQFRAME")) {
+					cmdsoutp = "";
+					if (conn == false) {
+						Thread.sleep((long)(Math.random()*5));
+						String[] cqframestrings = usablec.split(" ");
+						if (cqframestrings[0] == "CQFRAME") {
+							if (cqframestrings.length > 2) {
+								cmdsoutp = "BW500\r";
+							}
+							cmdsoutp = cmdsoutp + "CONNECT " + cqframestrings[1] + "\r";
+							cmdsdata = cmdsoutp.getBytes();
+							cmdsout.write(cmdsdata);
+						}
+
+					}
+				}
 				if (usablec.contains("CONNECTED")) {
 					if (conn == false) {
 						conn = true;
