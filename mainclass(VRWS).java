@@ -207,10 +207,9 @@ public class mainclass {
 		String[] latLng = null;
 		String st = "";
 		String downloadcheck = "";
-		
+		Integer initwait = 0;
 		boolean beginning = true;
 		boolean beggood = false;
-
 		boolean formremove = false;
 		boolean conn = false;
 		boolean connmsg = false;
@@ -238,7 +237,7 @@ public class mainclass {
         Scanner callinp = new Scanner(System.in);
         System.out.println("Enter exact callsign:");
         String callsign = callinp.nextLine();
-		String cmdsoutp = "MYCALL "+callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rCLEANTXBUFFER\r";
+		String cmdsoutp = "MYCALL "+callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rCLEANTXBUFFER\rBW2300\r";
 		String prevdatainthing = "";
 		boolean weatherbroke = false;
 		byte[] cmdsdata = cmdsoutp.getBytes();
@@ -305,15 +304,30 @@ public class mainclass {
 				}
 				// main loop things
 				if (usablec.contains("CQFRAME")) {
-					cmdsoutp = "";
+
 					if (conn == false) {
-						Thread.sleep((long)(Math.random()*5));
+						cmdsoutp = "";
+						Thread.sleep(((long)(Math.random()*5))+10);
+						usablec = usablec.substring(usablec.indexOf("CQFRAME"));
 						String[] cqframestrings = usablec.split(" ");
-						if (cqframestrings[0] == "CQFRAME") {
+						if (cqframestrings[0].contains("CQFRAME")) {
 							if (cqframestrings.length > 2) {
-								cmdsoutp = "BW500\r";
+								if (cqframestrings[2].contains("500")) {
+									cmdsoutp = "BW500\r";
+									//wbw = true;
+								}
+								//if (cqframestrings[2].contains("2300")) {
+									//cmdsoutp = "BW2300\r";
+								//}
+
 							}
-							cmdsoutp = cmdsoutp + "CONNECT " + cqframestrings[1] + "\r";
+							if (cqframestrings[1].contains("-")) {
+								cqframestrings[1] = cqframestrings[1].substring(0, cqframestrings[1].indexOf("-")) + cqframestrings[1].substring(cqframestrings[1].indexOf("-")+2);
+								
+							}
+							System.out.println("'" + cqframestrings[1] + "'");
+							cmdsoutp = cmdsoutp + "CONNECT " + callsign + " " + cqframestrings[1] + "\r";
+
 							cmdsdata = cmdsoutp.getBytes();
 							cmdsout.write(cmdsdata);
 						}
@@ -1347,7 +1361,18 @@ public class mainclass {
 				}
 				//System.out.println("Logs:\n-----\n" + logs + "\n-----");
 				// main loop things end
+				if (initwait > 3) {
+					cmdsoutp = "BW2300\r";
+					cmdsdata = cmdsoutp.getBytes();
+					cmdsout.write(cmdsdata);
+					initwait = 2;
+				}
+				else {
+					initwait = initwait + 1;
+				}
 				Thread.sleep(1000);
+
+
 		}
 	}
 
