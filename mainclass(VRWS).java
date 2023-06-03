@@ -1,5 +1,8 @@
 package VRWS;
 import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -183,6 +186,38 @@ class getstream2 implements Runnable {
 	}
 }
 
+class getstream3 implements Runnable {
+	public static String termin = "";
+
+	public void run() {
+		// Enter data using BufferReader
+        BufferedReader readerterm = new BufferedReader(
+            new InputStreamReader(System.in));
+ 
+        // Reading data using readLine
+        String nameterm = "";
+        while (0==0) {
+        	try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		try {
+    			
+    			nameterm = readerterm.readLine();
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+     
+            // Printing the read line
+            termin = nameterm;
+        }
+
+	}
+}
+
 public class mainclass {
 	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException, NoFilepatternException, GitAPIException {
 		String usablec = "";
@@ -215,7 +250,9 @@ public class mainclass {
 		boolean connmsg = false;
 		boolean readyforreading = true;
 		boolean readyforreadingc = true;
+		boolean termconnect = false;
 		Integer prevrdind = 0;
+		String prevtermin = "";
 		Integer prevrcind = 0;
 		// TODO Auto-generated method stub
 		getstream1.cmds = new Socket("127.0.0.1", 8300);
@@ -245,7 +282,11 @@ public class mainclass {
 		String postbody = "";
 		cmdsout.write(cmdsdata);
 		Thread.sleep(1000);
+		Thread object3 = new Thread(new getstream3());
+		object3.start();
+		System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"You can fetch the html or text from a website by saying 'website'."+"\n"+"You can do a quick Google search by saying 'search'."+"\n"+"You can check the weather for a given city by saying 'weather'."+"\n"+"You can download files from a URL by saying 'download'."+"\n"+"You can view or create posts or files on the community folder in the github by saying 'community'."+"\n"+"You can return the server logs by saying 'status'."+"\n"+"If you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'."+"\n"+"All commands are case sensitive.");
 		while (0==0) {
+			usabled = "";
 				//if (getstream2.readingdata == prevrdind) {
 					//Thread.sleep(0);
 					//if (getstream2.readingdata == prevrdind) {
@@ -258,6 +299,42 @@ public class mainclass {
 					//readyforreading = false;
 					//prevrdind = getstream2.readingdata;
 				//}
+			if (getstream3.termin != "") {
+				if (conn == true && termconnect == false) {
+					System.out.println("You can't interact with the server locally right now, there is someone who is connected to it externally.");
+					getstream3.termin = "";
+				}
+				else {
+
+						//if (getstream3.termin == "website" || getstream3.termin == "search" || getstream3.termin == "weather" || getstream3.termin == "download" || getstream3.termin == "community" || getstream3.termin == "status" || getstream3.termin == "disc") {
+						if (getstream3.termin.contains("|disc")) {
+							termconnect = false;
+							conn = false;
+							logs = logs + rcall + " disconnected\n";
+							System.out.println("Logs:\n-----\n" + logs + "\n-----");
+							option = 0;
+							getstream3.termin = "";
+							
+
+						}
+						else {
+							if (conn == false) {
+								conn = true;
+								rcall = "LOCAL";
+								connmsg = true;
+							}
+							termconnect = true;
+							usabled = getstream3.termin;
+							getstream3.termin = "";
+						}
+						
+					//}
+
+
+				}
+				
+			}
+			
 				if (getstream1.readingcmds == prevrcind) {
 					Thread.sleep(100);
 					if (getstream1.readingcmds == prevrcind) {
@@ -270,21 +347,26 @@ public class mainclass {
 					readyforreadingc = false;
 					prevrcind = getstream1.readingcmds;
 				}
-				if (prevdatainthing == getstream2.gdatain) {
-					usabled = "";
-				}
-				else {
-					if (getstream2.gdatain.contains("&IT&") || getstream2.gdatain.contains(rcall + " <R") ) {
+				if (termconnect == false) {
+					if (prevdatainthing == getstream2.gdatain) {
 						usabled = "";
 					}
 					else {
-						usabled = getstream2.gdatain;
-						System.out.println("DATA: " + usabled);
-						prevdatainthing = getstream2.gdatain;
+						if (getstream2.gdatain.contains("&IT&") || getstream2.gdatain.contains(rcall + " <R") ) {
+							usabled = "";
+						}
+						else {
+							usabled = getstream2.gdatain;
+							System.out.println("DATA: " + usabled);
+							prevdatainthing = getstream2.gdatain;
+
+						}
 
 					}
-
 				}
+				
+
+
 				if (getstream1.gcmdsin != null) {
 					if (readyforreadingc == true) {
 						if (getstream1.gcmdsin.length() > cind) {
@@ -307,7 +389,7 @@ public class mainclass {
 
 					if (conn == false) {
 						cmdsoutp = "";
-						Thread.sleep(((long)(Math.random()*5))+10);
+						Thread.sleep(((long)(Math.random()*5000))+10000);
 						usablec = usablec.substring(usablec.indexOf("CQFRAME"));
 						String[] cqframestrings = usablec.split(" ");
 						if (cqframestrings[0].contains("CQFRAME")) {
@@ -325,7 +407,6 @@ public class mainclass {
 								cqframestrings[1] = cqframestrings[1].substring(0, cqframestrings[1].indexOf("-")) + cqframestrings[1].substring(cqframestrings[1].indexOf("-")+2);
 								
 							}
-							System.out.println("'" + cqframestrings[1] + "'");
 							cmdsoutp = cmdsoutp + "CONNECT " + callsign + " " + cqframestrings[1] + "\r";
 
 							cmdsdata = cmdsoutp.getBytes();
@@ -335,54 +416,80 @@ public class mainclass {
 					}
 				}
 				if (usablec.contains("CONNECTED")) {
-					if (conn == false) {
-						conn = true;
-						connmsg = true;
+					if (termconnect == false) {
+						if (conn == false) {
+							conn = true;
+							connmsg = true;
+						}
+						else {
+							conn = false;
+							logs = logs + rcall + " disconnected\n";
+							System.out.println("Logs:\n-----\n" + logs + "\n-----");
+							option = 0;
+						}
 					}
-					else {
-						conn = false;
-						logs = logs + rcall + " disconnected\n";
-						System.out.println("Logs:\n-----\n" + logs + "\n-----");
-						option = 0;
-					}
+
 				}
 				
 				if (conn == true) {
 					if (connmsg == true) {
-						rcallind = usablec.indexOf("CONNECTED") + 10;
-						rcall = "";
-						while (usablec.charAt(rcallind) != ' ') {
-							rcall = rcall + usablec.charAt(rcallind);
-							rcallind = rcallind + 1;
+						if (termconnect == false) {
+							rcallind = usablec.indexOf("CONNECTED") + 10;
+							rcall = "";
+							while (usablec.charAt(rcallind) != ' ') {
+								rcall = rcall + usablec.charAt(rcallind);
+								rcallind = rcallind + 1;
+							}
+							if (rcall != "USY") {
+								dataoutp = "";
+								dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying 'website'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can view or create posts or files on the community folder in the github by saying 'community'. You can return the server logs by saying 'status'. All commands are case sensitive.\r";
+								logs = logs + rcall + " connected\n";
+								System.out.println("Logs:\n-----\n" + logs + "\n-----");
+		                        dataoutp = dataoutp.length() + " " + dataoutp;
+								byte[] datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+								connmsg = false;
+							}
+							else {
+								conn = false;
+								option = 0;
+								cmdsoutp = "CLEANTXBUFFER\r";
+								cmdsdata = cmdsoutp.getBytes();
+								cmdsout.write(cmdsdata);
+							}
 						}
-						if (rcall != "USY") {
+						else {
 							dataoutp = "";
 							dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying 'website'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can view or create posts or files on the community folder in the github by saying 'community'. You can return the server logs by saying 'status'. All commands are case sensitive.\r";
 							logs = logs + rcall + " connected\n";
 							System.out.println("Logs:\n-----\n" + logs + "\n-----");
-	                        dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
+	                        System.out.println(dataoutp);
+	                        dataoutp = "";
 							connmsg = false;
 						}
-						else {
-							conn = false;
-							option = 0;
-							cmdsoutp = "CLEANTXBUFFER\r";
-							cmdsdata = cmdsoutp.getBytes();
-							cmdsout.write(cmdsdata);
-						}
+						
 
 					}
 					if (option != 0) {
 						if (usabled.contains("|exit")) {
-							option = 0;
-							logs = logs + rcall + " went back to the main menu\n";
-							System.out.println("Logs:\n-----\n" + logs + "\n-----");
-							dataoutp = "Commands: website, search, weather, download, community, status. All commands are case sensitive.\r";
-	                        dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
+							if (termconnect == false) {
+								option = 0;
+								logs = logs + rcall + " went back to the main menu\n";
+								System.out.println("Logs:\n-----\n" + logs + "\n-----");
+								dataoutp = "Commands: website, search, weather, download, community, status. All commands are case sensitive.\r";
+		                        dataoutp = dataoutp.length() + " " + dataoutp;
+								byte[] datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+							}
+							else {
+								option = 0;
+								logs = logs + rcall + " went back to the main menu\n";
+								System.out.println("Logs:\n-----\n" + logs + "\n-----");
+								dataoutp = "Commands: website, search, weather, download, community, status. All commands are case sensitive.\r";
+		                        System.out.println(dataoutp);
+		                        dataoutp = "";
+							}
+
 						}
 					}
 					if (option == 1) {
@@ -415,76 +522,83 @@ public class mainclass {
 		                            logs = logs + rcall + " fetched text from URL " + textscanthing + "\n";
 		                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        }
-		                        encodedString = dataoutp;
-		                        filebytesleft = encodedString.length();
-								System.out.println(filebytesleft + " bytes to send");
-								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
-		                        byte[] datadata = dataoutp.getBytes();
-								dataout.write(datadata);
-								dataoutp = "";
-
-									while (filebytesleft > 1024) {
-										if (getstream1.readingcmds == prevrcind) {
-											Thread.sleep(100);
-											if (getstream1.readingcmds == prevrcind) {
-												readyforreadingc = true;
-
-											}
-
-										}
-										else {
-											readyforreadingc = false;
-											prevrcind = getstream1.readingcmds;
-										}
-										if (getstream1.gcmdsin != null) {
-											if (readyforreadingc == true) {
-												if (getstream1.gcmdsin.length() > cind) {
-
-													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-													cind = getstream1.gcmdsin.length();
-													System.out.println("CMD: " + usablec);
-												} else {
-													usablec = "";
-												}
-											}
-											else {
-												usablec = "";
-											}
-
-										}
-										if (usablec.contains("BUFFER")) {
-											Integer i = 7;
-											String numbuild = "";
-
-											while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-												numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
-												i = i + 1;
-											}
-											numbuf = Integer.valueOf(numbuild);
-										}
-										if (usablec.contains("DISCONN")) {
-											filebytesleft = 0;
-											dataoutp = "";
-											option = 0;
-										}
-										if (numbuf < 4096) {
-											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
-											dataoutp = dataoutp + encodedStringpart;
-					                        datadata = dataoutp.getBytes();
-											dataout.write(datadata);
-											dataoutp = "";
-											filebytesleft = filebytesleft - 1024;
-											numbuf = numbuf + 1024;
-										}
-										Thread.sleep(1000);
-									}
-									encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
-									dataoutp = dataoutp + encodedStringpart;
-			                        datadata = dataoutp.getBytes();
+		                        if (termconnect == false) {
+		                        	encodedString = dataoutp;
+			                        filebytesleft = encodedString.length();
+									System.out.println(filebytesleft + " bytes to send");
+									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+			                        byte[] datadata = dataoutp.getBytes();
 									dataout.write(datadata);
 									dataoutp = "";
-									filebytesleft = 0;
+
+										while (filebytesleft > 1024) {
+											if (getstream1.readingcmds == prevrcind) {
+												Thread.sleep(100);
+												if (getstream1.readingcmds == prevrcind) {
+													readyforreadingc = true;
+
+												}
+
+											}
+											else {
+												readyforreadingc = false;
+												prevrcind = getstream1.readingcmds;
+											}
+											if (getstream1.gcmdsin != null) {
+												if (readyforreadingc == true) {
+													if (getstream1.gcmdsin.length() > cind) {
+
+														usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+														cind = getstream1.gcmdsin.length();
+														System.out.println("CMD: " + usablec);
+													} else {
+														usablec = "";
+													}
+												}
+												else {
+													usablec = "";
+												}
+
+											}
+											if (usablec.contains("BUFFER")) {
+												Integer i = 7;
+												String numbuild = "";
+
+												while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
+													numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+													i = i + 1;
+												}
+												numbuf = Integer.valueOf(numbuild);
+											}
+											if (usablec.contains("DISCONN")) {
+												filebytesleft = 0;
+												dataoutp = "";
+												option = 0;
+											}
+											if (numbuf < 4096) {
+												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+												dataoutp = dataoutp + encodedStringpart;
+						                        datadata = dataoutp.getBytes();
+												dataout.write(datadata);
+												dataoutp = "";
+												filebytesleft = filebytesleft - 1024;
+												numbuf = numbuf + 1024;
+											}
+											Thread.sleep(1000);
+										}
+										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+										dataoutp = dataoutp + encodedStringpart;
+				                        datadata = dataoutp.getBytes();
+										dataout.write(datadata);
+										dataoutp = "";
+										filebytesleft = 0;
+		                        }
+		                        else {
+		                        	System.out.println(dataoutp);
+		                        	dataoutp = "";
+		                        }
+		                        
 							}
 							else {
 								dataoutp = "Here is the raw HTML from the website you provided.\n-----\n";
@@ -511,76 +625,83 @@ public class mainclass {
 		                            logs = logs + rcall + " fetched html from URL " + usabled + "\n";
 		                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        }								
-		                        encodedString = dataoutp;
-		                        filebytesleft = encodedString.length();
-								System.out.println(filebytesleft + " bytes to send");
-								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
-		                        byte[] datadata = dataoutp.getBytes();
-								dataout.write(datadata);
-								dataoutp = "";
-
-									while (filebytesleft > 1024) {
-										if (getstream1.readingcmds == prevrcind) {
-											Thread.sleep(100);
-											if (getstream1.readingcmds == prevrcind) {
-												readyforreadingc = true;
-
-											}
-
-										}
-										else {
-											readyforreadingc = false;
-											prevrcind = getstream1.readingcmds;
-										}
-										if (getstream1.gcmdsin != null) {
-											if (readyforreadingc == true) {
-												if (getstream1.gcmdsin.length() > cind) {
-
-													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-													cind = getstream1.gcmdsin.length();
-													System.out.println("CMD: " + usablec);
-												} else {
-													usablec = "";
-												}
-											}
-											else {
-												usablec = "";
-											}
-
-										}
-										if (usablec.contains("BUFFER")) {
-											Integer i = 7;
-											String numbuild = "";
-
-											while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-												numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
-												i = i + 1;
-											}
-											numbuf = Integer.valueOf(numbuild);
-										}
-										if (usablec.contains("DISCONN")) {
-											filebytesleft = 0;
-											dataoutp = "";
-											option = 0;
-										}
-										if (numbuf < 4096) {
-											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
-											dataoutp = dataoutp + encodedStringpart;
-					                        datadata = dataoutp.getBytes();
-											dataout.write(datadata);
-											dataoutp = "";
-											filebytesleft = filebytesleft - 1024;
-											numbuf = numbuf + 1024;
-										}
-										Thread.sleep(1000);
-									}
-									encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
-									dataoutp = dataoutp + encodedStringpart;
-			                        datadata = dataoutp.getBytes();
+		                        if (termconnect == false) {
+		                        	encodedString = dataoutp;
+			                        filebytesleft = encodedString.length();
+									System.out.println(filebytesleft + " bytes to send");
+									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+			                        byte[] datadata = dataoutp.getBytes();
 									dataout.write(datadata);
 									dataoutp = "";
-									filebytesleft = 0;
+
+										while (filebytesleft > 1024) {
+											if (getstream1.readingcmds == prevrcind) {
+												Thread.sleep(100);
+												if (getstream1.readingcmds == prevrcind) {
+													readyforreadingc = true;
+
+												}
+
+											}
+											else {
+												readyforreadingc = false;
+												prevrcind = getstream1.readingcmds;
+											}
+											if (getstream1.gcmdsin != null) {
+												if (readyforreadingc == true) {
+													if (getstream1.gcmdsin.length() > cind) {
+
+														usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+														cind = getstream1.gcmdsin.length();
+														System.out.println("CMD: " + usablec);
+													} else {
+														usablec = "";
+													}
+												}
+												else {
+													usablec = "";
+												}
+
+											}
+											if (usablec.contains("BUFFER")) {
+												Integer i = 7;
+												String numbuild = "";
+
+												while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
+													numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+													i = i + 1;
+												}
+												numbuf = Integer.valueOf(numbuild);
+											}
+											if (usablec.contains("DISCONN")) {
+												filebytesleft = 0;
+												dataoutp = "";
+												option = 0;
+											}
+											if (numbuf < 4096) {
+												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+												dataoutp = dataoutp + encodedStringpart;
+						                        datadata = dataoutp.getBytes();
+												dataout.write(datadata);
+												dataoutp = "";
+												filebytesleft = filebytesleft - 1024;
+												numbuf = numbuf + 1024;
+											}
+											Thread.sleep(1000);
+										}
+										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+										dataoutp = dataoutp + encodedStringpart;
+				                        datadata = dataoutp.getBytes();
+										dataout.write(datadata);
+										dataoutp = "";
+										filebytesleft = 0;
+		                        }
+		                        else {
+		                        	System.out.println(dataoutp);
+		                        	dataoutp = "";
+		                        }
+		                        
 							}
 						}
 					}
@@ -612,76 +733,83 @@ public class mainclass {
 	                            logs = logs + rcall + " searched for " + searchthing + "\n";
 	                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        }
-	                        encodedString = dataoutp;
-	                        filebytesleft = encodedString.length();
-							System.out.println(filebytesleft + " bytes to send");
-							dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
-	                        byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
-							dataoutp = "";
-
-								while (filebytesleft > 1024) {
-									if (getstream1.readingcmds == prevrcind) {
-										Thread.sleep(100);
-										if (getstream1.readingcmds == prevrcind) {
-											readyforreadingc = true;
-
-										}
-
-									}
-									else {
-										readyforreadingc = false;
-										prevrcind = getstream1.readingcmds;
-									}
-									if (getstream1.gcmdsin != null) {
-										if (readyforreadingc == true) {
-											if (getstream1.gcmdsin.length() > cind) {
-
-												usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-												cind = getstream1.gcmdsin.length();
-												System.out.println("CMD: " + usablec);
-											} else {
-												usablec = "";
-											}
-										}
-										else {
-											usablec = "";
-										}
-
-									}
-									if (usablec.contains("BUFFER")) {
-										Integer i = 7;
-										String numbuild = "";
-
-										while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-											numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
-											i = i + 1;
-										}
-										numbuf = Integer.valueOf(numbuild);
-									}
-									if (usablec.contains("DISCONN")) {
-										filebytesleft = 0;
-										dataoutp = "";
-										option = 0;
-									}
-									if (numbuf < 4096) {
-										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
-										dataoutp = dataoutp + encodedStringpart;
-				                        datadata = dataoutp.getBytes();
-										dataout.write(datadata);
-										dataoutp = "";
-										filebytesleft = filebytesleft - 1024;
-										numbuf = numbuf + 1024;
-									}
-									Thread.sleep(1000);
-								}
-								encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
-								dataoutp = dataoutp + encodedStringpart;
-		                        datadata = dataoutp.getBytes();
+	                        if (termconnect == false) {
+	                        	encodedString = dataoutp;
+		                        filebytesleft = encodedString.length();
+								System.out.println(filebytesleft + " bytes to send");
+								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+		                        byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 								dataoutp = "";
-								filebytesleft = 0;
+
+									while (filebytesleft > 1024) {
+										if (getstream1.readingcmds == prevrcind) {
+											Thread.sleep(100);
+											if (getstream1.readingcmds == prevrcind) {
+												readyforreadingc = true;
+
+											}
+
+										}
+										else {
+											readyforreadingc = false;
+											prevrcind = getstream1.readingcmds;
+										}
+										if (getstream1.gcmdsin != null) {
+											if (readyforreadingc == true) {
+												if (getstream1.gcmdsin.length() > cind) {
+
+													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+													cind = getstream1.gcmdsin.length();
+													System.out.println("CMD: " + usablec);
+												} else {
+													usablec = "";
+												}
+											}
+											else {
+												usablec = "";
+											}
+
+										}
+										if (usablec.contains("BUFFER")) {
+											Integer i = 7;
+											String numbuild = "";
+
+											while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
+												numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+												i = i + 1;
+											}
+											numbuf = Integer.valueOf(numbuild);
+										}
+										if (usablec.contains("DISCONN")) {
+											filebytesleft = 0;
+											dataoutp = "";
+											option = 0;
+										}
+										if (numbuf < 4096) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+											dataoutp = dataoutp + encodedStringpart;
+					                        datadata = dataoutp.getBytes();
+											dataout.write(datadata);
+											dataoutp = "";
+											filebytesleft = filebytesleft - 1024;
+											numbuf = numbuf + 1024;
+										}
+										Thread.sleep(1000);
+									}
+									encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+									dataoutp = dataoutp + encodedStringpart;
+			                        datadata = dataoutp.getBytes();
+									dataout.write(datadata);
+									dataoutp = "";
+									filebytesleft = 0;
+	                        }
+	                        else {
+	                        	System.out.println(dataoutp);
+	                        	dataoutp = "";
+	                        }
+	                        
 							
 						}
 					}
@@ -803,76 +931,83 @@ public class mainclass {
 	                            logs = logs + rcall + " got the weather for " + weatherthing + "\n";
 	                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        }
-	                        encodedString = dataoutp;
-	                        filebytesleft = encodedString.length();
-							System.out.println(filebytesleft + " bytes to send");
-							dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
-	                        byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
-							dataoutp = "";
-
-								while (filebytesleft > 1024) {
-									if (getstream1.readingcmds == prevrcind) {
-										Thread.sleep(100);
-										if (getstream1.readingcmds == prevrcind) {
-											readyforreadingc = true;
-
-										}
-
-									}
-									else {
-										readyforreadingc = false;
-										prevrcind = getstream1.readingcmds;
-									}
-									if (getstream1.gcmdsin != null) {
-										if (readyforreadingc == true) {
-											if (getstream1.gcmdsin.length() > cind) {
-
-												usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-												cind = getstream1.gcmdsin.length();
-												System.out.println("CMD: " + usablec);
-											} else {
-												usablec = "";
-											}
-										}
-										else {
-											usablec = "";
-										}
-
-									}
-									if (usablec.contains("BUFFER")) {
-										Integer i = 7;
-										String numbuild = "";
-
-										while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-											numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
-											i = i + 1;
-										}
-										numbuf = Integer.valueOf(numbuild);
-									}
-									if (usablec.contains("DISCONN")) {
-										filebytesleft = 0;
-										dataoutp = "";
-										option = 0;
-									}
-									if (numbuf < 4096) {
-										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
-										dataoutp = dataoutp + encodedStringpart;
-				                        datadata = dataoutp.getBytes();
-										dataout.write(datadata);
-										dataoutp = "";
-										filebytesleft = filebytesleft - 1024;
-										numbuf = numbuf + 1024;
-									}
-									Thread.sleep(1000);
-								}
-								encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
-								dataoutp = dataoutp + encodedStringpart;
-		                        datadata = dataoutp.getBytes();
+	                        if (termconnect == false) {
+		                        encodedString = dataoutp;
+		                        filebytesleft = encodedString.length();
+								System.out.println(filebytesleft + " bytes to send");
+								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+		                        byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 								dataoutp = "";
-								filebytesleft = 0;
+
+									while (filebytesleft > 1024) {
+										if (getstream1.readingcmds == prevrcind) {
+											Thread.sleep(100);
+											if (getstream1.readingcmds == prevrcind) {
+												readyforreadingc = true;
+
+											}
+
+										}
+										else {
+											readyforreadingc = false;
+											prevrcind = getstream1.readingcmds;
+										}
+										if (getstream1.gcmdsin != null) {
+											if (readyforreadingc == true) {
+												if (getstream1.gcmdsin.length() > cind) {
+
+													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+													cind = getstream1.gcmdsin.length();
+													System.out.println("CMD: " + usablec);
+												} else {
+													usablec = "";
+												}
+											}
+											else {
+												usablec = "";
+											}
+
+										}
+										if (usablec.contains("BUFFER")) {
+											Integer i = 7;
+											String numbuild = "";
+
+											while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
+												numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+												i = i + 1;
+											}
+											numbuf = Integer.valueOf(numbuild);
+										}
+										if (usablec.contains("DISCONN")) {
+											filebytesleft = 0;
+											dataoutp = "";
+											option = 0;
+										}
+										if (numbuf < 4096) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+											dataoutp = dataoutp + encodedStringpart;
+					                        datadata = dataoutp.getBytes();
+											dataout.write(datadata);
+											dataoutp = "";
+											filebytesleft = filebytesleft - 1024;
+											numbuf = numbuf + 1024;
+										}
+										Thread.sleep(1000);
+									}
+									encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+									dataoutp = dataoutp + encodedStringpart;
+			                        datadata = dataoutp.getBytes();
+									dataout.write(datadata);
+									dataoutp = "";
+									filebytesleft = 0;
+	                        }
+	                        else {
+	                        	System.out.println(dataoutp);
+	                        	dataoutp = "";
+	                        }
+
 						}
 					}
 					if (option == 5) {
@@ -902,81 +1037,89 @@ public class mainclass {
 
 							filebytesleft = encodedString.length();
 							System.out.println(filebytesleft + " bytes to send");
-							dataoutp = (encodedString.length()+23+281) + " Download started.\n-----\r";
-	                        byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
-							dataoutp = "";
-
-								while (filebytesleft > 1024) {
-									if (getstream1.readingcmds == prevrcind) {
-										Thread.sleep(100);
-										if (getstream1.readingcmds == prevrcind) {
-											readyforreadingc = true;
-
-										}
-
-									}
-									else {
-										readyforreadingc = false;
-										prevrcind = getstream1.readingcmds;
-									}
-									if (getstream1.gcmdsin != null) {
-										if (readyforreadingc == true) {
-											if (getstream1.gcmdsin.length() > cind) {
-
-												usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-												cind = getstream1.gcmdsin.length();
-												System.out.println("CMD: " + usablec);
-											} else {
-												usablec = "";
-											}
-										}
-										else {
-											usablec = "";
-										}
-
-									}
-									if (usablec.contains("BUFFER")) {
-										Integer i = 7;
-										String numbuild = "";
-
-										while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-											numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
-											i = i + 1;
-										}
-										numbuf = Integer.valueOf(numbuild);
-									}
-									if (usablec.contains("DISCONN")) {
-										filebytesleft = 0;
-										dataoutp = "";
-										option = 0;
-									}
-									if (numbuf < 4096) {
-										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
-										dataoutp = dataoutp + encodedStringpart;
-				                        datadata = dataoutp.getBytes();
-										dataout.write(datadata);
-										dataoutp = "";
-										filebytesleft = filebytesleft - 1024;
-										numbuf = numbuf + 1024;
-									}
-									Thread.sleep(1000);
-								}
-								encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
-								dataoutp = dataoutp + encodedStringpart;
-		                        datadata = dataoutp.getBytes();
+	                        if (termconnect == false) {
+								dataoutp = (encodedString.length()+23+281) + " Download started.\n-----\r";
+	                        	byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 								dataoutp = "";
-								filebytesleft = 0;
-					
 
+									while (filebytesleft > 1024) {
+										if (getstream1.readingcmds == prevrcind) {
+											Thread.sleep(100);
+											if (getstream1.readingcmds == prevrcind) {
+												readyforreadingc = true;
+
+											}
+
+										}
+										else {
+											readyforreadingc = false;
+											prevrcind = getstream1.readingcmds;
+										}
+										if (getstream1.gcmdsin != null) {
+											if (readyforreadingc == true) {
+												if (getstream1.gcmdsin.length() > cind) {
+
+													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+													cind = getstream1.gcmdsin.length();
+													System.out.println("CMD: " + usablec);
+												} else {
+													usablec = "";
+												}
+											}
+											else {
+												usablec = "";
+											}
+
+										}
+										if (usablec.contains("BUFFER")) {
+											Integer i = 7;
+											String numbuild = "";
+
+											while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
+												numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+												i = i + 1;
+											}
+											numbuf = Integer.valueOf(numbuild);
+										}
+										if (usablec.contains("DISCONN")) {
+											filebytesleft = 0;
+											dataoutp = "";
+											option = 0;
+										}
+										if (numbuf < 4096) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+											dataoutp = dataoutp + encodedStringpart;
+					                        datadata = dataoutp.getBytes();
+											dataout.write(datadata);
+											dataoutp = "";
+											filebytesleft = filebytesleft - 1024;
+											numbuf = numbuf + 1024;
+										}
+										Thread.sleep(1000);
+									}
+									encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+									dataoutp = dataoutp + encodedStringpart;
+			                        datadata = dataoutp.getBytes();
+									dataout.write(datadata);
+									dataoutp = "";
+									filebytesleft = 0;
+						
+
+								
+								dataoutp = "";
+								dataoutp = dataoutp + "\n-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nSay '|exit' to return to the main menu.\r";
+		                        //dataoutp = dataoutp.length() + " " + dataoutp;
+		                        datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+	                        }
+	                        else {
+	                        	System.out.println(encodedString);
+	                        	System.out.println("\n-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nSay '|exit' to return to the main menu.");
+	                        	dataoutp = "";
+	                        }
 							
-							dataoutp = "";
-							dataoutp = dataoutp + "\n-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nSay '|exit' to return to the main menu.\r";
-	                        //dataoutp = dataoutp.length() + " " + dataoutp;
-	                        datadata = dataoutp.getBytes();
-							dataout.write(datadata);
 						}
 					}
 					if (option == 6) {
@@ -1010,86 +1153,103 @@ public class mainclass {
 			                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
 			                        }
 			                        encodedString = dataoutp;
-			                        filebytesleft = encodedString.length();
-									System.out.println(filebytesleft + " bytes to send");
-									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
-			                        byte[] datadata = dataoutp.getBytes();
-									dataout.write(datadata);
-									dataoutp = "";
-
-										while (filebytesleft > 1024) {
-											if (getstream1.readingcmds == prevrcind) {
-												Thread.sleep(100);
-												if (getstream1.readingcmds == prevrcind) {
-													readyforreadingc = true;
-
-												}
-
-											}
-											else {
-												readyforreadingc = false;
-												prevrcind = getstream1.readingcmds;
-											}
-											if (getstream1.gcmdsin != null) {
-												if (readyforreadingc == true) {
-													if (getstream1.gcmdsin.length() > cind) {
-
-														usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-														cind = getstream1.gcmdsin.length();
-														System.out.println("CMD: " + usablec);
-													} else {
-														usablec = "";
-													}
-												}
-												else {
-													usablec = "";
-												}
-
-											}
-											if (usablec.contains("BUFFER")) {
-												Integer i = 7;
-												String numbuild = "";
-
-												while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-													numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
-													i = i + 1;
-												}
-												numbuf = Integer.valueOf(numbuild);
-											}
-											if (usablec.contains("DISCONN")) {
-												filebytesleft = 0;
-												dataoutp = "";
-												option = 0;
-											}
-											if (numbuf < 4096) {
-												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
-												dataoutp = dataoutp + encodedStringpart;
-						                        datadata = dataoutp.getBytes();
-												dataout.write(datadata);
-												dataoutp = "";
-												filebytesleft = filebytesleft - 1024;
-												numbuf = numbuf + 1024;
-											}
-											Thread.sleep(1000);
-										}
-										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
-										dataoutp = dataoutp + encodedStringpart;
-				                        datadata = dataoutp.getBytes();
+			                        if (termconnect == false) {
+			                        	filebytesleft = encodedString.length();
+										System.out.println(filebytesleft + " bytes to send");
+										dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+				                        byte[] datadata = dataoutp.getBytes();
 										dataout.write(datadata);
 										dataoutp = "";
-										filebytesleft = 0;
-										usabled = "";
+
+											while (filebytesleft > 1024) {
+												if (getstream1.readingcmds == prevrcind) {
+													Thread.sleep(100);
+													if (getstream1.readingcmds == prevrcind) {
+														readyforreadingc = true;
+
+													}
+
+												}
+												else {
+													readyforreadingc = false;
+													prevrcind = getstream1.readingcmds;
+												}
+												if (getstream1.gcmdsin != null) {
+													if (readyforreadingc == true) {
+														if (getstream1.gcmdsin.length() > cind) {
+
+															usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+															cind = getstream1.gcmdsin.length();
+															System.out.println("CMD: " + usablec);
+														} else {
+															usablec = "";
+														}
+													}
+													else {
+														usablec = "";
+													}
+
+												}
+												if (usablec.contains("BUFFER")) {
+													Integer i = 7;
+													String numbuild = "";
+
+													while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
+														numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+														i = i + 1;
+													}
+													numbuf = Integer.valueOf(numbuild);
+												}
+												if (usablec.contains("DISCONN")) {
+													filebytesleft = 0;
+													dataoutp = "";
+													option = 0;
+												}
+												if (numbuf < 4096) {
+													encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+													dataoutp = dataoutp + encodedStringpart;
+							                        datadata = dataoutp.getBytes();
+													dataout.write(datadata);
+													dataoutp = "";
+													filebytesleft = filebytesleft - 1024;
+													numbuf = numbuf + 1024;
+												}
+												Thread.sleep(1000);
+											}
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+											dataoutp = dataoutp + encodedStringpart;
+					                        datadata = dataoutp.getBytes();
+											dataout.write(datadata);
+											dataoutp = "";
+											filebytesleft = 0;
+											usabled = "";
+											option = 7;
+			                        }
+			                        else {
+			                        	System.out.println(dataoutp);
+			                        	dataoutp = "";
+			                        	usabled = "";
 										option = 7;
+			                        }
+			                        
 								}
 								if (usabled.contains("create")) {
 									//create posts
 									dataoutp = "Please send the name of the post you would like to create.\r";
-									dataoutp = dataoutp.length() + " " + dataoutp;
-									byte[] datadata = dataoutp.getBytes();
-									dataout.write(datadata);
-									option = 8;
-									usabled = "";
+									if (termconnect == false) {
+										dataoutp = dataoutp.length() + " " + dataoutp;
+										byte[] datadata = dataoutp.getBytes();
+										dataout.write(datadata);
+										option = 8;
+										usabled = "";
+									}
+									else {
+										System.out.println(dataoutp);
+										option = 8;
+										usabled = "";
+									}
+
 								}
 						}
 					}
@@ -1121,96 +1281,122 @@ public class mainclass {
 	                            logs = logs + rcall + " looked at the post " + searchthing + "\n";
 	                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        }
-	                        encodedString = dataoutp;
-	                        filebytesleft = encodedString.length();
-							System.out.println(filebytesleft + " bytes to send");
-							dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
-	                        byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
-							dataoutp = "";
-
-								while (filebytesleft > 1024) {
-									if (getstream1.readingcmds == prevrcind) {
-										Thread.sleep(100);
-										if (getstream1.readingcmds == prevrcind) {
-											readyforreadingc = true;
-
-										}
-
-									}
-									else {
-										readyforreadingc = false;
-										prevrcind = getstream1.readingcmds;
-									}
-									if (getstream1.gcmdsin != null) {
-										if (readyforreadingc == true) {
-											if (getstream1.gcmdsin.length() > cind) {
-
-												usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-												cind = getstream1.gcmdsin.length();
-												System.out.println("CMD: " + usablec);
-											} else {
-												usablec = "";
-											}
-										}
-										else {
-											usablec = "";
-										}
-
-									}
-									if (usablec.contains("BUFFER")) {
-										Integer i = 7;
-										String numbuild = "";
-
-										while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-											numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
-											i = i + 1;
-										}
-										numbuf = Integer.valueOf(numbuild);
-									}
-									if (usablec.contains("DISCONN")) {
-										filebytesleft = 0;
-										dataoutp = "";
-										option = 0;
-									}
-									if (numbuf < 4096) {
-										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
-										dataoutp = dataoutp + encodedStringpart;
-				                        datadata = dataoutp.getBytes();
-										dataout.write(datadata);
-										dataoutp = "";
-										filebytesleft = filebytesleft - 1024;
-										numbuf = numbuf + 1024;
-									}
-									Thread.sleep(1000);
-								}
-								encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
-								dataoutp = dataoutp + encodedStringpart;
-		                        datadata = dataoutp.getBytes();
+	                        if (termconnect == false) {
+		                        encodedString = dataoutp;
+		                        filebytesleft = encodedString.length();
+								System.out.println(filebytesleft + " bytes to send");
+								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+		                        byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 								dataoutp = "";
-								filebytesleft = 0;
-								option = 6;
+
+									while (filebytesleft > 1024) {
+										if (getstream1.readingcmds == prevrcind) {
+											Thread.sleep(100);
+											if (getstream1.readingcmds == prevrcind) {
+												readyforreadingc = true;
+
+											}
+
+										}
+										else {
+											readyforreadingc = false;
+											prevrcind = getstream1.readingcmds;
+										}
+										if (getstream1.gcmdsin != null) {
+											if (readyforreadingc == true) {
+												if (getstream1.gcmdsin.length() > cind) {
+
+													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+													cind = getstream1.gcmdsin.length();
+													System.out.println("CMD: " + usablec);
+												} else {
+													usablec = "";
+												}
+											}
+											else {
+												usablec = "";
+											}
+
+										}
+										if (usablec.contains("BUFFER")) {
+											Integer i = 7;
+											String numbuild = "";
+
+											while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
+												numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+												i = i + 1;
+											}
+											numbuf = Integer.valueOf(numbuild);
+										}
+										if (usablec.contains("DISCONN")) {
+											filebytesleft = 0;
+											dataoutp = "";
+											option = 0;
+										}
+										if (numbuf < 4096) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+											dataoutp = dataoutp + encodedStringpart;
+					                        datadata = dataoutp.getBytes();
+											dataout.write(datadata);
+											dataoutp = "";
+											filebytesleft = filebytesleft - 1024;
+											numbuf = numbuf + 1024;
+										}
+										Thread.sleep(1000);
+									}
+									encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+									dataoutp = dataoutp + encodedStringpart;
+			                        datadata = dataoutp.getBytes();
+									dataout.write(datadata);
+									dataoutp = "";
+									filebytesleft = 0;
+									option = 6;
+	                        }
+	                        else {
+	                        	System.out.println(dataoutp);
+	                        	dataoutp = "";
+	                        	option = 6;
+	                        }
+
 						}
 					}
 					if (option == 8) {
 						if (usabled != "") {
 							if (usabled.contains("/") || usabled.contains(".") || usabled.contains("README") || usabled.contains("README") ) {
 								dataoutp = "Oops, that title is invalid! Please make a title that does not include '/', '.', 'README', or 'index'.\r";
-								dataoutp = dataoutp.length() + " " + dataoutp;
-								byte[] datadata = dataoutp.getBytes();
-								dataout.write(datadata);
-								usabled = "";
+								if (termconnect == false) {
+									dataoutp = dataoutp.length() + " " + dataoutp;
+									byte[] datadata = dataoutp.getBytes();
+									dataout.write(datadata);
+									usabled = "";
+								}
+								else {
+									System.out.println(dataoutp);
+									dataoutp = "";
+									usabled = "";
+								}
+
 							}
 							else {
 								postname = usabled;
 								dataoutp = "Please send the body of the post you would like to create.\r";
-								dataoutp = dataoutp.length() + " " + dataoutp;
-								byte[] datadata = dataoutp.getBytes();
-								dataout.write(datadata);
-								option = 9;
-								usabled = "";
+								if (termconnect == false) {
+
+									dataoutp = dataoutp.length() + " " + dataoutp;
+									byte[] datadata = dataoutp.getBytes();
+									dataout.write(datadata);
+									option = 9;
+									usabled = "";
+								}
+								else {
+									System.out.println(dataoutp);
+									dataoutp = "";
+									option = 9;
+									usabled = "";
+								}
+
 							}
 
 						}
@@ -1218,14 +1404,22 @@ public class mainclass {
 					if (option == 9) {
 						if (usabled != "") {
 							dataoutp = "Uploading...\r";
-							logs = logs + rcall + " uploaded a post with title '" + postname + "' with body '" + postbody + "'\n";
-                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
-							dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
+							
+
+
 							dataoutp = "";
 							st = "";
 							postbody = usabled;
+							logs = logs + rcall + " uploaded a post with title '" + postname + "' with body '" + postbody + "'\n";
+                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+                            if (termconnect == false) {
+    							dataoutp = dataoutp.length() + " " + dataoutp;
+    							byte[] datadata = dataoutp.getBytes();
+    							dataout.write(datadata);
+                            }
+                            else {
+                            	System.out.println(dataoutp);
+                            }
 							String pathToClone = "./repo";
 					        Git git = Git.cloneRepository()
 					                .setURI("https://github.com/Glitch31415/rws.git")
@@ -1295,9 +1489,16 @@ public class mainclass {
 			                .map(Path::toFile)
 			                .forEach(File::delete);
 							dataoutp = "Your post has been uploaded!\nWould you like to 'view' or 'create' something in the community area?\nSay '|exit' to return to the main menu.\r";
-							dataoutp = dataoutp.length() + " " + dataoutp;
-							datadata = dataoutp.getBytes();
-							dataout.write(datadata);
+							if (termconnect == false) {
+								dataoutp = dataoutp.length() + " " + dataoutp;
+								byte[] datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+							}
+							else {
+								System.out.println(dataoutp);
+								dataoutp = "";
+							}
+
 							option = 6;
 							usabled = "";
 						}
@@ -1306,36 +1507,62 @@ public class mainclass {
 						if (option == 0) {
 							option = 1;
 							dataoutp = "Please provide the exact URL of the website you want to fetch. Example: 'https://www.example.com'. If you want a text-only website, please add a carat (^) behind the start of the URL. Example: '^https://www.example.com'.\nSay '|exit' to return to the main menu.\r";
-	                        dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
+	                        if (termconnect == false) {
+								dataoutp = dataoutp.length() + " " + dataoutp;
+								byte[] datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+	                        }
+	                        else {
+	                        	System.out.println(dataoutp);
+	                        	dataoutp = "";
+	                        }
+
 						}
 					}
 					if (usabled.contains("search")) {
 						if (option == 0) {
 							option = 2;
 							dataoutp = "Please provide your query.\r";
-	                        dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
+							if (termconnect == false) {
+		                        dataoutp = dataoutp.length() + " " + dataoutp;
+								byte[] datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+							}
+							else {
+								System.out.println(dataoutp);
+								dataoutp = "";
+							}
+
 						}
 					}
 					if (usabled.contains("weather")) {
 						if (option == 0) {
 							option = 3;
 							dataoutp = "Please provide the city and state you would like the weather for.\r";
-	                        dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
+							if (termconnect == false) {
+		                        dataoutp = dataoutp.length() + " " + dataoutp;
+								byte[] datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+							}
+							else {
+								System.out.println(dataoutp);
+								dataoutp = "";
+							}
 						}
 					}
 					if (usabled.contains("status")) {
 						if (option == 0) {
 							option = 4;
 							dataoutp = "Logs:\n-----\n" + logs + "\n-----\nCommands: website, search, weather, download, community, status. All commands are case sensitive.\r";
-	                        dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
+							if (termconnect == false) {
+		                        dataoutp = dataoutp.length() + " " + dataoutp;
+								byte[] datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+							}
+							else {
+								System.out.println(dataoutp);
+								dataoutp = "";
+							}
 							option = 0;
 						}
 					}
@@ -1343,18 +1570,30 @@ public class mainclass {
 						if (option == 0) {
 							option = 5;
 							dataoutp = "Please provide the URL of the file you would like to download.\r";
-	                        dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
+							if (termconnect == false) {
+		                        dataoutp = dataoutp.length() + " " + dataoutp;
+								byte[] datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+							}
+							else {
+								System.out.println(dataoutp);
+								dataoutp = "";
+							}
 						}
 					}
 					if (usabled.contains("community")) {
 						if (option == 0) {
 							option = 6;
 							dataoutp = "Would you like to 'view' or 'create' something in the community area?\r";
-	                        dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
-							dataout.write(datadata);
+							if (termconnect == false) {
+		                        dataoutp = dataoutp.length() + " " + dataoutp;
+								byte[] datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+							}
+							else {
+								System.out.println(dataoutp);
+								dataoutp = "";
+							}
 						}
 					}
 
