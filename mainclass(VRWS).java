@@ -357,7 +357,7 @@ public class mainclass {
 						}
 						else {
 							usabled = getstream2.gdatain;
-							System.out.println("DATA: " + usabled);
+							//System.out.println("DATA: " + usabled);
 							prevdatainthing = getstream2.gdatain;
 
 						}
@@ -374,7 +374,7 @@ public class mainclass {
 							usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
 
 							cind = getstream1.gcmdsin.length();
-							System.out.println("CMD: " + usablec);
+							//System.out.println("CMD: " + usablec);
 						} else {
 							usablec = "";
 						}
@@ -424,7 +424,7 @@ public class mainclass {
 						else {
 							conn = false;
 							logs = logs + rcall + " disconnected\n";
-							System.out.println("Logs:\n-----\n" + logs + "\n-----");
+							//System.out.println("Logs:\n-----\n" + logs + "\n-----");
 							option = 0;
 						}
 					}
@@ -444,7 +444,7 @@ public class mainclass {
 								dataoutp = "";
 								dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying 'website'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can view or create posts or files on the community folder in the github by saying 'community'. You can return the server logs by saying 'status'. All commands are case sensitive.\r";
 								logs = logs + rcall + " connected\n";
-								System.out.println("Logs:\n-----\n" + logs + "\n-----");
+								//System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        dataoutp = dataoutp.length() + " " + dataoutp;
 								byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
@@ -460,9 +460,9 @@ public class mainclass {
 						}
 						else {
 							dataoutp = "";
-							dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying 'website'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can view or create posts or files on the community folder in the github by saying 'community'. You can return the server logs by saying 'status'. All commands are case sensitive.\r";
+							dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying 'website'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can view or create posts or files on the community folder in the github by saying 'community'. You can return the server logs by saying 'status'. [You can disconnect by saying '|disc' because you are using the terminal.] All commands are case sensitive.\r";
 							logs = logs + rcall + " connected\n";
-							System.out.println("Logs:\n-----\n" + logs + "\n-----");
+							//System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        System.out.println(dataoutp);
 	                        dataoutp = "";
 							connmsg = false;
@@ -475,7 +475,7 @@ public class mainclass {
 							if (termconnect == false) {
 								option = 0;
 								logs = logs + rcall + " went back to the main menu\n";
-								System.out.println("Logs:\n-----\n" + logs + "\n-----");
+								//System.out.println("Logs:\n-----\n" + logs + "\n-----");
 								dataoutp = "Commands: website, search, weather, download, community, status. All commands are case sensitive.\r";
 		                        dataoutp = dataoutp.length() + " " + dataoutp;
 								byte[] datadata = dataoutp.getBytes();
@@ -484,8 +484,8 @@ public class mainclass {
 							else {
 								option = 0;
 								logs = logs + rcall + " went back to the main menu\n";
-								System.out.println("Logs:\n-----\n" + logs + "\n-----");
-								dataoutp = "Commands: website, search, weather, download, community, status. All commands are case sensitive.\r";
+								//System.out.println("Logs:\n-----\n" + logs + "\n-----");
+								dataoutp = "Commands: website, search, weather, download, community, status. [|disc to disconnect] All commands are case sensitive.\r";
 		                        System.out.println(dataoutp);
 		                        dataoutp = "";
 							}
@@ -515,17 +515,17 @@ public class mainclass {
 		                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
 		                            dataoutp = dataoutp + "Oops, your website contained material that is inappropriate for ham radio. Please try a different website.\n-----\nSay '|exit' to return to the main menu.\r";
 		                            logs = logs + rcall + " tried to fetch text from URL " + textscanthing + " but was blocked\n";
-		                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        } else {
 		                        	wstext = wstext.replaceAll("\\r", "");
 		                            dataoutp = dataoutp + wstext + "\n-----\nSay '|exit' to return to the main menu.\r";
 		                            logs = logs + rcall + " fetched text from URL " + textscanthing + "\n";
-		                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        }
 		                        if (termconnect == false) {
 		                        	encodedString = dataoutp;
 			                        filebytesleft = encodedString.length();
-									System.out.println(filebytesleft + " bytes to send");
+									//System.out.println(filebytesleft + " bytes to send");
 									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 			                        byte[] datadata = dataoutp.getBytes();
 									dataout.write(datadata);
@@ -551,7 +551,7 @@ public class mainclass {
 														usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
 
 														cind = getstream1.gcmdsin.length();
-														System.out.println("CMD: " + usablec);
+														//System.out.println("CMD: " + usablec);
 													} else {
 														usablec = "";
 													}
@@ -618,17 +618,17 @@ public class mainclass {
 		                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
 		                            dataoutp = dataoutp + "Oops, your website contained material that is inappropriate for ham radio. Please try a different website.\n-----\nSay '|exit' to return to the main menu.\r";
 		                            logs = logs + rcall + " tried to fetch html from URL " + usabled + " but was blocked\n";
-		                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        } else {
 		                        	wstext = wstext.replaceAll("\\r", "");
 		                            dataoutp = dataoutp + wstext + "\n-----\nSay '|exit' to return to the main menu.\r";
 		                            logs = logs + rcall + " fetched html from URL " + usabled + "\n";
-		                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        }								
 		                        if (termconnect == false) {
 		                        	encodedString = dataoutp;
 			                        filebytesleft = encodedString.length();
-									System.out.println(filebytesleft + " bytes to send");
+									//System.out.println(filebytesleft + " bytes to send");
 									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 			                        byte[] datadata = dataoutp.getBytes();
 									dataout.write(datadata);
@@ -654,7 +654,7 @@ public class mainclass {
 														usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
 
 														cind = getstream1.gcmdsin.length();
-														System.out.println("CMD: " + usablec);
+														//System.out.println("CMD: " + usablec);
 													} else {
 														usablec = "";
 													}
@@ -726,17 +726,17 @@ public class mainclass {
 	                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
 	                            dataoutp = dataoutp + "Oops, your results contained material that is inappropriate for ham radio. Please try a different query.\n-----\nSay '|exit' to return to the main menu.\r";
 	                            logs = logs + rcall + " attempted to search " + searchthing + " but was blocked\n";
-	                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        } else {
 	                        	wstext = wstext.replaceAll("\\r", "");
 	                            dataoutp = dataoutp + wstext + "\n-----\nSay '|exit' to return to the main menu.\r";
 	                            logs = logs + rcall + " searched for " + searchthing + "\n";
-	                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        }
 	                        if (termconnect == false) {
 	                        	encodedString = dataoutp;
 		                        filebytesleft = encodedString.length();
-								System.out.println(filebytesleft + " bytes to send");
+								//System.out.println(filebytesleft + " bytes to send");
 								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 		                        byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
@@ -762,7 +762,7 @@ public class mainclass {
 													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
 
 													cind = getstream1.gcmdsin.length();
-													System.out.println("CMD: " + usablec);
+													//System.out.println("CMD: " + usablec);
 												} else {
 													usablec = "";
 												}
@@ -853,7 +853,7 @@ public class mainclass {
 					            }
 					        }catch(IOException ioe){
 					        	weatherbroke = true;
-					            System.out.println(ioe.toString());
+					            //System.out.println(ioe.toString());
 					        }
 					        if (weatherbroke == false) {
 					        	try{
@@ -912,7 +912,7 @@ public class mainclass {
 						            in.close();
 						            weatherend = response.toString();
 						        }catch(IOException ioe){
-						            System.out.println(ioe.toString());
+						            //System.out.println(ioe.toString());
 
 						        }
 					        }
@@ -924,17 +924,17 @@ public class mainclass {
 	                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
 	                            dataoutp = dataoutp + "Oops, your results contained material that is inappropriate for ham radio. Please try a different city.\n-----\nSay '|exit' to return to the main menu.\r";
 	                            logs = logs + rcall + " attempted to get the weather for " + weatherthing + " but was blocked\n";
-	                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        } else {
 	                        	wstext = wstext.replaceAll("\\r", "");
 	                            dataoutp = dataoutp + wstext + "\n-----\nSay '|exit' to return to the main menu.\r";
 	                            logs = logs + rcall + " got the weather for " + weatherthing + "\n";
-	                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        }
 	                        if (termconnect == false) {
 		                        encodedString = dataoutp;
 		                        filebytesleft = encodedString.length();
-								System.out.println(filebytesleft + " bytes to send");
+								//System.out.println(filebytesleft + " bytes to send");
 								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 		                        byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
@@ -960,7 +960,7 @@ public class mainclass {
 													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
 
 													cind = getstream1.gcmdsin.length();
-													System.out.println("CMD: " + usablec);
+													//System.out.println("CMD: " + usablec);
 												} else {
 													usablec = "";
 												}
@@ -1021,11 +1021,11 @@ public class mainclass {
 								if (downloadcheck.contains("porn") || downloadcheck.contains(" sex ") || downloadcheck.contains("fuck") || downloadcheck.contains("shit") || downloadcheck.contains("bitch") || downloadcheck.contains(" ass ") || downloadcheck.contains("pussy") || downloadcheck.contains("hentai") || downloadcheck.contains("xvideos")) {
 		                            encodedString = "Oops, that file contained material that is inappropriate for ham radio.";
 		                            logs = logs + rcall + " attempted to download " + usabled + " but was blocked\n";
-		                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        } else {
 									encodedString = Base64.getEncoder().encodeToString(fileContent);
 									logs = logs + rcall + " downloaded " + usabled + "\n";
-									System.out.println("Logs:\n-----\n" + logs + "\n-----");
+									//System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        }
 
 							}
@@ -1036,9 +1036,9 @@ public class mainclass {
 
 
 							filebytesleft = encodedString.length();
-							System.out.println(filebytesleft + " bytes to send");
+							//System.out.println(filebytesleft + " bytes to send");
 	                        if (termconnect == false) {
-								dataoutp = (encodedString.length()+23+281) + " Download started.\n-----\r";
+								dataoutp = (encodedString.length()+23+280) + " Download started.\n-----\r";
 	                        	byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 								dataoutp = "";
@@ -1063,7 +1063,7 @@ public class mainclass {
 													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
 
 													cind = getstream1.gcmdsin.length();
-													System.out.println("CMD: " + usablec);
+													//System.out.println("CMD: " + usablec);
 												} else {
 													usablec = "";
 												}
@@ -1115,8 +1115,8 @@ public class mainclass {
 								dataout.write(datadata);
 	                        }
 	                        else {
-	                        	System.out.println(encodedString);
-	                        	System.out.println("\n-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nSay '|exit' to return to the main menu.");
+	                        	System.out.println(" Download started.\n-----\r" + encodedString);
+	                        	System.out.println("\n-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nSay '|exit' to return to the main menu.\r");
 	                        	dataoutp = "";
 	                        }
 							
@@ -1145,17 +1145,17 @@ public class mainclass {
 			                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
 			                            dataoutp = dataoutp + "Oops, the index page contained material that is inappropriate for ham radio. Please try a different query.\n-----\nSay '|exit' to return to the main menu.\r";
 			                            logs = logs + rcall + " attempted to look at the community index page but was blocked\n";
-			                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 			                        } else {
 			                        	wstext = wstext.replaceAll("\\r", "");
 			                            dataoutp = dataoutp + wstext + "\n-----\nSay '|exit' to return to the main menu.\r";
 			                            logs = logs + rcall + " looked at the community index page\n";
-			                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 			                        }
 			                        encodedString = dataoutp;
 			                        if (termconnect == false) {
 			                        	filebytesleft = encodedString.length();
-										System.out.println(filebytesleft + " bytes to send");
+										//System.out.println(filebytesleft + " bytes to send");
 										dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 				                        byte[] datadata = dataoutp.getBytes();
 										dataout.write(datadata);
@@ -1181,7 +1181,7 @@ public class mainclass {
 															usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
 
 															cind = getstream1.gcmdsin.length();
-															System.out.println("CMD: " + usablec);
+															//System.out.println("CMD: " + usablec);
 														} else {
 															usablec = "";
 														}
@@ -1274,17 +1274,17 @@ public class mainclass {
 	                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
 	                            dataoutp = dataoutp + "Oops, that post contained material that is inappropriate for ham radio. Please try a different query.\n-----\nWould you like to 'view' or 'create' something in the community area?\nSay '|exit' to return to the main menu.\r";
 	                            logs = logs + rcall + " attempted to look at the post " + searchthing + "but was blocked\n";
-	                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        } else {
 	                        	wstext = wstext.replaceAll("\\r", "");
 	                            dataoutp = dataoutp + wstext + "\n-----\nWould you like to 'view' or 'create' something in the community area?\nSay '|exit' to return to the main menu.\r";
 	                            logs = logs + rcall + " looked at the post " + searchthing + "\n";
-	                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        }
 	                        if (termconnect == false) {
 		                        encodedString = dataoutp;
 		                        filebytesleft = encodedString.length();
-								System.out.println(filebytesleft + " bytes to send");
+								//System.out.println(filebytesleft + " bytes to send");
 								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 		                        byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
@@ -1310,7 +1310,7 @@ public class mainclass {
 													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
 
 													cind = getstream1.gcmdsin.length();
-													System.out.println("CMD: " + usablec);
+													//System.out.println("CMD: " + usablec);
 												} else {
 													usablec = "";
 												}
@@ -1411,7 +1411,7 @@ public class mainclass {
 							st = "";
 							postbody = usabled;
 							logs = logs + rcall + " uploaded a post with title '" + postname + "' with body '" + postbody + "'\n";
-                            System.out.println("Logs:\n-----\n" + logs + "\n-----");
+                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
                             if (termconnect == false) {
     							dataoutp = dataoutp.length() + " " + dataoutp;
     							byte[] datadata = dataoutp.getBytes();
@@ -1425,14 +1425,14 @@ public class mainclass {
 					                .setURI("https://github.com/Glitch31415/rws.git")
 					                .setDirectory(new File(pathToClone))
 					                .call();
-					        System.out.println("remade local repo");
+					        //System.out.println("remade local repo");
 						        new File(git.getRepository().getDirectory().getParent() + "/community/", postname);
 					        try {
 					        	FileWriter myWriter;
 						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/" + postname);
 							        System.out.println("writing the file to " + git.getRepository().getDirectory().getParent() + "/community/" + postname);
 					            myWriter.write(postbody);
-					            System.out.println("wrote " + postbody);
+					            //System.out.println("wrote " + postbody);
 					            myWriter.close();
 					          } catch (IOException e) {
 					            e.printStackTrace();
@@ -1459,7 +1459,7 @@ public class mainclass {
 					        	    } catch (FileNotFoundException e) {
 					        	      e.printStackTrace();
 					        	    }
-					            System.out.println("index was read as '" + st + "'");
+					            //System.out.println("index was read as '" + st + "'");
 					            FileWriter myWriter;
 
 						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/index");
