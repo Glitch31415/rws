@@ -1038,7 +1038,7 @@ public class mainclass {
 							filebytesleft = encodedString.length();
 							//System.out.println(filebytesleft + " bytes to send");
 	                        if (termconnect == false) {
-								dataoutp = (encodedString.length()+23+280) + " Download started.\n-----\r";
+								dataoutp = (encodedString.length()+23+281) + " Download started.\n-----\r";
 	                        	byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 								dataoutp = "";
@@ -1115,8 +1115,8 @@ public class mainclass {
 								dataout.write(datadata);
 	                        }
 	                        else {
-	                        	System.out.println(" Download started.\n-----\r" + encodedString);
-	                        	System.out.println("\n-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nSay '|exit' to return to the main menu.\r");
+	                        	System.out.println("Download started.\n-----\n" + encodedString);
+	                        	System.out.println("-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nSay '|exit' to return to the main menu.\r");
 	                        	dataoutp = "";
 	                        }
 							
