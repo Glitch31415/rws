@@ -390,42 +390,44 @@ public class mainclass {
 					if (conn == false) {
 						cmdsoutp = "";
 						Thread.sleep(((long)(Math.random()*5000))+10000);
-						usablec = usablec.substring(usablec.indexOf("CQFRAME"));
-						String[] cqframestrings = usablec.split(" ");
-						if (cqframestrings[0].contains("CQFRAME")) {
-							if (cqframestrings.length > 2) {
-								if (cqframestrings[2].contains("500")) {
-									cmdsoutp = "BW500\r";
-									//wbw = true;
-								}
-								//if (cqframestrings[2].contains("2300")) {
-									//cmdsoutp = "BW2300\r";
-								//}
-
+						usablec = usablec.substring(usablec.lastIndexOf("CQFRAME"));
+						String[] cqframestrings = usablec.split("\r");
+							if (cqframestrings[0].contains(" 500")) {
+								cmdsoutp = "BW500\r";
 							}
-							if (cqframestrings[1].contains("-")) {
-								cqframestrings[1] = cqframestrings[1].substring(0, cqframestrings[1].indexOf("-")) + cqframestrings[1].substring(cqframestrings[1].indexOf("-")+2);
-								
-							}
-							cmdsoutp = cmdsoutp + "CONNECT " + callsign + " " + cqframestrings[1] + "\r";
+							String[] cqrx = cqframestrings[0].split(" ");
+							String cqrxcall = cqrx[1];
+							cmdsoutp = cmdsoutp + "CONNECT " + callsign + " " + cqrxcall + "\r";
 
 							cmdsdata = cmdsoutp.getBytes();
 							cmdsout.write(cmdsdata);
-						}
+
 
 					}
 				}
 				if (usablec.contains("CONNECTED")) {
 					if (termconnect == false) {
-						if (conn == false) {
-							conn = true;
-							connmsg = true;
+						if (usablec.lastIndexOf("CONNECTED") - 3 >= 0) {
+							if (usablec.charAt(usablec.lastIndexOf("CONNECTED") - 1) == 'S' && usablec.charAt(usablec.lastIndexOf("CONNECTED") - 2) == 'I' && usablec.charAt(usablec.lastIndexOf("CONNECTED") - 3) == 'D') {
+								if (conn == true) {
+									conn = false;
+									logs = logs + rcall + " disconnected\n";
+									//System.out.println("Logs:\n-----\n" + logs + "\n-----");
+									option = 0;
+								}
+							}
+							else {
+								if (conn == false) {
+									conn = true;
+									connmsg = true;
+								}
+							}
 						}
 						else {
-							conn = false;
-							logs = logs + rcall + " disconnected\n";
-							//System.out.println("Logs:\n-----\n" + logs + "\n-----");
-							option = 0;
+							if (conn == false) {
+								conn = true;
+								connmsg = true;
+							}
 						}
 					}
 
@@ -434,7 +436,7 @@ public class mainclass {
 				if (conn == true) {
 					if (connmsg == true) {
 						if (termconnect == false) {
-							rcallind = usablec.indexOf("CONNECTED") + 10;
+							rcallind = usablec.lastIndexOf("CONNECTED") + 10;
 							rcall = "";
 							while (usablec.charAt(rcallind) != ' ') {
 								rcall = rcall + usablec.charAt(rcallind);
@@ -565,8 +567,8 @@ public class mainclass {
 												Integer i = 7;
 												String numbuild = "";
 
-												while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-													numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 													i = i + 1;
 												}
 												numbuf = Integer.valueOf(numbuild);
@@ -668,8 +670,8 @@ public class mainclass {
 												Integer i = 7;
 												String numbuild = "";
 
-												while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-													numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 													i = i + 1;
 												}
 												numbuf = Integer.valueOf(numbuild);
@@ -776,8 +778,8 @@ public class mainclass {
 											Integer i = 7;
 											String numbuild = "";
 
-											while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-												numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+											while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+												numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 												i = i + 1;
 											}
 											numbuf = Integer.valueOf(numbuild);
@@ -817,6 +819,7 @@ public class mainclass {
 						if (usabled != "") {
 							dataoutp = "Here is the weather forecast for the location you provided.\n-----\n";
 							weatherbroke = false;
+							weatherend = "";
 							String address = usabled;
 							weatherthing = usabled;
 					        String key = "AIzaSyDr8Gh1WeemI_ovbqnX_RwecVFNy9POBgk";
@@ -853,7 +856,7 @@ public class mainclass {
 					            }
 					        }catch(IOException ioe){
 					        	weatherbroke = true;
-					            //System.out.println(ioe.toString());
+					        	weatherend = weatherend + ioe.toString();
 					        }
 					        if (weatherbroke == false) {
 					        	try{
@@ -912,12 +915,8 @@ public class mainclass {
 						            in.close();
 						            weatherend = response.toString();
 						        }catch(IOException ioe){
-						            //System.out.println(ioe.toString());
-
+						        	weatherend = weatherend + ioe.toString();
 						        }
-					        }
-					        else {
-					        	weatherend = "Oops, I was unable to get the weather from your input. Please try again.";
 					        }
 					        
 					        wstext = weatherend;
@@ -974,8 +973,8 @@ public class mainclass {
 											Integer i = 7;
 											String numbuild = "";
 
-											while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-												numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+											while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+												numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 												i = i + 1;
 											}
 											numbuf = Integer.valueOf(numbuild);
@@ -1015,6 +1014,7 @@ public class mainclass {
 							
 							try {
 								InputStream in = new URL(usabled).openStream();
+								System.out.println("made it this far");
 								Files.copy(in, Paths.get("tempdownload"), StandardCopyOption.REPLACE_EXISTING);
 								byte[] fileContent = FileUtils.readFileToByteArray(new File("tempdownload"));
 								downloadcheck = new String(fileContent);
@@ -1077,8 +1077,8 @@ public class mainclass {
 											Integer i = 7;
 											String numbuild = "";
 
-											while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-												numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+											while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+												numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 												i = i + 1;
 											}
 											numbuf = Integer.valueOf(numbuild);
@@ -1195,8 +1195,8 @@ public class mainclass {
 													Integer i = 7;
 													String numbuild = "";
 
-													while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-														numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+													while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+														numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 														i = i + 1;
 													}
 													numbuf = Integer.valueOf(numbuild);
@@ -1324,8 +1324,8 @@ public class mainclass {
 											Integer i = 7;
 											String numbuild = "";
 
-											while (Character.isDigit(usablec.charAt(usablec.indexOf("BUFFER")+i))) {
-												numbuild = numbuild + usablec.charAt(usablec.indexOf("BUFFER")+i);
+											while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+												numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 												i = i + 1;
 											}
 											numbuf = Integer.valueOf(numbuild);
