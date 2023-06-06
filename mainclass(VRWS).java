@@ -1,5 +1,8 @@
 package VRWS;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.Timer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -396,8 +399,8 @@ public class mainclass {
 								cmdsoutp = "BW500\r";
 							}
 							String[] cqrx = cqframestrings[0].split(" ");
-							String cqrxcall = cqrx[1];
-							cmdsoutp = cmdsoutp + "CONNECT " + callsign + " " + cqrxcall + "\r";
+							String[] cqrxcall = cqrx[1].split("-");
+							cmdsoutp = cmdsoutp + "CONNECT " + callsign + " " + cqrxcall[0] + "\r";
 
 							cmdsdata = cmdsoutp.getBytes();
 							cmdsout.write(cmdsdata);
@@ -442,7 +445,6 @@ public class mainclass {
 								rcall = rcall + usablec.charAt(rcallind);
 								rcallind = rcallind + 1;
 							}
-							if (rcall != "USY") {
 								dataoutp = "";
 								dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying 'website'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can view or create posts or files on the community folder in the github by saying 'community'. You can return the server logs by saying 'status'. All commands are case sensitive.\r";
 								logs = logs + rcall + " connected\n";
@@ -451,14 +453,6 @@ public class mainclass {
 								byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 								connmsg = false;
-							}
-							else {
-								conn = false;
-								option = 0;
-								cmdsoutp = "CLEANTXBUFFER\r";
-								cmdsdata = cmdsoutp.getBytes();
-								cmdsout.write(cmdsdata);
-							}
 						}
 						else {
 							dataoutp = "";
@@ -504,11 +498,12 @@ public class mainclass {
 								usabled = "https://www.w3.org/services/html2txt?url=" + usabled;
 								URLConnection connection = null;
 		                        try {
-		                            connection = new URL(usabled).openConnection();
-		                            webscan = new Scanner(connection.getInputStream());
-		                            webscan.useDelimiter("\\Z");
-		                            wstext = webscan.next();
-		                            webscan.close();
+			                            connection = new URL(usabled).openConnection();
+			                            webscan = new Scanner(connection.getInputStream());
+			                            webscan.useDelimiter("\\Z");
+			                            wstext = webscan.next();
+			                            webscan.close();
+
 		                        }
 		                        catch (Exception ex) {
 		                            ex.printStackTrace();
@@ -607,11 +602,13 @@ public class mainclass {
 								usabled = usabled.replaceAll("\\r|\\n", "");
 								URLConnection connection = null;
 		                        try {
-		                            connection = new URL(usabled).openConnection();
-		                            webscan = new Scanner(connection.getInputStream());
-		                            webscan.useDelimiter("\\Z");
-		                            wstext = webscan.next();
-		                            webscan.close();
+			                            connection = new URL(usabled).openConnection();
+			                            webscan = new Scanner(connection.getInputStream());
+			                            webscan.useDelimiter("\\Z");
+			                            wstext = webscan.next();
+			                            webscan.close();
+
+
 		                        }
 		                        catch (Exception ex) {
 		                            ex.printStackTrace();
@@ -715,11 +712,13 @@ public class mainclass {
 							usabled = "https://www.w3.org/services/html2txt?url=https://duckduckgo.com/html/?q=" + usabled + "&kp=1&kz=-1&kc=-1&kav=1&kac=-1&kd=-1&ko=-2&k1=-1";
 							URLConnection connection = null;
 	                        try {
-	                            connection = new URL(usabled).openConnection();
-	                            webscan = new Scanner(connection.getInputStream());
-	                            webscan.useDelimiter("\\Z");
-	                            wstext = webscan.next();
-	                            webscan.close();
+
+		                            connection = new URL(usabled).openConnection();
+		                            webscan = new Scanner(connection.getInputStream());
+		                            webscan.useDelimiter("\\Z");
+		                            wstext = webscan.next();
+		                            webscan.close();
+
 	                        }
 	                        catch (Exception ex) {
 	                            ex.printStackTrace();
@@ -1005,28 +1004,28 @@ public class mainclass {
 	                        else {
 	                        	System.out.println(dataoutp);
 	                        	dataoutp = "";
+	                        	
 	                        }
 
 						}
 					}
 					if (option == 5) {
 						if (usabled != "") {
-							
 							try {
-								InputStream in = new URL(usabled).openStream();
-								System.out.println("made it this far");
-								Files.copy(in, Paths.get("tempdownload"), StandardCopyOption.REPLACE_EXISTING);
-								byte[] fileContent = FileUtils.readFileToByteArray(new File("tempdownload"));
-								downloadcheck = new String(fileContent);
-								if (downloadcheck.contains("porn") || downloadcheck.contains(" sex ") || downloadcheck.contains("fuck") || downloadcheck.contains("shit") || downloadcheck.contains("bitch") || downloadcheck.contains(" ass ") || downloadcheck.contains("pussy") || downloadcheck.contains("hentai") || downloadcheck.contains("xvideos")) {
-		                            encodedString = "Oops, that file contained material that is inappropriate for ham radio.";
-		                            logs = logs + rcall + " attempted to download " + usabled + " but was blocked\n";
-		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
-		                        } else {
-									encodedString = Base64.getEncoder().encodeToString(fileContent);
-									logs = logs + rcall + " downloaded " + usabled + "\n";
-									//System.out.println("Logs:\n-----\n" + logs + "\n-----");
-		                        }
+									InputStream in = new URL(usabled).openStream();
+									Files.copy(in, Paths.get("tempdownload"), StandardCopyOption.REPLACE_EXISTING);
+									byte[] fileContent = FileUtils.readFileToByteArray(new File("tempdownload"));
+									downloadcheck = new String(fileContent);
+									if (downloadcheck.contains("porn") || downloadcheck.contains(" sex ") || downloadcheck.contains("fuck") || downloadcheck.contains("shit") || downloadcheck.contains("bitch") || downloadcheck.contains(" ass ") || downloadcheck.contains("pussy") || downloadcheck.contains("hentai") || downloadcheck.contains("xvideos")) {
+			                            encodedString = "Oops, that file contained material that is inappropriate for ham radio.";
+			                            logs = logs + rcall + " attempted to download " + usabled + " but was blocked\n";
+			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
+			                        } else {
+										encodedString = Base64.getEncoder().encodeToString(fileContent);
+										logs = logs + rcall + " downloaded " + usabled + "\n";
+										//System.out.println("Logs:\n-----\n" + logs + "\n-----");
+			                        }
+
 
 							}
 							catch (Exception badthing) {
@@ -1132,11 +1131,12 @@ public class mainclass {
 									usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/index";
 									URLConnection connection = null;
 			                        try {
-			                            connection = new URL(usabled).openConnection();
-			                            webscan = new Scanner(connection.getInputStream());
-			                            webscan.useDelimiter("\\Z");
-			                            wstext = webscan.next();
-			                            webscan.close();
+				                            connection = new URL(usabled).openConnection();
+				                            webscan = new Scanner(connection.getInputStream());
+				                            webscan.useDelimiter("\\Z");
+				                            wstext = webscan.next();
+				                            webscan.close();
+
 			                        }
 			                        catch (Exception ex) {
 			                            ex.printStackTrace();
@@ -1256,21 +1256,24 @@ public class mainclass {
 					if (option == 7) {
 						if (usabled != "") {
 							dataoutp = "Here is the post you requested.\n-----\n";
-							usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/" + usabled;
-							searchthing = usabled;
-							usabled = usabled.replaceAll(" ", "+");
-							URLConnection connection = null;
-	                        try {
-	                            connection = new URL(usabled).openConnection();
-	                            webscan = new Scanner(connection.getInputStream());
-	                            webscan.useDelimiter("\\Z");
-	                            wstext = webscan.next();
-	                            webscan.close();
-	                        }
-	                        catch (Exception ex) {
-	                            ex.printStackTrace();
-	                            wstext = ex.toString();
-	                        }
+								usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/" + usabled;
+
+								searchthing = usabled;
+								usabled = usabled.replaceAll(" ", "+");
+								URLConnection connection = null;
+		                        try {
+
+			                            connection = new URL(usabled).openConnection();
+			                            webscan = new Scanner(connection.getInputStream());
+			                            webscan.useDelimiter("\\Z");
+			                            wstext = webscan.next();
+			                            webscan.close();
+		                        }
+		                        catch (Exception ex) {
+		                            ex.printStackTrace();
+		                            wstext = ex.toString();
+		                        }
+							
 	                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
 	                            dataoutp = dataoutp + "Oops, that post contained material that is inappropriate for ham radio. Please try a different query.\n-----\nWould you like to 'view' or 'create' something in the community area?\nSay '|exit' to return to the main menu.\r";
 	                            logs = logs + rcall + " attempted to look at the post " + searchthing + "but was blocked\n";
@@ -1430,7 +1433,6 @@ public class mainclass {
 					        try {
 					        	FileWriter myWriter;
 						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/" + postname);
-							        System.out.println("writing the file to " + git.getRepository().getDirectory().getParent() + "/community/" + postname);
 					            myWriter.write(postbody);
 					            //System.out.println("wrote " + postbody);
 					            myWriter.close();
