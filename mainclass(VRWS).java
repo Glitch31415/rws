@@ -44,7 +44,7 @@ class getstream1 implements Runnable {
 	public static String gcmdsin = "";
 	public static String gcmdsout;
 	public static Socket cmds = null;
-	public static Integer readingcmds = 0;
+	public static int readingcmds = 0;
 
 	public void run() {
 		InputStream cmdsin = null;
@@ -84,7 +84,7 @@ class getstream2 implements Runnable {
 	public static String gdatain = "";
 	public static String gdataout;
 	public static Socket data = null;
-	public static Integer readingdata = 0;
+	public static int readingdata = 0;
 	String pgdi = "";
 	char datachar = 0;
 
@@ -103,12 +103,13 @@ class getstream2 implements Runnable {
         BufferedReader br2 = new BufferedReader(isr2);
         boolean erasenext = false;
         String totalnumbuild = "";
-        Integer totalnum = 0;
-        Integer charnum = 0;
+        int totalnum = 0;
+        int charnum = 0;
         boolean lookingforletters = false;
         boolean buildingtotalnum = true;
         boolean varacfuckedup = false;
 		while (0==0) {
+
 	        try {
 				datachar = (char)br2.read();
 
@@ -137,6 +138,7 @@ class getstream2 implements Runnable {
 						charnum = charnum + 1;
 						if (charnum == totalnum) {
 							gdatain = pgdi;
+
 							pgdi = "";
 							buildingtotalnum = true;
 						}
@@ -228,7 +230,7 @@ public class mainclass {
 		String wstext = "";
 		String textscanthing = "";
 		Scanner webscan;
-		Integer option = 0;
+		int option = 0;
 		String dataoutp;
 		String rcall = "";
 		String searchthing = "";
@@ -236,16 +238,16 @@ public class mainclass {
 		String logs = "";
 		String encodedString = "";
 		String encodedStringpart = "";
-		Integer cind = 8;
-		Integer dind = 0;
-		Integer rcallind = 0;
-		Integer filebytesleft = 0;
-		Integer numbuf = 0;
+		int cind = 8;
+		int dind = 0;
+		int rcallind = 0;
+		int filebytesleft = 0;
+		int numbuf = 0;
 		String weatherend = "";
 		String[] latLng = null;
 		String st = "";
 		String downloadcheck = "";
-		Integer initwait = 0;
+		int initwait = 0;
 		boolean beginning = true;
 		boolean beggood = false;
 		boolean formremove = false;
@@ -254,9 +256,9 @@ public class mainclass {
 		boolean readyforreading = true;
 		boolean readyforreadingc = true;
 		boolean termconnect = false;
-		Integer prevrdind = 0;
+		int prevrdind = 0;
 		String prevtermin = "";
-		Integer prevrcind = 0;
+		int prevrcind = 0;
 		// TODO Auto-generated method stub
 		getstream1.cmds = new Socket("127.0.0.1", 8300);
 		getstream2.data = new Socket("127.0.0.1", 8301);
@@ -360,7 +362,6 @@ public class mainclass {
 						}
 						else {
 							usabled = getstream2.gdatain;
-							//System.out.println("DATA: " + usabled);
 							prevdatainthing = getstream2.gdatain;
 
 						}
@@ -559,7 +560,7 @@ public class mainclass {
 
 											}
 											if (usablec.contains("BUFFER")) {
-												Integer i = 7;
+												int i = 7;
 												String numbuild = "";
 
 												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
@@ -664,7 +665,7 @@ public class mainclass {
 
 											}
 											if (usablec.contains("BUFFER")) {
-												Integer i = 7;
+												int i = 7;
 												String numbuild = "";
 
 												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
@@ -774,7 +775,7 @@ public class mainclass {
 
 										}
 										if (usablec.contains("BUFFER")) {
-											Integer i = 7;
+											int i = 7;
 											String numbuild = "";
 
 											while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
@@ -969,7 +970,7 @@ public class mainclass {
 
 										}
 										if (usablec.contains("BUFFER")) {
-											Integer i = 7;
+											int i = 7;
 											String numbuild = "";
 
 											while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
@@ -1073,7 +1074,7 @@ public class mainclass {
 
 										}
 										if (usablec.contains("BUFFER")) {
-											Integer i = 7;
+											int i = 7;
 											String numbuild = "";
 
 											while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
@@ -1192,7 +1193,7 @@ public class mainclass {
 
 												}
 												if (usablec.contains("BUFFER")) {
-													Integer i = 7;
+													int i = 7;
 													String numbuild = "";
 
 													while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
@@ -1324,7 +1325,7 @@ public class mainclass {
 
 										}
 										if (usablec.contains("BUFFER")) {
-											Integer i = 7;
+											int i = 7;
 											String numbuild = "";
 
 											while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
