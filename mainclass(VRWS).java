@@ -1370,8 +1370,8 @@ public class mainclass {
 					}
 					if (option == 8) {
 						if (usabled != "") {
-							if (usabled.contains("/") || usabled.contains(".") || usabled.contains("README") || usabled.contains("index") ) {
-								dataoutp = "Oops, that title is invalid! Please make a title that does not include '/', '.', 'README', or 'index'.\r";
+							if (usabled.contains("README") || usabled == "index" ) {
+								dataoutp = "Oops, that title is invalid! Please make a title that does not include 'README' and is not 'index'.\r";
 								if (termconnect == false) {
 									dataoutp = dataoutp.length() + " " + dataoutp;
 									byte[] datadata = dataoutp.getBytes();
@@ -1450,7 +1450,6 @@ public class mainclass {
 					        try {
 					        	try {
 					        		File myObj;
-
 						        	      myObj = new File(git.getRepository().getDirectory().getParent() + "/community/index");
 
 
@@ -1470,21 +1469,22 @@ public class mainclass {
 						        String[] stcheck = st.split("\n");
 						        boolean there = false;
 						        for (int stcheckind = 0; stcheckind < stcheck.length; stcheckind=stcheckind+1) {
-						        	System.out.println(stcheck[stcheckind] + " == " + postname);
-						            if (stcheck[stcheckind] == postname) {
-							            there = true;
+						        	if (there == false) {
+							            if (stcheck[stcheckind] == postname) {
+								            there = true;
+							            }
+							            else {
+							            	there = false;
+							            }
+						        	}
 
-						            }
-						            else {
-						            	there = false;
-
-						            }
 						        }
 						        if (there == false) {
-						            myWriter.write(st+postname+"\n");
+						            myWriter.write(postname+st);
 						        }
 						        else {
-					            	myWriter.write(st);
+						        	st = st.replaceAll(postname, "");
+						        	myWriter.write(postname+st);
 						        }
 
 
