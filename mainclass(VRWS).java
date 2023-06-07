@@ -138,9 +138,14 @@ class getstream2 implements Runnable {
 						charnum = charnum + 1;
 						if (charnum == totalnum) {
 							gdatain = pgdi;
-
 							pgdi = "";
+							totalnum = 0;
+							erasenext = false;
+							totalnumbuild = "";
+							charnum = 0;
+							lookingforletters = false;
 							buildingtotalnum = true;
+							
 						}
 					}
 
@@ -155,7 +160,7 @@ class getstream2 implements Runnable {
 							erasenext = false;
 							buildingtotalnum = false;
 							lookingforletters = true;
-							totalnum = Integer.valueOf(totalnumbuild);
+							totalnum = Integer.parseInt(totalnumbuild);
 						}
 
 					}
@@ -567,7 +572,7 @@ public class mainclass {
 													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 													i = i + 1;
 												}
-												numbuf = Integer.valueOf(numbuild);
+												numbuf = Integer.parseInt(numbuild);
 											}
 											if (usablec.contains("DISCONN")) {
 												filebytesleft = 0;
@@ -672,7 +677,7 @@ public class mainclass {
 													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 													i = i + 1;
 												}
-												numbuf = Integer.valueOf(numbuild);
+												numbuf = Integer.parseInt(numbuild);
 											}
 											if (usablec.contains("DISCONN")) {
 												filebytesleft = 0;
@@ -782,7 +787,7 @@ public class mainclass {
 												numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 												i = i + 1;
 											}
-											numbuf = Integer.valueOf(numbuild);
+											numbuf = Integer.parseInt(numbuild);
 										}
 										if (usablec.contains("DISCONN")) {
 											filebytesleft = 0;
@@ -977,7 +982,7 @@ public class mainclass {
 												numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 												i = i + 1;
 											}
-											numbuf = Integer.valueOf(numbuild);
+											numbuf = Integer.parseInt(numbuild);
 										}
 										if (usablec.contains("DISCONN")) {
 											filebytesleft = 0;
@@ -1081,7 +1086,7 @@ public class mainclass {
 												numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 												i = i + 1;
 											}
-											numbuf = Integer.valueOf(numbuild);
+											numbuf = Integer.parseInt(numbuild);
 										}
 										if (usablec.contains("DISCONN")) {
 											filebytesleft = 0;
@@ -1200,7 +1205,7 @@ public class mainclass {
 														numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 														i = i + 1;
 													}
-													numbuf = Integer.valueOf(numbuild);
+													numbuf = Integer.parseInt(numbuild);
 												}
 												if (usablec.contains("DISCONN")) {
 													filebytesleft = 0;
@@ -1332,7 +1337,7 @@ public class mainclass {
 												numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
 												i = i + 1;
 											}
-											numbuf = Integer.valueOf(numbuild);
+											numbuf = Integer.parseInt(numbuild);
 										}
 										if (usablec.contains("DISCONN")) {
 											filebytesleft = 0;
