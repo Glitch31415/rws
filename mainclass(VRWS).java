@@ -534,7 +534,7 @@ public class mainclass {
 									dataout.write(datadata);
 									dataoutp = "";
 
-										while (filebytesleft > 1024) {
+										while (filebytesleft > 8192) {
 											if (getstream1.readingcmds == prevrcind) {
 												Thread.sleep(100);
 												if (getstream1.readingcmds == prevrcind) {
@@ -579,14 +579,14 @@ public class mainclass {
 												dataoutp = "";
 												option = 0;
 											}
-											if (numbuf < 4096) {
-												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+											if (numbuf < 32768) {
+												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+8192);
 												dataoutp = dataoutp + encodedStringpart;
 						                        datadata = dataoutp.getBytes();
 												dataout.write(datadata);
 												dataoutp = "";
-												filebytesleft = filebytesleft - 1024;
-												numbuf = numbuf + 1024;
+												filebytesleft = filebytesleft - 8192;
+												numbuf = numbuf + 8192;
 											}
 											Thread.sleep(1000);
 										}
@@ -639,7 +639,7 @@ public class mainclass {
 									dataout.write(datadata);
 									dataoutp = "";
 
-										while (filebytesleft > 1024) {
+										while (filebytesleft > 8192) {
 											if (getstream1.readingcmds == prevrcind) {
 												Thread.sleep(100);
 												if (getstream1.readingcmds == prevrcind) {
@@ -684,14 +684,14 @@ public class mainclass {
 												dataoutp = "";
 												option = 0;
 											}
-											if (numbuf < 4096) {
-												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+											if (numbuf < 32768) {
+												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+8192);
 												dataoutp = dataoutp + encodedStringpart;
 						                        datadata = dataoutp.getBytes();
 												dataout.write(datadata);
 												dataoutp = "";
-												filebytesleft = filebytesleft - 1024;
-												numbuf = numbuf + 1024;
+												filebytesleft = filebytesleft - 8192;
+												numbuf = numbuf + 8192;
 											}
 											Thread.sleep(1000);
 										}
@@ -749,7 +749,7 @@ public class mainclass {
 								dataout.write(datadata);
 								dataoutp = "";
 
-									while (filebytesleft > 1024) {
+									while (filebytesleft > 8192) {
 										if (getstream1.readingcmds == prevrcind) {
 											Thread.sleep(100);
 											if (getstream1.readingcmds == prevrcind) {
@@ -794,14 +794,14 @@ public class mainclass {
 											dataoutp = "";
 											option = 0;
 										}
-										if (numbuf < 4096) {
-											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+										if (numbuf < 32768) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+8192);
 											dataoutp = dataoutp + encodedStringpart;
 					                        datadata = dataoutp.getBytes();
 											dataout.write(datadata);
 											dataoutp = "";
-											filebytesleft = filebytesleft - 1024;
-											numbuf = numbuf + 1024;
+											filebytesleft = filebytesleft - 8192;
+											numbuf = numbuf + 8192;
 										}
 										Thread.sleep(1000);
 									}
@@ -944,7 +944,7 @@ public class mainclass {
 								dataout.write(datadata);
 								dataoutp = "";
 
-									while (filebytesleft > 1024) {
+									while (filebytesleft > 8192) {
 										if (getstream1.readingcmds == prevrcind) {
 											Thread.sleep(100);
 											if (getstream1.readingcmds == prevrcind) {
@@ -989,14 +989,14 @@ public class mainclass {
 											dataoutp = "";
 											option = 0;
 										}
-										if (numbuf < 4096) {
-											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+										if (numbuf < 32768) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+8192);
 											dataoutp = dataoutp + encodedStringpart;
 					                        datadata = dataoutp.getBytes();
 											dataout.write(datadata);
 											dataoutp = "";
-											filebytesleft = filebytesleft - 1024;
-											numbuf = numbuf + 1024;
+											filebytesleft = filebytesleft - 8192;
+											numbuf = numbuf + 8192;
 										}
 										Thread.sleep(1000);
 									}
@@ -1048,7 +1048,7 @@ public class mainclass {
 								dataout.write(datadata);
 								dataoutp = "";
 
-									while (filebytesleft > 1024) {
+									while (filebytesleft > 8192) {
 										if (getstream1.readingcmds == prevrcind) {
 											Thread.sleep(100);
 											if (getstream1.readingcmds == prevrcind) {
@@ -1093,14 +1093,14 @@ public class mainclass {
 											dataoutp = "";
 											option = 0;
 										}
-										if (numbuf < 4096) {
-											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+										if (numbuf < 24576) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+8192);
 											dataoutp = dataoutp + encodedStringpart;
 					                        datadata = dataoutp.getBytes();
 											dataout.write(datadata);
 											dataoutp = "";
-											filebytesleft = filebytesleft - 1024;
-											numbuf = numbuf + 1024;
+											filebytesleft = filebytesleft - 8192;
+											numbuf = numbuf + 8192;
 										}
 										Thread.sleep(1000);
 									}
@@ -1167,7 +1167,7 @@ public class mainclass {
 										dataout.write(datadata);
 										dataoutp = "";
 
-											while (filebytesleft > 1024) {
+											while (filebytesleft > 8192) {
 												if (getstream1.readingcmds == prevrcind) {
 													Thread.sleep(100);
 													if (getstream1.readingcmds == prevrcind) {
@@ -1212,14 +1212,14 @@ public class mainclass {
 													dataoutp = "";
 													option = 0;
 												}
-												if (numbuf < 4096) {
-													encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+												if (numbuf < 32768) {
+													encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+8192);
 													dataoutp = dataoutp + encodedStringpart;
 							                        datadata = dataoutp.getBytes();
 													dataout.write(datadata);
 													dataoutp = "";
-													filebytesleft = filebytesleft - 1024;
-													numbuf = numbuf + 1024;
+													filebytesleft = filebytesleft - 8192;
+													numbuf = numbuf + 8192;
 												}
 												Thread.sleep(1000);
 											}
@@ -1299,7 +1299,7 @@ public class mainclass {
 								dataout.write(datadata);
 								dataoutp = "";
 
-									while (filebytesleft > 1024) {
+									while (filebytesleft > 8192) {
 										if (getstream1.readingcmds == prevrcind) {
 											Thread.sleep(100);
 											if (getstream1.readingcmds == prevrcind) {
@@ -1344,14 +1344,14 @@ public class mainclass {
 											dataoutp = "";
 											option = 0;
 										}
-										if (numbuf < 4096) {
-											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+										if (numbuf < 32768) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+8192);
 											dataoutp = dataoutp + encodedStringpart;
 					                        datadata = dataoutp.getBytes();
 											dataout.write(datadata);
 											dataoutp = "";
-											filebytesleft = filebytesleft - 1024;
-											numbuf = numbuf + 1024;
+											filebytesleft = filebytesleft - 8192;
+											numbuf = numbuf + 8192;
 										}
 										Thread.sleep(1000);
 									}
