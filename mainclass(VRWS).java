@@ -1480,11 +1480,11 @@ public class mainclass {
 
 						        }
 						        if (there == false) {
-						            myWriter.write(postname+st);
+						        	myWriter.write(st+postname);
+
 						        }
 						        else {
-						        	st = st.replaceAll(postname, "");
-						        	myWriter.write(postname+st);
+						        	myWriter.write(st);
 						        }
 
 
