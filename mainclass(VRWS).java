@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -534,7 +535,7 @@ public class mainclass {
 									dataout.write(datadata);
 									dataoutp = "";
 
-										while (filebytesleft > 256) {
+										while (filebytesleft > 1024) {
 											if (getstream1.readingcmds == prevrcind) {
 												Thread.sleep(100);
 												if (getstream1.readingcmds == prevrcind) {
@@ -579,14 +580,14 @@ public class mainclass {
 												dataoutp = "";
 												option = 0;
 											}
-											if (numbuf < 32512) {
-												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+256);
+											if (numbuf < 31744) {
+												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
 												dataoutp = dataoutp + encodedStringpart;
 						                        datadata = dataoutp.getBytes();
 												dataout.write(datadata);
 												dataoutp = "";
-												filebytesleft = filebytesleft - 256;
-												numbuf = numbuf + 256;
+												filebytesleft = filebytesleft - 1024;
+												numbuf = numbuf + 1024;
 											}
 										}
 										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
@@ -638,7 +639,7 @@ public class mainclass {
 									dataout.write(datadata);
 									dataoutp = "";
 
-										while (filebytesleft > 256) {
+										while (filebytesleft > 1024) {
 											if (getstream1.readingcmds == prevrcind) {
 												Thread.sleep(100);
 												if (getstream1.readingcmds == prevrcind) {
@@ -683,14 +684,14 @@ public class mainclass {
 												dataoutp = "";
 												option = 0;
 											}
-											if (numbuf < 32512) {
-												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+256);
+											if (numbuf < 31744) {
+												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
 												dataoutp = dataoutp + encodedStringpart;
 						                        datadata = dataoutp.getBytes();
 												dataout.write(datadata);
 												dataoutp = "";
-												filebytesleft = filebytesleft - 256;
-												numbuf = numbuf + 256;
+												filebytesleft = filebytesleft - 1024;
+												numbuf = numbuf + 1024;
 											}
 
 										}
@@ -713,7 +714,8 @@ public class mainclass {
 						if (usabled != "") {
 							dataoutp = "Here are the results of your search.\n-----\n";
 							searchthing = usabled;
-							usabled = usabled.replaceAll(" ", "+");
+							usabled = URLEncoder.encode(usabled, StandardCharsets.UTF_8);
+							usabled = usabled.replaceAll("\\+", "%20");
 							usabled = "https://www.w3.org/services/html2txt?url=https://duckduckgo.com/html/?q=" + usabled + "&kp=1&kz=-1&kc=-1&kav=1&kac=-1&kd=-1&ko=-2&k1=-1";
 							URLConnection connection = null;
 	                        try {
@@ -748,7 +750,7 @@ public class mainclass {
 								dataout.write(datadata);
 								dataoutp = "";
 
-									while (filebytesleft > 256) {
+									while (filebytesleft > 1024) {
 										if (getstream1.readingcmds == prevrcind) {
 											Thread.sleep(100);
 											if (getstream1.readingcmds == prevrcind) {
@@ -793,14 +795,14 @@ public class mainclass {
 											dataoutp = "";
 											option = 0;
 										}
-										if (numbuf < 32512) {
-											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+256);
+										if (numbuf < 31744) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
 											dataoutp = dataoutp + encodedStringpart;
 					                        datadata = dataoutp.getBytes();
 											dataout.write(datadata);
 											dataoutp = "";
-											filebytesleft = filebytesleft - 256;
-											numbuf = numbuf + 256;
+											filebytesleft = filebytesleft - 1024;
+											numbuf = numbuf + 1024;
 										}
 									}
 									encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
@@ -942,7 +944,7 @@ public class mainclass {
 								dataout.write(datadata);
 								dataoutp = "";
 
-									while (filebytesleft > 256) {
+									while (filebytesleft > 1024) {
 										if (getstream1.readingcmds == prevrcind) {
 											Thread.sleep(100);
 											if (getstream1.readingcmds == prevrcind) {
@@ -987,14 +989,14 @@ public class mainclass {
 											dataoutp = "";
 											option = 0;
 										}
-										if (numbuf < 32512) {
-											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+256);
+										if (numbuf < 31744) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
 											dataoutp = dataoutp + encodedStringpart;
 					                        datadata = dataoutp.getBytes();
 											dataout.write(datadata);
 											dataoutp = "";
-											filebytesleft = filebytesleft - 256;
-											numbuf = numbuf + 256;
+											filebytesleft = filebytesleft - 1024;
+											numbuf = numbuf + 1024;
 										}
 									}
 									encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
@@ -1045,7 +1047,7 @@ public class mainclass {
 								dataout.write(datadata);
 								dataoutp = "";
 
-									while (filebytesleft > 256) {
+									while (filebytesleft > 1024) {
 										if (getstream1.readingcmds == prevrcind) {
 											Thread.sleep(100);
 											if (getstream1.readingcmds == prevrcind) {
@@ -1090,14 +1092,14 @@ public class mainclass {
 											dataoutp = "";
 											option = 0;
 										}
-										if (numbuf < 32512) {
-											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+256);
+										if (numbuf < 31744) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
 											dataoutp = dataoutp + encodedStringpart;
 					                        datadata = dataoutp.getBytes();
 											dataout.write(datadata);
 											dataoutp = "";
-											filebytesleft = filebytesleft - 256;
-											numbuf = numbuf + 256;
+											filebytesleft = filebytesleft - 1024;
+											numbuf = numbuf + 1024;
 										}
 
 									}
@@ -1130,7 +1132,6 @@ public class mainclass {
 									//view posts
 									dataoutp = "Please send the name of the post you would like to view.\n-----\n";
 									searchthing = usabled;
-									usabled = usabled.replaceAll(" ", "+");
 									usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/index";
 									URLConnection connection = null;
 			                        try {
@@ -1164,7 +1165,7 @@ public class mainclass {
 										dataout.write(datadata);
 										dataoutp = "";
 
-											while (filebytesleft > 256) {
+											while (filebytesleft > 1024) {
 												if (getstream1.readingcmds == prevrcind) {
 													Thread.sleep(100);
 													if (getstream1.readingcmds == prevrcind) {
@@ -1209,14 +1210,14 @@ public class mainclass {
 													dataoutp = "";
 													option = 0;
 												}
-												if (numbuf < 32512) {
-													encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+256);
+												if (numbuf < 31744) {
+													encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
 													dataoutp = dataoutp + encodedStringpart;
 							                        datadata = dataoutp.getBytes();
 													dataout.write(datadata);
 													dataoutp = "";
-													filebytesleft = filebytesleft - 256;
-													numbuf = numbuf + 256;
+													filebytesleft = filebytesleft - 1024;
+													numbuf = numbuf + 1024;
 												}
 											}
 											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
@@ -1259,10 +1260,10 @@ public class mainclass {
 						if (usabled != "") {
 							dataoutp = "Here is the post you requested.\n-----\n";
 							searchthing = usabled;
+								usabled = URLEncoder.encode(usabled, StandardCharsets.UTF_8);
+								usabled = usabled.replaceAll("\\+", "%20");
 								usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/" + usabled;
 
-
-								usabled = usabled.replaceAll(" ", "+");
 								URLConnection connection = null;
 		                        try {
 
@@ -1296,7 +1297,7 @@ public class mainclass {
 								dataout.write(datadata);
 								dataoutp = "";
 
-									while (filebytesleft > 256) {
+									while (filebytesleft > 1024) {
 										if (getstream1.readingcmds == prevrcind) {
 											Thread.sleep(100);
 											if (getstream1.readingcmds == prevrcind) {
@@ -1341,14 +1342,14 @@ public class mainclass {
 											dataoutp = "";
 											option = 0;
 										}
-										if (numbuf < 32512) {
-											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+256);
+										if (numbuf < 31744) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
 											dataoutp = dataoutp + encodedStringpart;
 					                        datadata = dataoutp.getBytes();
 											dataout.write(datadata);
 											dataoutp = "";
-											filebytesleft = filebytesleft - 256;
-											numbuf = numbuf + 256;
+											filebytesleft = filebytesleft - 1024;
+											numbuf = numbuf + 1024;
 										}
 									}
 									encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
@@ -1369,7 +1370,7 @@ public class mainclass {
 					}
 					if (option == 8) {
 						if (usabled != "") {
-							if (usabled.contains("/") || usabled.contains(".") || usabled.contains("README") || usabled.contains("README") ) {
+							if (usabled.contains("/") || usabled.contains(".") || usabled.contains("README") || usabled.contains("index") ) {
 								dataoutp = "Oops, that title is invalid! Please make a title that does not include '/', '.', 'README', or 'index'.\r";
 								if (termconnect == false) {
 									dataoutp = dataoutp.length() + " " + dataoutp;
@@ -1385,6 +1386,7 @@ public class mainclass {
 
 							}
 							else {
+								//usabled = URLEncoder.encode(usabled, StandardCharsets.UTF_8);
 								postname = usabled;
 								dataoutp = "Please send the body of the post you would like to create.\r";
 								if (termconnect == false) {
@@ -1409,11 +1411,6 @@ public class mainclass {
 					if (option == 9) {
 						if (usabled != "") {
 							dataoutp = "Uploading...\r";
-							
-
-
-							dataoutp = "";
-							st = "";
 							postbody = usabled;
 							logs = logs + rcall + " uploaded a post with title '" + postname + "' with body '" + postbody + "'\n";
                             //System.out.println("Logs:\n-----\n" + logs + "\n-----");
@@ -1421,6 +1418,8 @@ public class mainclass {
     							dataoutp = dataoutp.length() + " " + dataoutp;
     							byte[] datadata = dataoutp.getBytes();
     							dataout.write(datadata);
+    							dataoutp = "";
+    							st = "";
                             }
                             else {
                             	System.out.println(dataoutp);
@@ -1468,9 +1467,27 @@ public class mainclass {
 
 						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/index");
 
+						        String[] stcheck = st.split("\n");
+						        boolean there = false;
+						        for (int stcheckind = 0; stcheckind < stcheck.length; stcheckind=stcheckind+1) {
+						        	System.out.println(stcheck[stcheckind] + " == " + postname);
+						            if (stcheck[stcheckind] == postname) {
+							            there = true;
 
-					            
-					            myWriter.write(st+postname+"\n");
+						            }
+						            else {
+						            	there = false;
+
+						            }
+						        }
+						        if (there == false) {
+						            myWriter.write(st+postname+"\n");
+						        }
+						        else {
+					            	myWriter.write(st);
+						        }
+
+
 					            myWriter.close();
 					          } catch (IOException e) {
 					            e.printStackTrace();
