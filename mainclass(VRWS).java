@@ -285,8 +285,12 @@ public class mainclass {
         System.out.println("Enter exact callsign:");
         String callsign = callinp.nextLine();
 		String cmdsoutp = "MYCALL "+callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rCLEANTXBUFFER\rBW2300\r";
+		
+		
+
 		String prevdatainthing = "";
 		boolean weatherbroke = false;
+
 		byte[] cmdsdata = cmdsoutp.getBytes();
 		String postname = "";
 		String postbody = "";
@@ -357,6 +361,25 @@ public class mainclass {
 					readyforreadingc = false;
 					prevrcind = getstream1.readingcmds;
 				}
+				
+				if (getstream1.gcmdsin != null) {
+					if (readyforreadingc == true) {
+						if (getstream1.gcmdsin.length() > cind) {
+
+							usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+							cind = getstream1.gcmdsin.length();
+							//System.out.println("CMD: " + usablec);
+						} else {
+							usablec = "";
+						}
+					}
+					else {
+						usablec = "";
+					}
+
+				}
+				
 				if (termconnect == false) {
 					if (prevdatainthing == getstream2.gdatain) {
 						usabled = "";
@@ -376,23 +399,7 @@ public class mainclass {
 				
 
 
-				if (getstream1.gcmdsin != null) {
-					if (readyforreadingc == true) {
-						if (getstream1.gcmdsin.length() > cind) {
 
-							usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-							cind = getstream1.gcmdsin.length();
-							//System.out.println("CMD: " + usablec);
-						} else {
-							usablec = "";
-						}
-					}
-					else {
-						usablec = "";
-					}
-
-				}
 				// main loop things
 				if (usablec.contains("CQFRAME")) {
 
@@ -455,6 +462,7 @@ public class mainclass {
 								dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying 'website'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can view or create posts or files on the community folder in the github by saying 'community'. You can return the server logs by saying 'status'. All commands are case sensitive.\r";
 								logs = logs + rcall + " connected\n";
 								//System.out.println("Logs:\n-----\n" + logs + "\n-----");
+							
 		                        dataoutp = dataoutp.length() + " " + dataoutp;
 								byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
@@ -479,6 +487,7 @@ public class mainclass {
 								logs = logs + rcall + " went back to the main menu\n";
 								//System.out.println("Logs:\n-----\n" + logs + "\n-----");
 								dataoutp = "Commands: website, search, weather, download, community, status. All commands are case sensitive.\r";
+								
 		                        dataoutp = dataoutp.length() + " " + dataoutp;
 								byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
@@ -530,6 +539,7 @@ public class mainclass {
 			                        filebytesleft = encodedString.length();
 									//System.out.println(filebytesleft + " bytes to send");
 									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+									
 			                        byte[] datadata = dataoutp.getBytes();
 									dataout.write(datadata);
 									dataoutp = "";
@@ -635,40 +645,13 @@ public class mainclass {
 			                        filebytesleft = encodedString.length();
 									//System.out.println(filebytesleft + " bytes to send");
 									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+									
 			                        byte[] datadata = dataoutp.getBytes();
 									dataout.write(datadata);
 									dataoutp = "";
 
 										while (filebytesleft > 8192) {
-											if (getstream1.readingcmds == prevrcind) {
-												Thread.sleep(100);
-												if (getstream1.readingcmds == prevrcind) {
-													readyforreadingc = true;
-
-												}
-
-											}
-											else {
-												readyforreadingc = false;
-												prevrcind = getstream1.readingcmds;
-											}
-											if (getstream1.gcmdsin != null) {
-												if (readyforreadingc == true) {
-													if (getstream1.gcmdsin.length() > cind) {
-
-														usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-														cind = getstream1.gcmdsin.length();
-														//System.out.println("CMD: " + usablec);
-													} else {
-														usablec = "";
-													}
-												}
-												else {
-													usablec = "";
-												}
-
-											}
+				
 											if (usablec.contains("BUFFER")) {
 												int i = 7;
 												String numbuild = "";
@@ -745,40 +728,12 @@ public class mainclass {
 		                        filebytesleft = encodedString.length();
 								//System.out.println(filebytesleft + " bytes to send");
 								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+								
 		                        byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 								dataoutp = "";
 
 									while (filebytesleft > 8192) {
-										if (getstream1.readingcmds == prevrcind) {
-											Thread.sleep(100);
-											if (getstream1.readingcmds == prevrcind) {
-												readyforreadingc = true;
-
-											}
-
-										}
-										else {
-											readyforreadingc = false;
-											prevrcind = getstream1.readingcmds;
-										}
-										if (getstream1.gcmdsin != null) {
-											if (readyforreadingc == true) {
-												if (getstream1.gcmdsin.length() > cind) {
-
-													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-													cind = getstream1.gcmdsin.length();
-													//System.out.println("CMD: " + usablec);
-												} else {
-													usablec = "";
-												}
-											}
-											else {
-												usablec = "";
-											}
-
-										}
 										if (usablec.contains("BUFFER")) {
 											int i = 7;
 											String numbuild = "";
@@ -940,40 +895,12 @@ public class mainclass {
 		                        filebytesleft = encodedString.length();
 								//System.out.println(filebytesleft + " bytes to send");
 								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+								
 		                        byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 								dataoutp = "";
 
 									while (filebytesleft > 8192) {
-										if (getstream1.readingcmds == prevrcind) {
-											Thread.sleep(100);
-											if (getstream1.readingcmds == prevrcind) {
-												readyforreadingc = true;
-
-											}
-
-										}
-										else {
-											readyforreadingc = false;
-											prevrcind = getstream1.readingcmds;
-										}
-										if (getstream1.gcmdsin != null) {
-											if (readyforreadingc == true) {
-												if (getstream1.gcmdsin.length() > cind) {
-
-													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-													cind = getstream1.gcmdsin.length();
-													//System.out.println("CMD: " + usablec);
-												} else {
-													usablec = "";
-												}
-											}
-											else {
-												usablec = "";
-											}
-
-										}
 										if (usablec.contains("BUFFER")) {
 											int i = 7;
 											String numbuild = "";
@@ -1044,40 +971,12 @@ public class mainclass {
 							//System.out.println(filebytesleft + " bytes to send");
 	                        if (termconnect == false) {
 								dataoutp = (encodedString.length()+23+281) + " Download started.\n-----\r";
+								
 	                        	byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 								dataoutp = "";
 
 									while (filebytesleft > 8192) {
-										if (getstream1.readingcmds == prevrcind) {
-											Thread.sleep(100);
-											if (getstream1.readingcmds == prevrcind) {
-												readyforreadingc = true;
-
-											}
-
-										}
-										else {
-											readyforreadingc = false;
-											prevrcind = getstream1.readingcmds;
-										}
-										if (getstream1.gcmdsin != null) {
-											if (readyforreadingc == true) {
-												if (getstream1.gcmdsin.length() > cind) {
-
-													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-													cind = getstream1.gcmdsin.length();
-													//System.out.println("CMD: " + usablec);
-												} else {
-													usablec = "";
-												}
-											}
-											else {
-												usablec = "";
-											}
-
-										}
 										if (usablec.contains("BUFFER")) {
 											int i = 7;
 											String numbuild = "";
@@ -1163,40 +1062,12 @@ public class mainclass {
 			                        	filebytesleft = encodedString.length();
 										//System.out.println(filebytesleft + " bytes to send");
 										dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+										
 				                        byte[] datadata = dataoutp.getBytes();
 										dataout.write(datadata);
 										dataoutp = "";
 
 											while (filebytesleft > 8192) {
-												if (getstream1.readingcmds == prevrcind) {
-													Thread.sleep(100);
-													if (getstream1.readingcmds == prevrcind) {
-														readyforreadingc = true;
-
-													}
-
-												}
-												else {
-													readyforreadingc = false;
-													prevrcind = getstream1.readingcmds;
-												}
-												if (getstream1.gcmdsin != null) {
-													if (readyforreadingc == true) {
-														if (getstream1.gcmdsin.length() > cind) {
-
-															usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-															cind = getstream1.gcmdsin.length();
-															//System.out.println("CMD: " + usablec);
-														} else {
-															usablec = "";
-														}
-													}
-													else {
-														usablec = "";
-													}
-
-												}
 												if (usablec.contains("BUFFER")) {
 													int i = 7;
 													String numbuild = "";
@@ -1244,6 +1115,7 @@ public class mainclass {
 									//create posts
 									dataoutp = "Please send the name of the post you would like to create.\r";
 									if (termconnect == false) {
+										
 										dataoutp = dataoutp.length() + " " + dataoutp;
 										byte[] datadata = dataoutp.getBytes();
 										dataout.write(datadata);
@@ -1295,40 +1167,12 @@ public class mainclass {
 		                        filebytesleft = encodedString.length();
 								//System.out.println(filebytesleft + " bytes to send");
 								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+								
 		                        byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 								dataoutp = "";
 
 									while (filebytesleft > 8192) {
-										if (getstream1.readingcmds == prevrcind) {
-											Thread.sleep(100);
-											if (getstream1.readingcmds == prevrcind) {
-												readyforreadingc = true;
-
-											}
-
-										}
-										else {
-											readyforreadingc = false;
-											prevrcind = getstream1.readingcmds;
-										}
-										if (getstream1.gcmdsin != null) {
-											if (readyforreadingc == true) {
-												if (getstream1.gcmdsin.length() > cind) {
-
-													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-													cind = getstream1.gcmdsin.length();
-													//System.out.println("CMD: " + usablec);
-												} else {
-													usablec = "";
-												}
-											}
-											else {
-												usablec = "";
-											}
-
-										}
 										if (usablec.contains("BUFFER")) {
 											int i = 7;
 											String numbuild = "";
@@ -1377,6 +1221,7 @@ public class mainclass {
 								dataoutp = "Oops, that title is invalid! Please make a title that does not include '/', '.', 'README', or 'index'.\r";
 								if (termconnect == false) {
 									dataoutp = dataoutp.length() + " " + dataoutp;
+									
 									byte[] datadata = dataoutp.getBytes();
 									dataout.write(datadata);
 									usabled = "";
@@ -1394,6 +1239,7 @@ public class mainclass {
 								if (termconnect == false) {
 
 									dataoutp = dataoutp.length() + " " + dataoutp;
+									
 									byte[] datadata = dataoutp.getBytes();
 									dataout.write(datadata);
 									option = 9;
@@ -1423,6 +1269,7 @@ public class mainclass {
                             //System.out.println("Logs:\n-----\n" + logs + "\n-----");
                             if (termconnect == false) {
     							dataoutp = dataoutp.length() + " " + dataoutp;
+    							
     							byte[] datadata = dataoutp.getBytes();
     							dataout.write(datadata);
                             }
@@ -1499,6 +1346,7 @@ public class mainclass {
 							dataoutp = "Your post has been uploaded!\nWould you like to 'view' or 'create' something in the community area?\nSay '|exit' to return to the main menu.\r";
 							if (termconnect == false) {
 								dataoutp = dataoutp.length() + " " + dataoutp;
+								
 								byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 							}
@@ -1517,6 +1365,7 @@ public class mainclass {
 							dataoutp = "Please provide the exact URL of the website you want to fetch. Example: 'https://www.example.com'. If you want a text-only website, please add a carat (^) behind the start of the URL. Example: '^https://www.example.com'.\nSay '|exit' to return to the main menu.\r";
 	                        if (termconnect == false) {
 								dataoutp = dataoutp.length() + " " + dataoutp;
+								
 								byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 	                        }
@@ -1533,6 +1382,7 @@ public class mainclass {
 							dataoutp = "Please provide your query.\r";
 							if (termconnect == false) {
 		                        dataoutp = dataoutp.length() + " " + dataoutp;
+		                        
 								byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 							}
@@ -1549,6 +1399,7 @@ public class mainclass {
 							dataoutp = "Please provide the city and state you would like the weather for.\r";
 							if (termconnect == false) {
 		                        dataoutp = dataoutp.length() + " " + dataoutp;
+		                        
 								byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 							}
@@ -1564,6 +1415,7 @@ public class mainclass {
 							dataoutp = "Logs:\n-----\n" + logs + "\n-----\nCommands: website, search, weather, download, community, status. All commands are case sensitive.\r";
 							if (termconnect == false) {
 		                        dataoutp = dataoutp.length() + " " + dataoutp;
+		                        
 								byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 							}
@@ -1580,6 +1432,7 @@ public class mainclass {
 							dataoutp = "Please provide the URL of the file you would like to download.\r";
 							if (termconnect == false) {
 		                        dataoutp = dataoutp.length() + " " + dataoutp;
+		                        
 								byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 							}
@@ -1595,6 +1448,7 @@ public class mainclass {
 							dataoutp = "Would you like to 'view' or 'create' something in the community area?\r";
 							if (termconnect == false) {
 		                        dataoutp = dataoutp.length() + " " + dataoutp;
+		                        
 								byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 							}
