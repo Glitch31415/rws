@@ -331,7 +331,7 @@ public class mainclass {
 						else {
 							if (conn == false) {
 								conn = true;
-								rcall = "LOCAL";
+								rcall = callsign;
 								connmsg = true;
 							}
 							termconnect = true;
@@ -446,12 +446,25 @@ public class mainclass {
 				if (conn == true) {
 					if (connmsg == true) {
 						if (termconnect == false) {
-							rcallind = usablec.lastIndexOf("CONNECTED") + 10;
-							rcall = "";
-							while (usablec.charAt(rcallind) != ' ') {
-								rcall = rcall + usablec.charAt(rcallind);
-								rcallind = rcallind + 1;
+							String rcallcut = usablec.substring(usablec.lastIndexOf("CONNECTED"),usablec.length());
+							String[] rcallcutcall = rcallcut.split(" ");
+							rcall = "person";
+							for (int rcind = 0; rcind < rcallcutcall.length; rcind = rcind + 1) {
+								if (rcallcutcall[rcind].contains(callsign)) {
+									if (rcind == 1) {
+										rcall = rcallcutcall[2];
+									}
+									if (rcind == 2) {
+										rcall = rcallcutcall[1];
+									}
+								}
 							}
+							//rcallind = usablec.lastIndexOf("CONNECTED") + callsign.length() + 2;
+							//rcall = "";
+							//while (usablec.charAt(rcallind) != ' ') {
+								//rcall = rcall + usablec.charAt(rcallind);
+								//rcallind = rcallind + 1;
+							//}
 								dataoutp = "";
 								dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying 'website'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can view or create posts or files on the community folder in the github by saying 'community'. You can return the server logs by saying 'status'. All commands are case sensitive.\r";
 								logs = logs + rcall + " connected\n";
@@ -463,6 +476,7 @@ public class mainclass {
 						}
 						else {
 							dataoutp = "";
+							rcall = callsign;
 							dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying 'website'. You can do a quick Google search by saying 'search'. You can check the weather for a given city by saying 'weather'. You can download files from a URL by saying 'download'. You can view or create posts or files on the community folder in the github by saying 'community'. You can return the server logs by saying 'status'. [You can disconnect by saying '|disc' because you are using the terminal.] All commands are case sensitive.\r";
 							logs = logs + rcall + " connected\n";
 							//System.out.println("Logs:\n-----\n" + logs + "\n-----");
