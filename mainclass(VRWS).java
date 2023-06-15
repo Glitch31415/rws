@@ -582,12 +582,15 @@ public class mainclass {
 											if (usablec.contains("BUFFER")) {
 												int i = 7;
 												String numbuild = "";
-
-												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-													i = i + 1;
+												
+												if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+													while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+														numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+														i = i + 1;
+													}
+													numbuf = Integer.parseInt(numbuild);
 												}
-												numbuf = Integer.parseInt(numbuild);
+
 											}
 											if (usablec.contains("DISCONN")) {
 												filebytesleft = 0;
@@ -686,12 +689,15 @@ public class mainclass {
 											if (usablec.contains("BUFFER")) {
 												int i = 7;
 												String numbuild = "";
-
-												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-													i = i + 1;
+												
+												if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+													while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+														numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+														i = i + 1;
+													}
+													numbuf = Integer.parseInt(numbuild);
 												}
-												numbuf = Integer.parseInt(numbuild);
+
 											}
 											if (usablec.contains("DISCONN")) {
 												filebytesleft = 0;
@@ -797,12 +803,15 @@ public class mainclass {
 										if (usablec.contains("BUFFER")) {
 											int i = 7;
 											String numbuild = "";
-
-											while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-												numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-												i = i + 1;
+											
+											if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+													i = i + 1;
+												}
+												numbuf = Integer.parseInt(numbuild);
 											}
-											numbuf = Integer.parseInt(numbuild);
+
 										}
 										if (usablec.contains("DISCONN")) {
 											filebytesleft = 0;
@@ -991,12 +1000,15 @@ public class mainclass {
 										if (usablec.contains("BUFFER")) {
 											int i = 7;
 											String numbuild = "";
-
-											while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-												numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-												i = i + 1;
+											
+											if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+													i = i + 1;
+												}
+												numbuf = Integer.parseInt(numbuild);
 											}
-											numbuf = Integer.parseInt(numbuild);
+
 										}
 										if (usablec.contains("DISCONN")) {
 											filebytesleft = 0;
@@ -1094,12 +1106,15 @@ public class mainclass {
 										if (usablec.contains("BUFFER")) {
 											int i = 7;
 											String numbuild = "";
-
-											while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-												numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-												i = i + 1;
+											
+											if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+													i = i + 1;
+												}
+												numbuf = Integer.parseInt(numbuild);
 											}
-											numbuf = Integer.parseInt(numbuild);
+
 										}
 										if (usablec.contains("DISCONN")) {
 											filebytesleft = 0;
@@ -1212,12 +1227,15 @@ public class mainclass {
 												if (usablec.contains("BUFFER")) {
 													int i = 7;
 													String numbuild = "";
-
-													while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-														numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-														i = i + 1;
+													
+													if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+														while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+															numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+															i = i + 1;
+														}
+														numbuf = Integer.parseInt(numbuild);
 													}
-													numbuf = Integer.parseInt(numbuild);
+
 												}
 												if (usablec.contains("DISCONN")) {
 													filebytesleft = 0;
@@ -1344,12 +1362,15 @@ public class mainclass {
 										if (usablec.contains("BUFFER")) {
 											int i = 7;
 											String numbuild = "";
-
-											while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-												numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-												i = i + 1;
+											
+											if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+													i = i + 1;
+												}
+												numbuf = Integer.parseInt(numbuild);
 											}
-											numbuf = Integer.parseInt(numbuild);
+
 										}
 										if (usablec.contains("DISCONN")) {
 											filebytesleft = 0;
@@ -1573,7 +1594,7 @@ public class mainclass {
 					if (usabled.contains("weather")) {
 						if (option == 0) {
 							option = 3;
-							dataoutp = "Please provide the city and state you would like the weather for.\r";
+							dataoutp = "Please provide the city and state you would like the weather for in the format of 'city state'. If the command returns blank, try reformatting your query.\r";
 							if (termconnect == false) {
 		                        dataoutp = dataoutp.length() + " " + dataoutp;
 								byte[] datadata = dataoutp.getBytes();
