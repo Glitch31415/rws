@@ -582,14 +582,20 @@ public class mainclass {
 											if (usablec.contains("BUFFER")) {
 												int i = 7;
 												String numbuild = "";
-												
-												if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-													while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-														numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-														i = i + 1;
+												if (usablec.lastIndexOf("BUFFER")+i < usablec.length()) {
+													if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+														boolean kloop = true;
+														while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
+															numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+															i = i + 1;
+															if (i >= usablec.length()) {
+																kloop = false;
+															}
+														}
+														numbuf = Integer.parseInt(numbuild);
 													}
-													numbuf = Integer.parseInt(numbuild);
 												}
+
 
 											}
 											if (usablec.contains("DISCONN")) {
@@ -690,12 +696,18 @@ public class mainclass {
 												int i = 7;
 												String numbuild = "";
 												
-												if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-													while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-														numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-														i = i + 1;
+												if (usablec.lastIndexOf("BUFFER")+i < usablec.length()) {
+													if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+														boolean kloop = true;
+														while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
+															numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+															i = i + 1;
+															if (i >= usablec.length()) {
+																kloop = false;
+															}
+														}
+														numbuf = Integer.parseInt(numbuild);
 													}
-													numbuf = Integer.parseInt(numbuild);
 												}
 
 											}
@@ -804,12 +816,18 @@ public class mainclass {
 											int i = 7;
 											String numbuild = "";
 											
-											if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-													i = i + 1;
+											if (usablec.lastIndexOf("BUFFER")+i < usablec.length()) {
+												if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+													boolean kloop = true;
+													while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
+														numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+														i = i + 1;
+														if (i >= usablec.length()) {
+															kloop = false;
+														}
+													}
+													numbuf = Integer.parseInt(numbuild);
 												}
-												numbuf = Integer.parseInt(numbuild);
 											}
 
 										}
@@ -1001,12 +1019,18 @@ public class mainclass {
 											int i = 7;
 											String numbuild = "";
 											
-											if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-													i = i + 1;
+											if (usablec.lastIndexOf("BUFFER")+i < usablec.length()) {
+												if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+													boolean kloop = true;
+													while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
+														numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+														i = i + 1;
+														if (i >= usablec.length()) {
+															kloop = false;
+														}
+													}
+													numbuf = Integer.parseInt(numbuild);
 												}
-												numbuf = Integer.parseInt(numbuild);
 											}
 
 										}
@@ -1107,12 +1131,18 @@ public class mainclass {
 											int i = 7;
 											String numbuild = "";
 											
-											if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-													i = i + 1;
+											if (usablec.lastIndexOf("BUFFER")+i < usablec.length()) {
+												if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+													boolean kloop = true;
+													while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
+														numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+														i = i + 1;
+														if (i >= usablec.length()) {
+															kloop = false;
+														}
+													}
+													numbuf = Integer.parseInt(numbuild);
 												}
-												numbuf = Integer.parseInt(numbuild);
 											}
 
 										}
@@ -1228,12 +1258,18 @@ public class mainclass {
 													int i = 7;
 													String numbuild = "";
 													
-													if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-														while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-															numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-															i = i + 1;
+													if (usablec.lastIndexOf("BUFFER")+i < usablec.length()) {
+														if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+															boolean kloop = true;
+															while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
+																numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+																i = i + 1;
+																if (i >= usablec.length()) {
+																	kloop = false;
+																}
+															}
+															numbuf = Integer.parseInt(numbuild);
 														}
-														numbuf = Integer.parseInt(numbuild);
 													}
 
 												}
@@ -1363,12 +1399,18 @@ public class mainclass {
 											int i = 7;
 											String numbuild = "";
 											
-											if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-													i = i + 1;
+											if (usablec.lastIndexOf("BUFFER")+i < usablec.length()) {
+												if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+													boolean kloop = true;
+													while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
+														numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+														i = i + 1;
+														if (i >= usablec.length()) {
+															kloop = false;
+														}
+													}
+													numbuf = Integer.parseInt(numbuild);
 												}
-												numbuf = Integer.parseInt(numbuild);
 											}
 
 										}
