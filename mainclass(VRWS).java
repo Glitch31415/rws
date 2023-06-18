@@ -503,7 +503,7 @@ public class mainclass {
 				}
 				if (usabled.contains("|search")) {
 						option = 2;
-						dataoutp = "Please provide your query.\r";
+						dataoutp = "Please provide your query.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
@@ -517,7 +517,7 @@ public class mainclass {
 				}
 				if (usabled.contains("|weather")) {
 						option = 3;
-						dataoutp = "Please provide the city and state you would like the weather for in the format of 'city state'. If the command returns blank, try reformatting your query.\r";
+						dataoutp = "Please provide the city and state you would like the weather for in the format of 'city state'. If the command returns blank, try reformatting your query.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
@@ -546,7 +546,7 @@ public class mainclass {
 				}
 				if (usabled.contains("|download")) {
 						option = 5;
-						dataoutp = "Please provide the URL of the file you would like to download.\r";
+						dataoutp = "Please provide the URL of the file you would like to download.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
@@ -560,7 +560,7 @@ public class mainclass {
 				}
 				if (usabled.contains("|community")) {
 						option = 6;
-						dataoutp = "Would you like to 'view' or 'create' something in the community area?\r";
+						dataoutp = "Would you like to 'view' or 'create' something in the community area?\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
@@ -1155,7 +1155,7 @@ public class mainclass {
 							filebytesleft = encodedString.length();
 							//System.out.println(filebytesleft + " bytes to send");
 	                        if (termconnect == false) {
-								dataoutp = (encodedString.length()+23+281) + " Download started.\n-----\r";
+								dataoutp = (encodedString.length()+23+357) + " Download started.\n-----\r";
 	                        	byte[] datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 								dataoutp = "";
