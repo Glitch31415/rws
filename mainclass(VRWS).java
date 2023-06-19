@@ -295,7 +295,7 @@ public class mainclass {
 		Thread.sleep(1000);
 		Thread object3 = new Thread(new getstream3());
 		object3.start();
-		System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"You can fetch the html or text from a website by saying '|website'."+"\n"+"You can do a quick Google search by saying '|search'."+"\n"+"You can check the weather for a given city by saying '|weather'."+"\n"+"You can download files from a URL by saying '|download'."+"\n"+"You can view or create posts or files on the community folder in the github by saying '|community'."+"\n"+"You can return the server logs by saying '|status'."+"\n"+"If you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'."+"\n"+"All commands are case sensitive.");
+		System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"You can fetch the text or html from a website by saying '|website'."+"\n"+"You can do a quick Google search by saying '|search'."+"\n"+"You can check the weather for a given city by saying '|weather'."+"\n"+"You can download files from a URL by saying '|download'."+"\n"+"You can view or create posts or files on the community folder in the github by saying '|community'."+"\n"+"You can return the server logs by saying '|status'."+"\n"+"If you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'."+"\n"+"All commands are case sensitive.");
 		while (0==0) {
 			usabled = "";
 				//if (getstream2.readingdata == prevrdind) {
@@ -417,8 +417,12 @@ public class mainclass {
 				}
 				if (usablec.contains("CONNECTED")) {
 					if (termconnect == false) {
-						if (usablec.lastIndexOf("CONNECTED") - 3 >= 0) {
-							if (usablec.charAt(usablec.lastIndexOf("CONNECTED") - 1) == 'S' && usablec.charAt(usablec.lastIndexOf("CONNECTED") - 2) == 'I' && usablec.charAt(usablec.lastIndexOf("CONNECTED") - 3) == 'D') {
+						if (usablec.contains("DISCONN")) {
+							if (usablec.lastIndexOf("CONNECTED") > (usablec.lastIndexOf("DISCONN") + 3)) {
+								conn = true;
+								connmsg = true;
+							}
+							else {
 								if (conn == true) {
 									conn = false;
 									logs = logs + rcall + " disconnected\n";
@@ -426,18 +430,11 @@ public class mainclass {
 									option = 0;
 								}
 							}
-							else {
-								if (conn == false) {
-									conn = true;
-									connmsg = true;
-								}
-							}
+
 						}
 						else {
-							if (conn == false) {
-								conn = true;
-								connmsg = true;
-							}
+							conn = true;
+							connmsg = true;
 						}
 					}
 
@@ -466,7 +463,7 @@ public class mainclass {
 								//rcallind = rcallind + 1;
 							//}
 								dataoutp = "";
-								dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying '|website'. You can do a quick Google search by saying '|search'. You can check the weather for a given city by saying '|weather'. You can download files from a URL by saying '|download'. You can view or create posts or files on the community folder in the github by saying '|community'. You can return the server logs by saying '|status'. All commands are case sensitive.\r";
+								dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the text or html from a website by saying '|website'. You can do a quick Google search by saying '|search'. You can check the weather for a given city by saying '|weather'. You can download files from a URL by saying '|download'. You can view or create posts or files on the community folder in the github by saying '|community'. You can return the server logs by saying '|status'. All commands are case sensitive.\r";
 								logs = logs + rcall + " connected\n";
 								//System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        dataoutp = dataoutp.length() + " " + dataoutp;
@@ -477,7 +474,7 @@ public class mainclass {
 						else {
 							dataoutp = "";
 							rcall = callsign;
-							dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the html or text from a website by saying '|website'. You can do a quick Google search by saying '|search'. You can check the weather for a given city by saying '|weather'. You can download files from a URL by saying '|download'. You can view or create posts or files on the community folder in the github by saying '|community'. You can return the server logs by saying '|status'. [You can disconnect by saying '|disc' because you are using the terminal.] All commands are case sensitive.\r";
+							dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the text or html from a website by saying '|website'. You can do a quick Google search by saying '|search'. You can check the weather for a given city by saying '|weather'. You can download files from a URL by saying '|download'. You can view or create posts or files on the community folder in the github by saying '|community'. You can return the server logs by saying '|status'. [You can disconnect by saying '|disc' because you are using the terminal.] All commands are case sensitive.\r";
 							logs = logs + rcall + " connected\n";
 							//System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        System.out.println(dataoutp);
@@ -489,7 +486,7 @@ public class mainclass {
 					}
 					if (usabled.contains("|website")) {
 						option = 1;
-						dataoutp = "Please provide the exact URL of the website you want to fetch. Example: 'https://www.example.com'. If you want a text-only website, please add a carat (^) behind the start of the URL. Example: '^https://www.example.com'.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+						dataoutp = "Please provide the exact URL of the website you want to fetch. Example: 'https://www.example.com'. If you want the raw HTML from the website, please add a carat (^) behind the start of the URL. Example: '^https://www.example.com'.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
                         if (termconnect == false) {
 							dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
@@ -575,6 +572,119 @@ public class mainclass {
 					if (option == 1) {
 						if (usabled != "") {
 							if (usabled.contains("^")) {
+								dataoutp = "Here is the raw HTML from the website you provided.\n-----\n";
+								usabled = usabled.replaceAll("\\r|\\n", "");
+								URLConnection connection = null;
+		                        try {
+			                            connection = new URL(usabled).openConnection();
+			                            webscan = new Scanner(connection.getInputStream());
+			                            webscan.useDelimiter("\\Z");
+			                            wstext = webscan.next();
+			                            webscan.close();
+
+
+		                        }
+		                        catch (Exception ex) {
+		                            ex.printStackTrace();
+		                            wstext = ex.toString();
+		                        }
+		                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
+		                            dataoutp = dataoutp + "Oops, your website contained material that is inappropriate for ham radio. Please try a different website.\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+		                            logs = logs + rcall + " tried to fetch html from URL " + usabled + " but was blocked\n";
+		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
+		                        } else {
+		                        	wstext = wstext.replaceAll("\\r", "");
+		                            dataoutp = dataoutp + wstext + "\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+		                            logs = logs + rcall + " fetched html from URL " + usabled + "\n";
+		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
+		                        }								
+		                        if (termconnect == false) {
+		                        	encodedString = dataoutp;
+			                        filebytesleft = encodedString.length();
+									//System.out.println(filebytesleft + " bytes to send");
+									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+			                        byte[] datadata = dataoutp.getBytes();
+									dataout.write(datadata);
+									dataoutp = "";
+
+										while (filebytesleft > 1024) {
+											if (getstream1.readingcmds == prevrcind) {
+												Thread.sleep(100);
+												if (getstream1.readingcmds == prevrcind) {
+													readyforreadingc = true;
+
+												}
+
+											}
+											else {
+												readyforreadingc = false;
+												prevrcind = getstream1.readingcmds;
+											}
+											if (getstream1.gcmdsin != null) {
+												if (readyforreadingc == true) {
+													if (getstream1.gcmdsin.length() > cind) {
+
+														usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+														cind = getstream1.gcmdsin.length();
+														//System.out.println("CMD: " + usablec);
+													} else {
+														usablec = "";
+													}
+												}
+												else {
+													usablec = "";
+												}
+
+											}
+											if (usablec.contains("BUFFER")) {
+												int i = 7;
+												String numbuild = "";
+												
+												if (usablec.lastIndexOf("BUFFER")+i < (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
+													if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+														boolean kloop = true;
+														while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
+															numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+															i = i + 1;
+															if (i >= (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
+																kloop = false;
+															}
+														}
+														numbuf = Integer.parseInt(numbuild);
+													}
+												}
+
+											}
+											if (usablec.contains("DISCONN")) {
+												filebytesleft = 0;
+												dataoutp = "";
+												option = 0;
+											}
+											if (numbuf < 31744) {
+												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+												dataoutp = dataoutp + encodedStringpart;
+						                        datadata = dataoutp.getBytes();
+												dataout.write(datadata);
+												dataoutp = "";
+												filebytesleft = filebytesleft - 1024;
+												numbuf = numbuf + 1024;
+											}
+
+										}
+										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+										dataoutp = dataoutp + encodedStringpart;
+				                        datadata = dataoutp.getBytes();
+										dataout.write(datadata);
+										dataoutp = "";
+										filebytesleft = 0;
+		                        }
+		                        else {
+		                        	System.out.println(dataoutp);
+		                        	dataoutp = "";
+		                        }		                        
+							}
+							else {
 								dataoutp = "Here is the text from the website you provided.\n-----\n";
 								usabled = usabled.replace("^", "");
 								usabled = usabled.replaceAll("\\r|\\n", "");
@@ -687,120 +797,7 @@ public class mainclass {
 		                        	System.out.println(dataoutp);
 		                        	dataoutp = "";
 		                        }
-		                        
-							}
-							else {
-								dataoutp = "Here is the raw HTML from the website you provided.\n-----\n";
-								usabled = usabled.replaceAll("\\r|\\n", "");
-								URLConnection connection = null;
-		                        try {
-			                            connection = new URL(usabled).openConnection();
-			                            webscan = new Scanner(connection.getInputStream());
-			                            webscan.useDelimiter("\\Z");
-			                            wstext = webscan.next();
-			                            webscan.close();
-
-
-		                        }
-		                        catch (Exception ex) {
-		                            ex.printStackTrace();
-		                            wstext = ex.toString();
-		                        }
-		                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-		                            dataoutp = dataoutp + "Oops, your website contained material that is inappropriate for ham radio. Please try a different website.\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
-		                            logs = logs + rcall + " tried to fetch html from URL " + usabled + " but was blocked\n";
-		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
-		                        } else {
-		                        	wstext = wstext.replaceAll("\\r", "");
-		                            dataoutp = dataoutp + wstext + "\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
-		                            logs = logs + rcall + " fetched html from URL " + usabled + "\n";
-		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
-		                        }								
-		                        if (termconnect == false) {
-		                        	encodedString = dataoutp;
-			                        filebytesleft = encodedString.length();
-									//System.out.println(filebytesleft + " bytes to send");
-									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
-			                        byte[] datadata = dataoutp.getBytes();
-									dataout.write(datadata);
-									dataoutp = "";
-
-										while (filebytesleft > 1024) {
-											if (getstream1.readingcmds == prevrcind) {
-												Thread.sleep(100);
-												if (getstream1.readingcmds == prevrcind) {
-													readyforreadingc = true;
-
-												}
-
-											}
-											else {
-												readyforreadingc = false;
-												prevrcind = getstream1.readingcmds;
-											}
-											if (getstream1.gcmdsin != null) {
-												if (readyforreadingc == true) {
-													if (getstream1.gcmdsin.length() > cind) {
-
-														usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-														cind = getstream1.gcmdsin.length();
-														//System.out.println("CMD: " + usablec);
-													} else {
-														usablec = "";
-													}
-												}
-												else {
-													usablec = "";
-												}
-
-											}
-											if (usablec.contains("BUFFER")) {
-												int i = 7;
-												String numbuild = "";
-												
-												if (usablec.lastIndexOf("BUFFER")+i < (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
-													if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-														boolean kloop = true;
-														while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
-															numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-															i = i + 1;
-															if (i >= (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
-																kloop = false;
-															}
-														}
-														numbuf = Integer.parseInt(numbuild);
-													}
-												}
-
-											}
-											if (usablec.contains("DISCONN")) {
-												filebytesleft = 0;
-												dataoutp = "";
-												option = 0;
-											}
-											if (numbuf < 31744) {
-												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
-												dataoutp = dataoutp + encodedStringpart;
-						                        datadata = dataoutp.getBytes();
-												dataout.write(datadata);
-												dataoutp = "";
-												filebytesleft = filebytesleft - 1024;
-												numbuf = numbuf + 1024;
-											}
-
-										}
-										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
-										dataoutp = dataoutp + encodedStringpart;
-				                        datadata = dataoutp.getBytes();
-										dataout.write(datadata);
-										dataoutp = "";
-										filebytesleft = 0;
-		                        }
-		                        else {
-		                        	System.out.println(dataoutp);
-		                        	dataoutp = "";
-		                        }
+								
 		                        
 							}
 						}
