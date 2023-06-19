@@ -573,6 +573,7 @@ public class mainclass {
 						if (usabled != "") {
 							if (usabled.contains("^")) {
 								dataoutp = "Here is the raw HTML from the website you provided.\n-----\n";
+								usabled = usabled.replace("^", "");
 								usabled = usabled.replaceAll("\\r|\\n", "");
 								URLConnection connection = null;
 		                        try {
@@ -686,7 +687,7 @@ public class mainclass {
 							}
 							else {
 								dataoutp = "Here is the text from the website you provided.\n-----\n";
-								usabled = usabled.replace("^", "");
+								
 								usabled = usabled.replaceAll("\\r|\\n", "");
 								textscanthing = usabled;
 								usabled = "https://www.w3.org/services/html2txt?url=" + usabled;
