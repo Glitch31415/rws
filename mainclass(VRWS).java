@@ -25,6 +25,7 @@ import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.dircache.DirCache;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import java.util.concurrent.ThreadLocalRandom;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -399,7 +400,9 @@ public class mainclass {
 
 					if (conn == false) {
 						cmdsoutp = "";
-						Thread.sleep(10000+(5000*((int)Math.random()*12)));
+						Thread.sleep(10000);
+						int randomNum = ThreadLocalRandom.current().nextInt(0, 10);
+						Thread.sleep(8000*randomNum);
 						usablec = usablec.substring(usablec.lastIndexOf("CQFRAME"));
 						String[] cqframestrings = usablec.split("\r");
 							if (cqframestrings[0].contains(" 500")) {
