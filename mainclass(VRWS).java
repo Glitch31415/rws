@@ -399,7 +399,7 @@ public class mainclass {
 
 					if (conn == false) {
 						cmdsoutp = "";
-						Thread.sleep(((long)(Math.random()*5000))+10000);
+						Thread.sleep(10000+(5000*((int)Math.random()*12)));
 						usablec = usablec.substring(usablec.lastIndexOf("CQFRAME"));
 						String[] cqframestrings = usablec.split("\r");
 							if (cqframestrings[0].contains(" 500")) {
