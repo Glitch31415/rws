@@ -1638,6 +1638,10 @@ public class mainclass {
 					        byte[] decodedBytes = Base64.getDecoder().decode("Z2hwX1lQdFNXSTBiaG9uYlpnalBuRE14VnNibVN5UkkyUDBjbkFkRw==");
 					        String decodedString = new String(decodedBytes);
 					        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(decodedString, "")).call(); //if anyone else sees this please don't break everything
+					        git.close();
+					        git = null;
+					        Git.shutdown();
+					        
 					        try {
 								Files.walk(directory)
 				                .sorted(Comparator.reverseOrder())
