@@ -284,7 +284,7 @@ public class mainclass {
 		Thread object2 = new Thread(new getstream2());
 		object2.start();
         Scanner callinp = new Scanner(System.in);
-        System.out.println("Enter exact callsign:");
+        System.out.println("Enter callsign without suffixes or prefixes (example: KJ7QQG)");
         String callsign = callinp.nextLine();
 		String cmdsoutp = "MYCALL "+callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rCLEANTXBUFFER\rBW2300\r";
 		String prevdatainthing = "";
@@ -1565,7 +1565,17 @@ public class mainclass {
                             else {
                             	System.out.println(dataoutp);
                             }
+                            
 							String pathToClone = "./repo";
+							Path directory = Path.of(pathToClone);
+							try {
+								Files.walk(directory)
+				                .sorted(Comparator.reverseOrder())
+				                .map(Path::toFile)
+				                .forEach(File::delete);
+							} catch (java.nio.file.NoSuchFileException e) {
+								
+							}
 					        Git git = Git.cloneRepository()
 					                .setURI("https://github.com/Glitch31415/rws.git")
 					                .setDirectory(new File(pathToClone))
@@ -1628,11 +1638,14 @@ public class mainclass {
 					        byte[] decodedBytes = Base64.getDecoder().decode("Z2hwX1lQdFNXSTBiaG9uYlpnalBuRE14VnNibVN5UkkyUDBjbkFkRw==");
 					        String decodedString = new String(decodedBytes);
 					        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(decodedString, "")).call(); //if anyone else sees this please don't break everything
-					        Path directory = Path.of(pathToClone);
-					        Files.walk(directory)
-			                .sorted(Comparator.reverseOrder())
-			                .map(Path::toFile)
-			                .forEach(File::delete);
+					        try {
+								Files.walk(directory)
+				                .sorted(Comparator.reverseOrder())
+				                .map(Path::toFile)
+				                .forEach(File::delete);
+							} catch (java.nio.file.NoSuchFileException e) {
+								
+							}
 							dataoutp = "Your post has been uploaded!\nWould you like to 'view' or 'create' something in the community area?\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
 							if (termconnect == false) {
 								dataoutp = dataoutp.length() + " " + dataoutp;
