@@ -485,45 +485,7 @@ public class mainclass {
 								//System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        dataoutp = dataoutp.length() + " " + dataoutp;
 								byte[] datadata = dataoutp.getBytes();
-								int bufc = 0;
-								while (curbuf != 0) {
-		        					if (getstream1.gcmdsin != null) {
-		        						if (readyforreadingc == true) {
-		        							if (getstream1.gcmdsin.length() > cind) {
-
-		        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-		        								cind = getstream1.gcmdsin.length();
-		        								//System.out.println("CMD: " + usablec);
-		        							} else {
-		        								usablec = "";
-		        							}
-		        						}
-		        						else {
-		        							usablec = "";
-		        						}
-
-		        					}
-		        					// main loop things
-		        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-		        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-		        							int thing = 7;
-		        							String thingcounter = "";
-		        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-		        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-		        								thing = thing + 1;
-		        							}
-		        							if (thingcounter != "") {
-		        								curbuf = Integer.parseInt(thingcounter);
-		        							}
-		        						}
-		        					}
-		        					Thread.sleep(100);
-		        					bufc = bufc + 1;
-		        					if (bufc >= 100) {
-		        						curbuf = 0;
-		        					}
-		        				}
+								
 								dataout.write(datadata);
 								curbuf = 1;
 								connmsg = false;
@@ -542,104 +504,33 @@ public class mainclass {
 
 					}
 					if (usabled.contains("|website")) {
-						option = 1;
-						dataoutp = "Please provide the exact URL of the website you want to fetch. Example: 'https://www.example.com'. If you want the raw HTML from the website, please add a carat (^) behind the start of the URL. Example: '^https://www.example.com'.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
-                        if (termconnect == false) {
-							dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
-							int bufc = 0;
-							while (curbuf != 0) {
-	        					if (getstream1.gcmdsin != null) {
-	        						if (readyforreadingc == true) {
-	        							if (getstream1.gcmdsin.length() > cind) {
-
-	        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-	        								cind = getstream1.gcmdsin.length();
-	        								//System.out.println("CMD: " + usablec);
-	        							} else {
-	        								usablec = "";
-	        							}
-	        						}
-	        						else {
-	        							usablec = "";
-	        						}
-
-	        					}
-	        					// main loop things
-	        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-	        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-	        							int thing = 7;
-	        							String thingcounter = "";
-	        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-	        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-	        								thing = thing + 1;
-	        							}
-	        							if (thingcounter != "") {
-	        								curbuf = Integer.parseInt(thingcounter);
-	        							}
-	        						}
-	        					}
-	        					Thread.sleep(100);
-	        					bufc = bufc + 1;
-	        					if (bufc >= 100) {
-	        						curbuf = 0;
-	        					}
-	        				}
-							dataout.write(datadata);
-							curbuf = 1;
-                        }
-                        else {
-                        	System.out.println(dataoutp);
-                        	dataoutp = "";
-                        }
-                        usabled = "";
+						if (curbuf == 0) {
+							option = 1;
+							dataoutp = "Please provide the exact URL of the website you want to fetch. Example: 'https://www.example.com'. If you want the raw HTML from the website, please add a carat (^) behind the start of the URL. Example: '^https://www.example.com'.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+	                        if (termconnect == false) {
+								dataoutp = dataoutp.length() + " " + dataoutp;
+								byte[] datadata = dataoutp.getBytes();
+								
+								dataout.write(datadata);
+								curbuf = 1;
+	                        }
+	                        else {
+	                        	System.out.println(dataoutp);
+	                        	dataoutp = "";
+	                        }
+	                        
+						}
+						usabled = "";
+						
 				}
 				if (usabled.contains("|search")) {
+					if (curbuf == 0) {
 						option = 2;
 						dataoutp = "Please provide your query.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
-							int bufc = 0;
-							while (curbuf != 0) {
-	        					if (getstream1.gcmdsin != null) {
-	        						if (readyforreadingc == true) {
-	        							if (getstream1.gcmdsin.length() > cind) {
-
-	        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-	        								cind = getstream1.gcmdsin.length();
-	        								//System.out.println("CMD: " + usablec);
-	        							} else {
-	        								usablec = "";
-	        							}
-	        						}
-	        						else {
-	        							usablec = "";
-	        						}
-
-	        					}
-	        					// main loop things
-	        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-	        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-	        							int thing = 7;
-	        							String thingcounter = "";
-	        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-	        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-	        								thing = thing + 1;
-	        							}
-	        							if (thingcounter != "") {
-	        								curbuf = Integer.parseInt(thingcounter);
-	        							}
-	        						}
-	        					}
-	        					Thread.sleep(100);
-	        					bufc = bufc + 1;
-	        					if (bufc >= 100) {
-	        						curbuf = 0;
-	        					}
-	        				}
+							
 							dataout.write(datadata);
 							curbuf = 1;
 						}
@@ -647,53 +538,19 @@ public class mainclass {
 							System.out.println(dataoutp);
 							dataoutp = "";
 						}
-						usabled = "";
+						
+					}
+					usabled = "";
+						
 				}
 				if (usabled.contains("|weather")) {
+					if (curbuf == 0) {
 						option = 3;
 						dataoutp = "Please provide the city and state you would like the weather for in the format of 'city state'. If the command returns blank, try reformatting your query.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
-							int bufc = 0;
-							while (curbuf != 0) {
-	        					if (getstream1.gcmdsin != null) {
-	        						if (readyforreadingc == true) {
-	        							if (getstream1.gcmdsin.length() > cind) {
-
-	        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-	        								cind = getstream1.gcmdsin.length();
-	        								//System.out.println("CMD: " + usablec);
-	        							} else {
-	        								usablec = "";
-	        							}
-	        						}
-	        						else {
-	        							usablec = "";
-	        						}
-
-	        					}
-	        					// main loop things
-	        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-	        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-	        							int thing = 7;
-	        							String thingcounter = "";
-	        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-	        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-	        								thing = thing + 1;
-	        							}
-	        							if (thingcounter != "") {
-	        								curbuf = Integer.parseInt(thingcounter);
-	        							}
-	        						}
-	        					}
-	        					Thread.sleep(100);
-	        					bufc = bufc + 1;
-	        					if (bufc >= 100) {
-	        						curbuf = 0;
-	        					}
-	        				}
+							
 							dataout.write(datadata);
 							curbuf = 1;
 						}
@@ -701,53 +558,19 @@ public class mainclass {
 							System.out.println(dataoutp);
 							dataoutp = "";
 						}
-						usabled = "";
+							
+					}
+					usabled = "";
+						
 				}
 				if (usabled.contains("|status")) {
+					if (curbuf == 0) {
 						option = 4;
 						dataoutp = "Logs:\n-----\n" + logs + "\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
-							int bufc = 0;
-							while (curbuf != 0) {
-	        					if (getstream1.gcmdsin != null) {
-	        						if (readyforreadingc == true) {
-	        							if (getstream1.gcmdsin.length() > cind) {
-
-	        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-	        								cind = getstream1.gcmdsin.length();
-	        								//System.out.println("CMD: " + usablec);
-	        							} else {
-	        								usablec = "";
-	        							}
-	        						}
-	        						else {
-	        							usablec = "";
-	        						}
-
-	        					}
-	        					// main loop things
-	        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-	        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-	        							int thing = 7;
-	        							String thingcounter = "";
-	        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-	        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-	        								thing = thing + 1;
-	        							}
-	        							if (thingcounter != "") {
-	        								curbuf = Integer.parseInt(thingcounter);
-	        							}
-	        						}
-	        					}
-	        					Thread.sleep(100);
-	        					bufc = bufc + 1;
-	        					if (bufc >= 100) {
-	        						curbuf = 0;
-	        					}
-	        				}
+							
 							dataout.write(datadata);
 							curbuf = 1;
 						}
@@ -756,53 +579,19 @@ public class mainclass {
 							dataoutp = "";
 						}
 						option = 0;
-						usabled = "";
+						
+					}
+					usabled = "";
+						
 				}
 				if (usabled.contains("|download")) {
+					if (curbuf == 0) {
 						option = 5;
 						dataoutp = "Please provide the URL of the file you would like to download.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
-							int bufc = 0;
-							while (curbuf != 0) {
-	        					if (getstream1.gcmdsin != null) {
-	        						if (readyforreadingc == true) {
-	        							if (getstream1.gcmdsin.length() > cind) {
-
-	        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-	        								cind = getstream1.gcmdsin.length();
-	        								//System.out.println("CMD: " + usablec);
-	        							} else {
-	        								usablec = "";
-	        							}
-	        						}
-	        						else {
-	        							usablec = "";
-	        						}
-
-	        					}
-	        					// main loop things
-	        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-	        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-	        							int thing = 7;
-	        							String thingcounter = "";
-	        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-	        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-	        								thing = thing + 1;
-	        							}
-	        							if (thingcounter != "") {
-	        								curbuf = Integer.parseInt(thingcounter);
-	        							}
-	        						}
-	        					}
-	        					Thread.sleep(100);
-	        					bufc = bufc + 1;
-	        					if (bufc >= 100) {
-	        						curbuf = 0;
-	        					}
-	        				}
+							
 							dataout.write(datadata);
 							curbuf = 1;
 						}
@@ -810,53 +599,19 @@ public class mainclass {
 							System.out.println(dataoutp);
 							dataoutp = "";
 						}
-						usabled = "";
+						
+					}
+					usabled = "";
+						
 				}
 				if (usabled.contains("|community")) {
+					if (curbuf == 0) {
 						option = 6;
 						dataoutp = "Would you like to 'view' or 'create' something in the community area?\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
-							int bufc = 0;
-							while (curbuf != 0) {
-	        					if (getstream1.gcmdsin != null) {
-	        						if (readyforreadingc == true) {
-	        							if (getstream1.gcmdsin.length() > cind) {
-
-	        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-	        								cind = getstream1.gcmdsin.length();
-	        								//System.out.println("CMD: " + usablec);
-	        							} else {
-	        								usablec = "";
-	        							}
-	        						}
-	        						else {
-	        							usablec = "";
-	        						}
-
-	        					}
-	        					// main loop things
-	        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-	        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-	        							int thing = 7;
-	        							String thingcounter = "";
-	        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-	        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-	        								thing = thing + 1;
-	        							}
-	        							if (thingcounter != "") {
-	        								curbuf = Integer.parseInt(thingcounter);
-	        							}
-	        						}
-	        					}
-	        					Thread.sleep(100);
-	        					bufc = bufc + 1;
-	        					if (bufc >= 100) {
-	        						curbuf = 0;
-	        					}
-	        				}
+							
 							dataout.write(datadata);
 							curbuf = 1;
 						}
@@ -864,7 +619,10 @@ public class mainclass {
 							System.out.println(dataoutp);
 							dataoutp = "";
 						}
-						usabled = "";
+						
+					}
+					usabled = "";
+						
 				}
 					if (option == 1) {
 						if (usabled != "") {
@@ -902,45 +660,7 @@ public class mainclass {
 									//System.out.println(filebytesleft + " bytes to send");
 									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 			                        byte[] datadata = dataoutp.getBytes();
-			                        int bufc = 0;
-			                        while (curbuf != 0) {
-			        					if (getstream1.gcmdsin != null) {
-			        						if (readyforreadingc == true) {
-			        							if (getstream1.gcmdsin.length() > cind) {
-
-			        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-			        								cind = getstream1.gcmdsin.length();
-			        								//System.out.println("CMD: " + usablec);
-			        							} else {
-			        								usablec = "";
-			        							}
-			        						}
-			        						else {
-			        							usablec = "";
-			        						}
-
-			        					}
-			        					// main loop things
-			        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-			        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-			        							int thing = 7;
-			        							String thingcounter = "";
-			        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-			        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-			        								thing = thing + 1;
-			        							}
-			        							if (thingcounter != "") {
-			        								curbuf = Integer.parseInt(thingcounter);
-			        							}
-			        						}
-			        					}
-			        					Thread.sleep(100);
-			        					bufc = bufc + 1;
-			        					if (bufc >= 100) {
-			        						curbuf = 0;
-			        					}
-			        				}
+			                       
 									dataout.write(datadata);
 									curbuf = 1;
 									dataoutp = "";
@@ -1072,45 +792,7 @@ public class mainclass {
 									//System.out.println(filebytesleft + " bytes to send");
 									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 			                        byte[] datadata = dataoutp.getBytes();
-			                        int bufc = 0;
-			                        while (curbuf != 0) {
-			        					if (getstream1.gcmdsin != null) {
-			        						if (readyforreadingc == true) {
-			        							if (getstream1.gcmdsin.length() > cind) {
-
-			        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-			        								cind = getstream1.gcmdsin.length();
-			        								//System.out.println("CMD: " + usablec);
-			        							} else {
-			        								usablec = "";
-			        							}
-			        						}
-			        						else {
-			        							usablec = "";
-			        						}
-
-			        					}
-			        					// main loop things
-			        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-			        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-			        							int thing = 7;
-			        							String thingcounter = "";
-			        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-			        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-			        								thing = thing + 1;
-			        							}
-			        							if (thingcounter != "") {
-			        								curbuf = Integer.parseInt(thingcounter);
-			        							}
-			        						}
-			        					}
-			        					Thread.sleep(100);
-			        					bufc = bufc + 1;
-			        					if (bufc >= 100) {
-			        						curbuf = 0;
-			        					}
-			        				}
+			                       
 									dataout.write(datadata);
 									curbuf = 1;
 									dataoutp = "";
@@ -1245,45 +927,7 @@ public class mainclass {
 								//System.out.println(filebytesleft + " bytes to send");
 								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 		                        byte[] datadata = dataoutp.getBytes();
-		                        int bufc = 0;
-		                        while (curbuf != 0) {
-		        					if (getstream1.gcmdsin != null) {
-		        						if (readyforreadingc == true) {
-		        							if (getstream1.gcmdsin.length() > cind) {
-
-		        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-		        								cind = getstream1.gcmdsin.length();
-		        								//System.out.println("CMD: " + usablec);
-		        							} else {
-		        								usablec = "";
-		        							}
-		        						}
-		        						else {
-		        							usablec = "";
-		        						}
-
-		        					}
-		        					// main loop things
-		        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-		        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-		        							int thing = 7;
-		        							String thingcounter = "";
-		        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-		        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-		        								thing = thing + 1;
-		        							}
-		        							if (thingcounter != "") {
-		        								curbuf = Integer.parseInt(thingcounter);
-		        							}
-		        						}
-		        					}
-		        					Thread.sleep(100);
-		        					bufc = bufc + 1;
-		        					if (bufc >= 100) {
-		        						curbuf = 0;
-		        					}
-		        				}
+		                        
 								dataout.write(datadata);
 								curbuf = 1;
 								dataoutp = "";
@@ -1502,45 +1146,7 @@ public class mainclass {
 								//System.out.println(filebytesleft + " bytes to send");
 								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 		                        byte[] datadata = dataoutp.getBytes();
-		                        int bufc = 0;
-		                        while (curbuf != 0) {
-		        					if (getstream1.gcmdsin != null) {
-		        						if (readyforreadingc == true) {
-		        							if (getstream1.gcmdsin.length() > cind) {
-
-		        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-		        								cind = getstream1.gcmdsin.length();
-		        								//System.out.println("CMD: " + usablec);
-		        							} else {
-		        								usablec = "";
-		        							}
-		        						}
-		        						else {
-		        							usablec = "";
-		        						}
-
-		        					}
-		        					// main loop things
-		        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-		        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-		        							int thing = 7;
-		        							String thingcounter = "";
-		        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-		        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-		        								thing = thing + 1;
-		        							}
-		        							if (thingcounter != "") {
-		        								curbuf = Integer.parseInt(thingcounter);
-		        							}
-		        						}
-		        					}
-		        					Thread.sleep(100);
-		        					bufc = bufc + 1;
-		        					if (bufc >= 100) {
-		        						curbuf = 0;
-		        					}
-		        				}
+		                        
 								dataout.write(datadata);
 								curbuf = 1;
 								dataoutp = "";
@@ -1667,45 +1273,7 @@ public class mainclass {
 	                        if (termconnect == false) {
 								dataoutp = (encodedString.length()+23+357) + " Download started.\n-----\r";
 	                        	byte[] datadata = dataoutp.getBytes();
-	                        	int bufc = 0;
-	                        	while (curbuf != 0) {
-		        					if (getstream1.gcmdsin != null) {
-		        						if (readyforreadingc == true) {
-		        							if (getstream1.gcmdsin.length() > cind) {
-
-		        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-		        								cind = getstream1.gcmdsin.length();
-		        								//System.out.println("CMD: " + usablec);
-		        							} else {
-		        								usablec = "";
-		        							}
-		        						}
-		        						else {
-		        							usablec = "";
-		        						}
-
-		        					}
-		        					// main loop things
-		        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-		        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-		        							int thing = 7;
-		        							String thingcounter = "";
-		        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-		        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-		        								thing = thing + 1;
-		        							}
-		        							if (thingcounter != "") {
-		        								curbuf = Integer.parseInt(thingcounter);
-		        							}
-		        						}
-		        					}
-		        					Thread.sleep(100);
-		        					bufc = bufc + 1;
-		        					if (bufc >= 100) {
-		        						curbuf = 0;
-		        					}
-		        				}
+	                        	
 								dataout.write(datadata);
 								curbuf = 1;
 								dataoutp = "";
@@ -1847,45 +1415,7 @@ public class mainclass {
 										//System.out.println(filebytesleft + " bytes to send");
 										dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 				                        byte[] datadata = dataoutp.getBytes();
-				                        int bufc = 0;
-				                        while (curbuf != 0) {
-				        					if (getstream1.gcmdsin != null) {
-				        						if (readyforreadingc == true) {
-				        							if (getstream1.gcmdsin.length() > cind) {
-
-				        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-				        								cind = getstream1.gcmdsin.length();
-				        								//System.out.println("CMD: " + usablec);
-				        							} else {
-				        								usablec = "";
-				        							}
-				        						}
-				        						else {
-				        							usablec = "";
-				        						}
-
-				        					}
-				        					// main loop things
-				        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-				        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-				        							int thing = 7;
-				        							String thingcounter = "";
-				        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-				        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-				        								thing = thing + 1;
-				        							}
-				        							if (thingcounter != "") {
-				        								curbuf = Integer.parseInt(thingcounter);
-				        							}
-				        						}
-				        					}
-				        					Thread.sleep(100);
-				        					bufc = bufc + 1;
-				        					if (bufc >= 100) {
-				        						curbuf = 0;
-				        					}
-				        				}
+				                        
 										dataout.write(datadata);
 										curbuf = 1;
 										dataoutp = "";
@@ -1990,45 +1520,7 @@ public class mainclass {
 									if (termconnect == false) {
 										dataoutp = dataoutp.length() + " " + dataoutp;
 										byte[] datadata = dataoutp.getBytes();
-										int bufc = 0;
-										while (curbuf != 0) {
-				        					if (getstream1.gcmdsin != null) {
-				        						if (readyforreadingc == true) {
-				        							if (getstream1.gcmdsin.length() > cind) {
-
-				        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-				        								cind = getstream1.gcmdsin.length();
-				        								//System.out.println("CMD: " + usablec);
-				        							} else {
-				        								usablec = "";
-				        							}
-				        						}
-				        						else {
-				        							usablec = "";
-				        						}
-
-				        					}
-				        					// main loop things
-				        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-				        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-				        							int thing = 7;
-				        							String thingcounter = "";
-				        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-				        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-				        								thing = thing + 1;
-				        							}
-				        							if (thingcounter != "") {
-				        								curbuf = Integer.parseInt(thingcounter);
-				        							}
-				        						}
-				        					}
-				        					Thread.sleep(100);
-				        					bufc = bufc + 1;
-				        					if (bufc >= 100) {
-				        						curbuf = 0;
-				        					}
-				        				}
+										
 										dataout.write(datadata);
 										curbuf = 1;
 										option = 8;
@@ -2081,45 +1573,7 @@ public class mainclass {
 								//System.out.println(filebytesleft + " bytes to send");
 								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
 		                        byte[] datadata = dataoutp.getBytes();
-		                        int bufc = 0;
-		                        while (curbuf != 0) {
-		        					if (getstream1.gcmdsin != null) {
-		        						if (readyforreadingc == true) {
-		        							if (getstream1.gcmdsin.length() > cind) {
-
-		        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-		        								cind = getstream1.gcmdsin.length();
-		        								//System.out.println("CMD: " + usablec);
-		        							} else {
-		        								usablec = "";
-		        							}
-		        						}
-		        						else {
-		        							usablec = "";
-		        						}
-
-		        					}
-		        					// main loop things
-		        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-		        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-		        							int thing = 7;
-		        							String thingcounter = "";
-		        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-		        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-		        								thing = thing + 1;
-		        							}
-		        							if (thingcounter != "") {
-		        								curbuf = Integer.parseInt(thingcounter);
-		        							}
-		        						}
-		        					}
-		        					Thread.sleep(100);
-		        					bufc = bufc + 1;
-		        					if (bufc >= 100) {
-		        						curbuf = 0;
-		        					}
-		        				}
+		                        
 								dataout.write(datadata);
 								curbuf = 1;
 								dataoutp = "";
@@ -2224,45 +1678,7 @@ public class mainclass {
 								if (termconnect == false) {
 									dataoutp = dataoutp.length() + " " + dataoutp;
 									byte[] datadata = dataoutp.getBytes();
-									int bufc = 0;
-									while (curbuf != 0) {
-			        					if (getstream1.gcmdsin != null) {
-			        						if (readyforreadingc == true) {
-			        							if (getstream1.gcmdsin.length() > cind) {
-
-			        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-			        								cind = getstream1.gcmdsin.length();
-			        								//System.out.println("CMD: " + usablec);
-			        							} else {
-			        								usablec = "";
-			        							}
-			        						}
-			        						else {
-			        							usablec = "";
-			        						}
-
-			        					}
-			        					// main loop things
-			        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-			        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-			        							int thing = 7;
-			        							String thingcounter = "";
-			        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-			        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-			        								thing = thing + 1;
-			        							}
-			        							if (thingcounter != "") {
-			        								curbuf = Integer.parseInt(thingcounter);
-			        							}
-			        						}
-			        					}
-			        					Thread.sleep(100);
-			        					bufc = bufc + 1;
-			        					if (bufc >= 100) {
-			        						curbuf = 0;
-			        					}
-			        				}
+									
 									dataout.write(datadata);
 									curbuf = 1;
 									usabled = "";
@@ -2282,45 +1698,7 @@ public class mainclass {
 
 									dataoutp = dataoutp.length() + " " + dataoutp;
 									byte[] datadata = dataoutp.getBytes();
-									int bufc = 0;
-									while (curbuf != 0) {
-			        					if (getstream1.gcmdsin != null) {
-			        						if (readyforreadingc == true) {
-			        							if (getstream1.gcmdsin.length() > cind) {
-
-			        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-			        								cind = getstream1.gcmdsin.length();
-			        								//System.out.println("CMD: " + usablec);
-			        							} else {
-			        								usablec = "";
-			        							}
-			        						}
-			        						else {
-			        							usablec = "";
-			        						}
-
-			        					}
-			        					// main loop things
-			        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-			        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-			        							int thing = 7;
-			        							String thingcounter = "";
-			        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-			        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-			        								thing = thing + 1;
-			        							}
-			        							if (thingcounter != "") {
-			        								curbuf = Integer.parseInt(thingcounter);
-			        							}
-			        						}
-			        					}
-			        					Thread.sleep(100);
-			        					bufc = bufc + 1;
-			        					if (bufc >= 100) {
-			        						curbuf = 0;
-			        					}
-			        				}
+									
 									dataout.write(datadata);
 									curbuf = 1;
 									option = 9;
@@ -2346,45 +1724,7 @@ public class mainclass {
                             if (termconnect == false) {
     							dataoutp = dataoutp.length() + " " + dataoutp;
     							byte[] datadata = dataoutp.getBytes();
-    							int bufc = 0;
-    							while (curbuf != 0) {
-		        					if (getstream1.gcmdsin != null) {
-		        						if (readyforreadingc == true) {
-		        							if (getstream1.gcmdsin.length() > cind) {
-
-		        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-		        								cind = getstream1.gcmdsin.length();
-		        								//System.out.println("CMD: " + usablec);
-		        							} else {
-		        								usablec = "";
-		        							}
-		        						}
-		        						else {
-		        							usablec = "";
-		        						}
-
-		        					}
-		        					// main loop things
-		        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-		        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-		        							int thing = 7;
-		        							String thingcounter = "";
-		        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-		        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-		        								thing = thing + 1;
-		        							}
-		        							if (thingcounter != "") {
-		        								curbuf = Integer.parseInt(thingcounter);
-		        							}
-		        						}
-		        					}
-		        					Thread.sleep(100);
-		        					bufc = bufc + 1;
-		        					if (bufc >= 100) {
-		        						curbuf = 0;
-		        					}
-		        				}
+    							
 								dataout.write(datadata);
 								curbuf = 1;
     							dataoutp = "";
@@ -2482,45 +1822,7 @@ public class mainclass {
 							if (termconnect == false) {
 								dataoutp = dataoutp.length() + " " + dataoutp;
 								byte[] datadata = dataoutp.getBytes();
-								int bufc = 0;
-								while (curbuf != 0) {
-		        					if (getstream1.gcmdsin != null) {
-		        						if (readyforreadingc == true) {
-		        							if (getstream1.gcmdsin.length() > cind) {
-
-		        								usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-		        								cind = getstream1.gcmdsin.length();
-		        								//System.out.println("CMD: " + usablec);
-		        							} else {
-		        								usablec = "";
-		        							}
-		        						}
-		        						else {
-		        							usablec = "";
-		        						}
-
-		        					}
-		        					// main loop things
-		        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-		        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-		        							int thing = 7;
-		        							String thingcounter = "";
-		        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-		        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-		        								thing = thing + 1;
-		        							}
-		        							if (thingcounter != "") {
-		        								curbuf = Integer.parseInt(thingcounter);
-		        							}
-		        						}
-		        					}
-		        					Thread.sleep(100);
-		        					bufc = bufc + 1;
-		        					if (bufc >= 100) {
-		        						curbuf = 0;
-		        					}
-		        				}
+								
 								dataout.write(datadata);
 								curbuf = 1;
 							}
