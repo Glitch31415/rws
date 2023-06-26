@@ -300,6 +300,9 @@ public class mainclass {
 		System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"You can fetch the text or html from a website by saying '|website'."+"\n"+"You can do a quick Google search by saying '|search'."+"\n"+"You can check the weather for a given city by saying '|weather'."+"\n"+"You can download files from a URL by saying '|download'."+"\n"+"You can view or create posts or files on the community folder in the github by saying '|community'."+"\n"+"You can return the server logs by saying '|status'."+"\n"+"If you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'."+"\n"+"All commands are case sensitive.");
 		while (0==0) {
 			usabled = "";
+			if (termconnect == true) {
+				curbuf = 0;
+			}
 				//if (getstream2.readingdata == prevrdind) {
 					//Thread.sleep(0);
 					//if (getstream2.readingdata == prevrdind) {
@@ -337,6 +340,7 @@ public class mainclass {
 								connmsg = true;
 							}
 							termconnect = true;
+							curbuf = 0;
 							usabled = getstream3.termin;
 							getstream3.termin = "";
 						}
@@ -491,6 +495,7 @@ public class mainclass {
 								connmsg = false;
 						}
 						else {
+							curbuf = 0;
 							dataoutp = "";
 							rcall = callsign;
 							dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the text or html from a website by saying '|website'. You can do a quick Google search by saying '|search'. You can check the weather for a given city by saying '|weather'. You can download files from a URL by saying '|download'. You can view or create posts or files on the community folder in the github by saying '|community'. You can return the server logs by saying '|status'. [You can disconnect by saying '|disc' because you are using the terminal.] All commands are case sensitive.\r";
