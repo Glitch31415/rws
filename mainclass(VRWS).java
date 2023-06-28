@@ -1133,7 +1133,11 @@ public class mainclass {
 						        	weatherend = weatherend + ioe.toString();
 						        }
 					        }
-					        
+					        weatherend = weatherend.replaceAll("[^A-Za-z .0-9]", "");
+					        weatherend = weatherend.replaceAll(" ", "\n");
+					        weatherend = weatherend.replaceAll("\n\n", "\n");
+					        weatherend = weatherend.replaceAll("\n\n", "\n");
+					        weatherend = weatherend.replaceAll("\n\n", "\n");
 					        wstext = weatherend;
 	                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
 	                            dataoutp = dataoutp + "Oops, your results contained material that is inappropriate for ham radio. Please try a different city.\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
