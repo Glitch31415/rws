@@ -11,6 +11,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Scanner;
@@ -1392,7 +1395,7 @@ public class mainclass {
 						if (usabled != "") {
 								if (usabled.contains("view")) {
 									//view posts
-									dataoutp = "Please send the name of the post you would like to view.\n-----\n";
+									dataoutp = "Please send the name of the post you would like to view. You can also send '|all' to view all posts; this is just the most recent 25.\n-----\n";
 									searchthing = usabled;
 									usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/index";
 									URLConnection connection = null;
@@ -1408,6 +1411,15 @@ public class mainclass {
 			                            ex.printStackTrace();
 			                            wstext = ex.toString();
 			                        }
+			                        String lesswstext = "";
+			                        int i2=0;
+			                        while (i2 < wstext.split("\n").length) {
+			                        	if (i2 < 25) {
+			                        		lesswstext = lesswstext + wstext.split("\n")[i2] + "\n"; 
+			                        	}
+			                        	i2 = i2 + 1;
+			                        }
+			                        wstext = lesswstext;
 			                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
 			                            dataoutp = dataoutp + "Oops, the index page contained material that is inappropriate for ham radio. Please try a different query.\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
 			                            logs = logs + rcall + " attempted to look at the community index page but was blocked\n";
@@ -1419,6 +1431,8 @@ public class mainclass {
 			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 			                        }
 			                        encodedString = dataoutp;
+			                        
+
 			                        if (termconnect == false) {
 			                        	filebytesleft = encodedString.length();
 										//System.out.println(filebytesleft + " bytes to send");
@@ -1546,144 +1560,283 @@ public class mainclass {
 					}
 					if (option == 7) {
 						if (usabled != "") {
-							dataoutp = "Here is the post you requested.\n-----\n";
-							searchthing = usabled;
-								usabled = URLEncoder.encode(usabled, StandardCharsets.UTF_8);
-								usabled = usabled.replaceAll("\\+", "%20");
-								usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/" + usabled;
+							if (usabled.contains("|")) {
+								if (usabled.contains("|all")) {
+									//view posts
+									dataoutp = "Please send the name of the post you would like to view.\n-----\n";
+									searchthing = usabled;
+									usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/index";
+									URLConnection connection = null;
+			                        try {
+				                            connection = new URL(usabled).openConnection();
+				                            webscan = new Scanner(connection.getInputStream());
+				                            webscan.useDelimiter("\\Z");
+				                            wstext = webscan.next();
+				                            webscan.close();
 
-								URLConnection connection = null;
-		                        try {
+			                        }
+			                        catch (Exception ex) {
+			                            ex.printStackTrace();
+			                            wstext = ex.toString();
+			                        }
+			                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
+			                            dataoutp = dataoutp + "Oops, the index page contained material that is inappropriate for ham radio. Please try a different query.\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+			                            logs = logs + rcall + " attempted to look at the community index page but was blocked\n";
+			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
+			                        } else {
+			                        	wstext = wstext.replaceAll("\\r", "");
+			                            dataoutp = dataoutp + wstext + "\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+			                            logs = logs + rcall + " looked at the community index page\n";
+			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
+			                        }
+			                        encodedString = dataoutp;
+			                        
 
-			                            connection = new URL(usabled).openConnection();
-			                            webscan = new Scanner(connection.getInputStream());
-			                            webscan.useDelimiter("\\Z");
-			                            wstext = webscan.next();
-			                            webscan.close();
-		                        }
-		                        catch (Exception ex) {
-		                            ex.printStackTrace();
-		                            wstext = ex.toString();
-		                        }
-							
-	                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-	                            dataoutp = dataoutp + "Oops, that post contained material that is inappropriate for ham radio. Please try a different query.\n-----\nWould you like to 'view' or 'create' something in the community area?\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
-	                            logs = logs + rcall + " attempted to look at the post " + searchthing + "but was blocked\n";
-	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
-	                        } else {
-	                        	wstext = wstext.replaceAll("\\r", "");
-	                            dataoutp = dataoutp + wstext + "\n-----\nWould you like to 'view' or 'create' something in the community area?\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
-	                            logs = logs + rcall + " looked at the post " + searchthing + "\n";
-	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
-	                        }
-	                        if (termconnect == false) {
-		                        encodedString = dataoutp;
-		                        filebytesleft = encodedString.length();
-								//System.out.println(filebytesleft + " bytes to send");
-								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
-		                        byte[] datadata = dataoutp.getBytes();
-		                        
-								dataout.write(datadata);
-								curbuf = 1;
-								dataoutp = "";
+			                        if (termconnect == false) {
+			                        	filebytesleft = encodedString.length();
+										//System.out.println(filebytesleft + " bytes to send");
+										dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+				                        byte[] datadata = dataoutp.getBytes();
+				                        
+										dataout.write(datadata);
+										curbuf = 1;
+										dataoutp = "";
 
-									while (filebytesleft > 1024) {
-										if (getstream1.readingcmds == prevrcind) {
-											Thread.sleep(100);
-											if (getstream1.readingcmds == prevrcind) {
-												readyforreadingc = true;
+											while (filebytesleft > 1024) {
+												if (getstream1.readingcmds == prevrcind) {
+													Thread.sleep(100);
+													if (getstream1.readingcmds == prevrcind) {
+														readyforreadingc = true;
 
-											}
+													}
 
-										}
-										else {
-											readyforreadingc = false;
-											prevrcind = getstream1.readingcmds;
-										}
-										if (getstream1.gcmdsin != null) {
-											if (readyforreadingc == true) {
-												if (getstream1.gcmdsin.length() > cind) {
-
-													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-													cind = getstream1.gcmdsin.length();
-													//System.out.println("CMD: " + usablec);
-												} else {
-													usablec = "";
 												}
-											}
-											else {
-												usablec = "";
-											}
+												else {
+													readyforreadingc = false;
+													prevrcind = getstream1.readingcmds;
+												}
+												if (getstream1.gcmdsin != null) {
+													if (readyforreadingc == true) {
+														if (getstream1.gcmdsin.length() > cind) {
 
-										}
-				        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-				        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-				        							int thing = 7;
-				        							String thingcounter = "";
-				        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-				        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-				        								thing = thing + 1;
-				        							}
-				        							if (thingcounter != "") {
-				        								curbuf = Integer.parseInt(thingcounter);
-				        							}
-				        						}
-				        					}
-										if (usablec.contains("BUFFER")) {
-											int i = 7;
-											String numbuild = "";
-											
-											if (usablec.lastIndexOf("BUFFER")+i < (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
-												if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-													boolean kloop = true;
-													while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
-														numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-														i = i + 1;
-														if (i >= (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
-															kloop = false;
+															usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+															cind = getstream1.gcmdsin.length();
+															//System.out.println("CMD: " + usablec);
+														} else {
+															usablec = "";
 														}
 													}
-													numbuf = Integer.parseInt(numbuild);
+													else {
+														usablec = "";
+													}
+
+												}
+						        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
+						        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
+						        							int thing = 7;
+						        							String thingcounter = "";
+						        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
+						        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
+						        								thing = thing + 1;
+						        							}
+						        							if (thingcounter != "") {
+						        								curbuf = Integer.parseInt(thingcounter);
+						        							}
+						        						}
+						        					}
+												if (usablec.contains("BUFFER")) {
+													int i = 7;
+													String numbuild = "";
+													
+													if (usablec.lastIndexOf("BUFFER")+i < (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
+														if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+															boolean kloop = true;
+															while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
+																numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+																i = i + 1;
+																if (i >= (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
+																	kloop = false;
+																}
+															}
+															numbuf = Integer.parseInt(numbuild);
+														}
+													}
+
+												}
+												if (usablec.contains("DISCONN")) {
+													filebytesleft = 0;
+													dataoutp = "";
+													option = 0;
+												}
+												if (numbuf < 31744) {
+													encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+													dataoutp = dataoutp + encodedStringpart;
+							                        datadata = dataoutp.getBytes();
+													dataout.write(datadata);
+													dataoutp = "";
+													filebytesleft = filebytesleft - 1024;
+													numbuf = numbuf + 1024;
 												}
 											}
-
-										}
-										if (usablec.contains("DISCONN")) {
-											filebytesleft = 0;
-											dataoutp = "";
-											option = 0;
-										}
-										if (numbuf < 31744) {
-											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
 											dataoutp = dataoutp + encodedStringpart;
 					                        datadata = dataoutp.getBytes();
 											dataout.write(datadata);
 											dataoutp = "";
-											filebytesleft = filebytesleft - 1024;
-											numbuf = numbuf + 1024;
-										}
-									}
-									encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
-									dataoutp = dataoutp + encodedStringpart;
-			                        datadata = dataoutp.getBytes();
+											filebytesleft = 0;
+											usabled = "";
+											option = 7;
+			                        }
+			                        else {
+			                        	System.out.println(dataoutp);
+			                        	dataoutp = "";
+			                        	usabled = "";
+										option = 7;
+			                        }
+								}
+							}
+							else {
+								dataoutp = "Here is the post you requested.\n-----\n";
+								searchthing = usabled;
+									usabled = URLEncoder.encode(usabled, StandardCharsets.UTF_8);
+									usabled = usabled.replaceAll("\\+", "%20");
+									usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/" + usabled;
+
+									URLConnection connection = null;
+			                        try {
+
+				                            connection = new URL(usabled).openConnection();
+				                            webscan = new Scanner(connection.getInputStream());
+				                            webscan.useDelimiter("\\Z");
+				                            wstext = webscan.next();
+				                            webscan.close();
+			                        }
+			                        catch (Exception ex) {
+			                            ex.printStackTrace();
+			                            wstext = ex.toString();
+			                        }
+								
+		                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
+		                            dataoutp = dataoutp + "Oops, that post contained material that is inappropriate for ham radio. Please try a different query.\n-----\nWould you like to 'view' or 'create' something in the community area?\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+		                            logs = logs + rcall + " attempted to look at the post " + searchthing + "but was blocked\n";
+		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
+		                        } else {
+		                        	wstext = wstext.replaceAll("\\r", "");
+		                            dataoutp = dataoutp + wstext + "\n-----\nWould you like to 'view' or 'create' something in the community area?\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+		                            logs = logs + rcall + " looked at the post " + searchthing + "\n";
+		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
+		                        }
+		                        if (termconnect == false) {
+			                        encodedString = dataoutp;
+			                        filebytesleft = encodedString.length();
+									//System.out.println(filebytesleft + " bytes to send");
+									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+			                        byte[] datadata = dataoutp.getBytes();
+			                        
 									dataout.write(datadata);
+									curbuf = 1;
 									dataoutp = "";
-									filebytesleft = 0;
-									option = 6;
-	                        }
-	                        else {
-	                        	System.out.println(dataoutp);
-	                        	dataoutp = "";
-	                        	option = 6;
-	                        }
+
+										while (filebytesleft > 1024) {
+											if (getstream1.readingcmds == prevrcind) {
+												Thread.sleep(100);
+												if (getstream1.readingcmds == prevrcind) {
+													readyforreadingc = true;
+
+												}
+
+											}
+											else {
+												readyforreadingc = false;
+												prevrcind = getstream1.readingcmds;
+											}
+											if (getstream1.gcmdsin != null) {
+												if (readyforreadingc == true) {
+													if (getstream1.gcmdsin.length() > cind) {
+
+														usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+														cind = getstream1.gcmdsin.length();
+														//System.out.println("CMD: " + usablec);
+													} else {
+														usablec = "";
+													}
+												}
+												else {
+													usablec = "";
+												}
+
+											}
+					        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
+					        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
+					        							int thing = 7;
+					        							String thingcounter = "";
+					        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
+					        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
+					        								thing = thing + 1;
+					        							}
+					        							if (thingcounter != "") {
+					        								curbuf = Integer.parseInt(thingcounter);
+					        							}
+					        						}
+					        					}
+											if (usablec.contains("BUFFER")) {
+												int i = 7;
+												String numbuild = "";
+												
+												if (usablec.lastIndexOf("BUFFER")+i < (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
+													if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+														boolean kloop = true;
+														while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
+															numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+															i = i + 1;
+															if (i >= (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
+																kloop = false;
+															}
+														}
+														numbuf = Integer.parseInt(numbuild);
+													}
+												}
+
+											}
+											if (usablec.contains("DISCONN")) {
+												filebytesleft = 0;
+												dataoutp = "";
+												option = 0;
+											}
+											if (numbuf < 31744) {
+												encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+												dataoutp = dataoutp + encodedStringpart;
+						                        datadata = dataoutp.getBytes();
+												dataout.write(datadata);
+												dataoutp = "";
+												filebytesleft = filebytesleft - 1024;
+												numbuf = numbuf + 1024;
+											}
+										}
+										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+										dataoutp = dataoutp + encodedStringpart;
+				                        datadata = dataoutp.getBytes();
+										dataout.write(datadata);
+										dataoutp = "";
+										filebytesleft = 0;
+										option = 6;
+		                        }
+		                        else {
+		                        	System.out.println(dataoutp);
+		                        	dataoutp = "";
+		                        	option = 6;
+		                        }
+
+							}
 
 						}
 					}
 					if (option == 8) {
 						if (usabled != "") {
-							if (usabled.contains("README") || usabled == "index" ) {
-								dataoutp = "Oops, that title is invalid! Please make a title that does not include 'README' and is not 'index'.\r";
+							if (usabled.contains("README") || usabled == "index" || usabled.contains("|")) {
+								dataoutp = "Oops, that title is invalid! Please make a title that does not include 'README' or '|' and is not 'index'.\r";
 								if (termconnect == false) {
 									dataoutp = dataoutp.length() + " " + dataoutp;
 									byte[] datadata = dataoutp.getBytes();
@@ -1728,7 +1881,7 @@ public class mainclass {
 						if (usabled != "") {
 							dataoutp = "Uploading...\r";
 							postbody = usabled;
-							logs = logs + rcall + " uploaded a post with title '" + postname + "' with body '" + postbody + "'\n";
+							logs = logs + rcall + " requested an upload for a post with title '" + postname + "' with body '" + postbody + "'\n";
                             //System.out.println("Logs:\n-----\n" + logs + "\n-----");
                             if (termconnect == false) {
     							dataoutp = dataoutp.length() + " " + dataoutp;
@@ -1742,7 +1895,7 @@ public class mainclass {
                             else {
                             	System.out.println(dataoutp);
                             }
-                            
+                            st = "";
 							String pathToClone = "./repo";
 							Path directory = Path.of(pathToClone);
 							try {
@@ -1753,95 +1906,102 @@ public class mainclass {
 							} catch (java.nio.file.NoSuchFileException e) {
 								
 							}
-					        Git git = Git.cloneRepository()
-					                .setURI("https://github.com/Glitch31415/rws.git")
-					                .setDirectory(new File(pathToClone))
-					                .call();
+
+						        Git git = Git.cloneRepository()
+						                .setURI("https://github.com/Glitch31415/rws.git")
+						                .setDirectory(new File(pathToClone))
+						                .call();
+
+								   new File(git.getRepository().getDirectory().getParent() + "/community/", postname);
+							        try {
+							        	FileWriter myWriter;
+								            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/" + postname);
+							            myWriter.write(postbody);
+							            //System.out.println("wrote " + postbody);
+							            myWriter.close();
+							          } catch (IOException e) {
+							            e.printStackTrace();
+							        }
+							        //git.add().addFilepattern(postname).call();
+							       //if (windows == true) {
+							        	//git.add().addFilepattern(".").call();
+						            //}
+						            //else {
+						            	//git.add().addFilepattern(".").call();
+						            //}
+							        try {
+							        	try {
+							        		File myObj;
+								        	      myObj = new File(git.getRepository().getDirectory().getParent() + "/community/index");
+
+
+							        	      Scanner myReader = new Scanner(myObj);
+							        	      while (myReader.hasNextLine()) {
+							        	        st = st + myReader.nextLine() + "\n";
+							        	      }
+							        	      myReader.close();
+							        	    } catch (FileNotFoundException e) {
+							        	      e.printStackTrace();
+							        	    }
+							            //System.out.println("index was read as '" + st + "'");
+							            FileWriter myWriter;
+
+								            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/index");
+								            Instant instant = Instant.now();
+
+								            // Set the time zone to GMT
+								            ZoneId zone = ZoneId.of("GMT");
+
+								            // Format the date and time as a string
+								            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy HH:mm:ss");
+								            String dateTime = instant.atZone(zone).format(formatter);
+								        	myWriter.write("'"+postname+"'"+" - "+rcall+", "+dateTime+" UTC"+ "\n" + st);
+								       myWriter.close();
+							          } catch (IOException e) {
+							            e.printStackTrace();
+							        }
+							        //git.add().addFilepattern("/community/index").call();
+							        //if (windows == true) {
+							        	//git.add().addFilepattern("\\community\\index").call();
+						            //}
+						            //else {
+						            	//git.add().addFilepattern("/community/index").call();
+						            //}
+							        git.add().addFilepattern(".").call();
+							        git.commit().setMessage("Committed from server").call();
+							        byte[] decodedBytes = Base64.getDecoder().decode("Z2hwX1lQdFNXSTBiaG9uYlpnalBuRE14VnNibVN5UkkyUDBjbkFkRw==");
+							        String decodedString = new String(decodedBytes);
+							        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(decodedString, "")).call(); //if anyone else sees this please don't break everything
+							        git.close();
+							        git = null;
+							        //Git.shutdown();
+							        
+							        try {
+										Files.walk(directory)
+						                .sorted(Comparator.reverseOrder())
+						                .map(Path::toFile)
+						                .forEach(File::delete);
+									} catch (java.nio.file.NoSuchFileException e) {
+										
+									}
+									dataoutp = "Your post has been uploaded!\nWould you like to 'view' or 'create' something in the community area?\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+									if (termconnect == false) {
+										dataoutp = dataoutp.length() + " " + dataoutp;
+										byte[] datadata = dataoutp.getBytes();
+										
+										dataout.write(datadata);
+										curbuf = 1;
+									}
+									else {
+										System.out.println(dataoutp);
+										dataoutp = "";
+									}
+
+									option = 6;
+									usabled = "";
+
 					        //System.out.println("remade local repo");
-						        new File(git.getRepository().getDirectory().getParent() + "/community/", postname);
-					        try {
-					        	FileWriter myWriter;
-						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/" + postname);
-					            myWriter.write(postbody);
-					            //System.out.println("wrote " + postbody);
-					            myWriter.close();
-					          } catch (IOException e) {
-					            e.printStackTrace();
-					        }
-					        //git.add().addFilepattern(postname).call();
-					       //if (windows == true) {
-					        	//git.add().addFilepattern(".").call();
-				            //}
-				            //else {
-				            	//git.add().addFilepattern(".").call();
-				            //}
-					        try {
-					        	try {
-					        		File myObj;
-						        	      myObj = new File(git.getRepository().getDirectory().getParent() + "/community/index");
-
-
-					        	      Scanner myReader = new Scanner(myObj);
-					        	      while (myReader.hasNextLine()) {
-					        	        st = st + myReader.nextLine() + "\n";
-					        	      }
-					        	      myReader.close();
-					        	    } catch (FileNotFoundException e) {
-					        	      e.printStackTrace();
-					        	    }
-					            //System.out.println("index was read as '" + st + "'");
-					            FileWriter myWriter;
-
-						            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/index");
-						        if (st.contains("\n"+postname+"\n")) {
-						        	myWriter.write(st);
-						        }
-						        else {
-						        	myWriter.write(st+postname+"\n");
-						        }
-						       myWriter.close();
-					          } catch (IOException e) {
-					            e.printStackTrace();
-					        }
-					        //git.add().addFilepattern("/community/index").call();
-					        //if (windows == true) {
-					        	//git.add().addFilepattern("\\community\\index").call();
-				            //}
-				            //else {
-				            	//git.add().addFilepattern("/community/index").call();
-				            //}
-					        git.add().addFilepattern(".").call();
-					        git.commit().setMessage("Committed from server").call();
-					        byte[] decodedBytes = Base64.getDecoder().decode("Z2hwX1lQdFNXSTBiaG9uYlpnalBuRE14VnNibVN5UkkyUDBjbkFkRw==");
-					        String decodedString = new String(decodedBytes);
-					        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(decodedString, "")).call(); //if anyone else sees this please don't break everything
-					        git.close();
-					        git = null;
-					        Git.shutdown();
-					        
-					        try {
-								Files.walk(directory)
-				                .sorted(Comparator.reverseOrder())
-				                .map(Path::toFile)
-				                .forEach(File::delete);
-							} catch (java.nio.file.NoSuchFileException e) {
-								
-							}
-							dataoutp = "Your post has been uploaded!\nWould you like to 'view' or 'create' something in the community area?\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
-							if (termconnect == false) {
-								dataoutp = dataoutp.length() + " " + dataoutp;
-								byte[] datadata = dataoutp.getBytes();
-								
-								dataout.write(datadata);
-								curbuf = 1;
-							}
-							else {
-								System.out.println(dataoutp);
-								dataoutp = "";
-							}
-
-							option = 6;
-							usabled = "";
+						     
 						}
 					}
 					
