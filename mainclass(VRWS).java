@@ -1953,7 +1953,7 @@ public class mainclass {
 								            ZoneId zone = ZoneId.of("GMT");
 
 								            // Format the date and time as a string
-								            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy HH:mm:ss");
+								            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 								            String dateTime = instant.atZone(zone).format(formatter);
 								        	myWriter.write("'"+postname+"'"+" - "+rcall+", "+dateTime+" UTC"+ "\n" + st);
 								       myWriter.close();
