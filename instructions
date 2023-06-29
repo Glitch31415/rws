@@ -1,0 +1,25 @@
+Thank you for wanting to set up your own VRWS server!
+
+First, install the latest JDK.
+https://www.oracle.com/java/technologies/downloads/
+
+Next, install the VARA modem. If you want to put the server on 14.110 (recommended), choose the VARA HF version.
+https://rosmodem.wordpress.com
+
+Now, download "vrws.jar" from https://github.com/Glitch31415/rws.
+
+To run the server, first start the VARA modem (VARA.exe), and make sure your settings are as follows:
+TCP Ports:
+Command: 8300
+Data: 8301
+KISS: 8100 (not used at the moment)
+Accept 500 Hz Connections should be checked
+Tuner enchancement should be unchecked
+CW ID should be checked if you are in the US (and is good practice in general)
+KISS Interface should be checked (not used)
+I would recommend setting Retries to 5. It causes less interference to other stations answering CQs and for the server to be used effectively the link should be strong enough to not need 5 retries.
+
+Finally, open cmd.exe and type in "java -jar [path to jar]" replacing [path to jar] with the full path of the vrws.jar file (example: C:\Users\glitch\Downloads\vrws.jar).
+Type in your callsign when it prompts and your server will be active! PTT is VOX.
+
+(If you have any problems, email me at jpradiophone@gmail.com. Linux support is offered, email me for help.)
