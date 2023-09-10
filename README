@@ -14,7 +14,7 @@ Command: 8300
 Data: 8301
 KISS: 8100 (not used at the moment)
 Accept 500 Hz Connections should be checked
-Tuner enchancement should be unchecked
+Tuner enhancement should be unchecked
 CW ID should be checked if you are in the US (and is good practice in general)
 KISS Interface should be checked (not used)
 I would recommend setting Retries to 5. It causes less interference to other stations answering CQs and for the server to be used effectively the link should be strong enough to not need 5 retries.
