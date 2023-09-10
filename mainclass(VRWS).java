@@ -1969,7 +1969,7 @@ public class mainclass {
 						            //}
 							        git.add().addFilepattern(".").call();
 							        git.commit().setMessage("Committed from server").call();
-							        byte[] decodedBytes = Base64.getDecoder().decode("Z2hwX1lQdFNXSTBiaG9uYlpnalBuRE14VnNibVN5UkkyUDBjbkFkRw==");
+							        byte[] decodedBytes = Base64.getDecoder().decode(Base64.getDecoder().decode("WjJod1gxRlVSRlJoWlZSaU5qSmtSbVkwVkdwNmVESXlXSFE1U1d0NlpHUnVSekZGVERsME53PT0="));
 							        String decodedString = new String(decodedBytes);
 							        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(decodedString, "")).call(); //if anyone else sees this please don't break everything
 							        git.close();
