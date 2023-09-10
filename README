@@ -16,7 +16,7 @@ KISS: 8100 (not used at the moment)
 Accept 500 Hz Connections should be checked
 Tuner enhancement should be unchecked
 CW ID should be checked if you are in the US (and is good practice in general)
-KISS Interface should be checked (not used)
+KISS Interface should be checked (not used at the moment but might be in the future)
 I would recommend setting Retries to 5. It causes less interference to other stations answering CQs and for the server to be used effectively the link should be strong enough to not need 5 retries.
 
 Finally, open cmd.exe and type in "java -jar [path to jar]" replacing [path to jar] with the full path of the vrws.jar file (example: C:\Users\glitch\Downloads\vrws.jar).
