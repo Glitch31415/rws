@@ -300,7 +300,7 @@ public class mainclass {
 		Thread.sleep(1000);
 		Thread object3 = new Thread(new getstream3());
 		object3.start();
-		System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"You can fetch the text or html from a website by saying '|website'."+"\n"+"You can do a quick Google search by saying '|search'."+"\n"+"You can check the weather for a given city by saying '|weather'."+"\n"+"You can download files from a URL by saying '|download'."+"\n"+"You can view or create posts or files on the community folder in the github by saying '|community'."+"\n"+"You can return the server logs by saying '|status'."+"\n"+"If you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'."+"\n"+"All commands are case sensitive.");
+		System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create posts in the community folder on the github\n|i : Print server info\nIf you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'.");
 		while (0==0) {
 			usabled = "";
 			if (termconnect == true) {
@@ -487,7 +487,7 @@ public class mainclass {
 								//rcallind = rcallind + 1;
 							//}
 								dataoutp = "";
-								dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the text or html from a website by saying '|website'. You can do a quick Google search by saying '|search'. You can check the weather for a given city by saying '|weather'. You can download files from a URL by saying '|download'. You can view or create posts or files on the community folder in the github by saying '|community'. You can return the server logs by saying '|status'. All commands are case sensitive.\r";
+								dataoutp = "Welcome, " + rcall + "\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create posts in the community folder on the github\n|i : Print server info\r";
 								logs = logs + rcall + " connected\n";
 								//System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        dataoutp = dataoutp.length() + " " + dataoutp;
@@ -501,7 +501,7 @@ public class mainclass {
 							curbuf = 0;
 							dataoutp = "";
 							rcall = callsign;
-							dataoutp = "(Reconnect if VarAC errors out) Welcome to the VARA Radio Web Services (VRWS) server, " + rcall + "! You can fetch the text or html from a website by saying '|website'. You can do a quick Google search by saying '|search'. You can check the weather for a given city by saying '|weather'. You can download files from a URL by saying '|download'. You can view or create posts or files on the community folder in the github by saying '|community'. You can return the server logs by saying '|status'. [You can disconnect by saying '|disc' because you are using the terminal.] All commands are case sensitive.\r";
+							dataoutp = "Welcome, " + rcall + "\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create posts in the community folder on the github\n|i : Print server info\n[You can disconnect by saying '|disc' because you are using the terminal.]\r";
 							logs = logs + rcall + " connected\n";
 							//System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        System.out.println(dataoutp);
@@ -511,10 +511,10 @@ public class mainclass {
 						
 
 					}
-					if (usabled.contains("|website")) {
+					if (usabled.contains("|w")) {
 						if (curbuf == 0) {
 							option = 1;
-							dataoutp = "Please provide the exact URL of the website you want to fetch. Example: 'https://www.example.com'. If you want the raw HTML from the website, please add a carat (^) behind the start of the URL. Example: '^https://www.example.com'.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+							dataoutp = "Please provide the exact URL of the website you want to fetch. Example: 'https://www.example.com'. If you want the raw HTML from the website, please add a carat (^) behind the start of the URL. Example: '^https://www.example.com'.\nCommands: |w |s |f |d |c |i\r";
 	                        if (termconnect == false) {
 								dataoutp = dataoutp.length() + " " + dataoutp;
 								byte[] datadata = dataoutp.getBytes();
@@ -531,10 +531,10 @@ public class mainclass {
 						usabled = "";
 						
 				}
-				if (usabled.contains("|search")) {
+				if (usabled.contains("|s")) {
 					if (curbuf == 0) {
 						option = 2;
-						dataoutp = "Please provide your query.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+						dataoutp = "Please provide your query.\nCommands: |w |s |f |d |c |i\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
@@ -551,10 +551,10 @@ public class mainclass {
 					usabled = "";
 						
 				}
-				if (usabled.contains("|weather")) {
+				if (usabled.contains("|f")) {
 					if (curbuf == 0) {
 						option = 3;
-						dataoutp = "Please provide the city and state you would like the weather for in the format of 'city state'. If the command returns blank, try reformatting your query.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+						dataoutp = "Please provide the city and state you would like the weather for in the format of 'city state'. If the command returns blank, try reformatting your query.\nCommands: |w |s |f |d |c |i\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
@@ -571,10 +571,10 @@ public class mainclass {
 					usabled = "";
 						
 				}
-				if (usabled.contains("|status")) {
+				if (usabled.contains("|i")) {
 					if (curbuf == 0) {
 						option = 4;
-						dataoutp = "Logs:\n-----\n" + logs + "\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+						dataoutp = "Logs:\n-----\n" + logs + "\n-----\nCommands: |w |s |f |d |c |i\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
@@ -592,30 +592,36 @@ public class mainclass {
 					usabled = "";
 						
 				}
-				if (usabled.contains("|download")) {
-					if (curbuf == 0) {
-						option = 5;
-						dataoutp = "Please provide the URL of the file you would like to download.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
-						if (termconnect == false) {
-	                        dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
-							
-							dataout.write(datadata);
-							curbuf = 1;
-						}
-						else {
-							System.out.println(dataoutp);
-							dataoutp = "";
-						}
+				if (usabled.contains("|d")) {
+					if (usabled.contains("|disc")) {
 						
 					}
-					usabled = "";
+					else {
+						if (curbuf == 0) {
+							option = 5;
+							dataoutp = "Please provide the URL of the file you would like to download.\nCommands: |w |s |f |d |c |i\r";
+							if (termconnect == false) {
+		                        dataoutp = dataoutp.length() + " " + dataoutp;
+								byte[] datadata = dataoutp.getBytes();
+								
+								dataout.write(datadata);
+								curbuf = 1;
+							}
+							else {
+								System.out.println(dataoutp);
+								dataoutp = "";
+							}
+							
+						}
+						usabled = "";
+					}
+
 						
 				}
-				if (usabled.contains("|community")) {
+				if (usabled.contains("|c")) {
 					if (curbuf == 0) {
 						option = 6;
-						dataoutp = "Would you like to 'view' or 'create' something in the community area?\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+						dataoutp = "Would you like to 'view' or 'create' something in the community area?\nCommands: |w |s |f |d |c |i\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
@@ -653,12 +659,12 @@ public class mainclass {
 		                            wstext = ex.toString();
 		                        }
 		                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-		                            dataoutp = dataoutp + "Oops, your website contained material that is inappropriate for ham radio. Please try a different website.\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+		                            dataoutp = dataoutp + "Oops, your website contained material that is inappropriate for ham radio. Please try a different website.\n-----\nCommands: |w |s |f |d |c |i\r";
 		                            logs = logs + rcall + " tried to fetch html from URL " + usabled + " but was blocked\n";
 		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        } else {
 		                        	wstext = wstext.replaceAll("\\r", "");
-		                            dataoutp = dataoutp + wstext + "\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+		                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
 		                            logs = logs + rcall + " fetched html from URL " + usabled + "\n";
 		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        }								
@@ -785,12 +791,12 @@ public class mainclass {
 		                            wstext = ex.toString();
 		                        }
 		                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-		                            dataoutp = dataoutp + "Oops, your website contained material that is inappropriate for ham radio. Please try a different website.\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+		                            dataoutp = dataoutp + "Oops, your website contained material that is inappropriate for ham radio. Please try a different website.\n-----\nCommands: |w |s |f |d |c |i\r";
 		                            logs = logs + rcall + " tried to fetch text from URL " + textscanthing + " but was blocked\n";
 		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        } else {
 		                        	wstext = wstext.replaceAll("\\r", "");
-		                            dataoutp = dataoutp + wstext + "\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+		                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
 		                            logs = logs + rcall + " fetched text from URL " + textscanthing + "\n";
 		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        }
@@ -920,12 +926,12 @@ public class mainclass {
 	                            wstext = ex.toString();
 	                        }
 	                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-	                            dataoutp = dataoutp + "Oops, your results contained material that is inappropriate for ham radio. Please try a different query.\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+	                            dataoutp = dataoutp + "Oops, your results contained material that is inappropriate for ham radio. Please try a different query.\n-----\nCommands: |w |s |f |d |c |i\r";
 	                            logs = logs + rcall + " attempted to search " + searchthing + " but was blocked\n";
 	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        } else {
 	                        	wstext = wstext.replaceAll("\\r", "");
-	                            dataoutp = dataoutp + wstext + "\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+	                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
 	                            logs = logs + rcall + " searched for " + searchthing + "\n";
 	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        }
@@ -1143,12 +1149,12 @@ public class mainclass {
 					        weatherend = weatherend.replaceAll("\n\n", "\n");
 					        wstext = weatherend;
 	                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-	                            dataoutp = dataoutp + "Oops, your results contained material that is inappropriate for ham radio. Please try a different city.\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+	                            dataoutp = dataoutp + "Oops, your results contained material that is inappropriate for ham radio. Please try a different city.\n-----\nCommands: |w |s |f |d |c |i\r";
 	                            logs = logs + rcall + " attempted to get the weather for " + weatherthing + " but was blocked\n";
 	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        } else {
 	                        	wstext = wstext.replaceAll("\\r", "");
-	                            dataoutp = dataoutp + wstext + "\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+	                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
 	                            logs = logs + rcall + " got the weather for " + weatherthing + "\n";
 	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        }
@@ -1283,7 +1289,7 @@ public class mainclass {
 							filebytesleft = encodedString.length();
 							//System.out.println(filebytesleft + " bytes to send");
 	                        if (termconnect == false) {
-								dataoutp = (encodedString.length()+23+357) + " Download started.\n-----\r";
+								dataoutp = (encodedString.length()+23+269) + " Download started.\n-----\r";
 	                        	byte[] datadata = dataoutp.getBytes();
 	                        	
 								dataout.write(datadata);
@@ -1378,14 +1384,14 @@ public class mainclass {
 
 								
 								dataoutp = "";
-								dataoutp = dataoutp + "\n-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+								dataoutp = dataoutp + "\n-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nCommands: |w |s |f |d |c |i\r";
 		                        //dataoutp = dataoutp.length() + " " + dataoutp;
 		                        datadata = dataoutp.getBytes();
 								dataout.write(datadata);
 	                        }
 	                        else {
 	                        	System.out.println("Download started.\n-----\n" + encodedString);
-	                        	System.out.println("-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r");
+	                        	System.out.println("-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nCommands: |w |s |f |d |c |i\r");
 	                        	dataoutp = "";
 	                        }
 							
@@ -1421,12 +1427,12 @@ public class mainclass {
 			                        }
 			                        wstext = lesswstext;
 			                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-			                            dataoutp = dataoutp + "Oops, the index page contained material that is inappropriate for ham radio. Please try a different query.\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+			                            dataoutp = dataoutp + "Oops, the index page contained material that is inappropriate for ham radio. Please try a different query.\n-----\nCommands: |w |s |f |d |c |i\r";
 			                            logs = logs + rcall + " attempted to look at the community index page but was blocked\n";
 			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 			                        } else {
 			                        	wstext = wstext.replaceAll("\\r", "");
-			                            dataoutp = dataoutp + wstext + "\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+			                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
 			                            logs = logs + rcall + " looked at the community index page\n";
 			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 			                        }
@@ -1580,12 +1586,12 @@ public class mainclass {
 			                            wstext = ex.toString();
 			                        }
 			                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-			                            dataoutp = dataoutp + "Oops, the index page contained material that is inappropriate for ham radio. Please try a different query.\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+			                            dataoutp = dataoutp + "Oops, the index page contained material that is inappropriate for ham radio. Please try a different query.\n-----\nCommands: |w |s |f |d |c |i\r";
 			                            logs = logs + rcall + " attempted to look at the community index page but was blocked\n";
 			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 			                        } else {
 			                        	wstext = wstext.replaceAll("\\r", "");
-			                            dataoutp = dataoutp + wstext + "\n-----\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+			                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
 			                            logs = logs + rcall + " looked at the community index page\n";
 			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 			                        }
@@ -1718,12 +1724,12 @@ public class mainclass {
 			                        }
 								
 		                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-		                            dataoutp = dataoutp + "Oops, that post contained material that is inappropriate for ham radio. Please try a different query.\n-----\nWould you like to 'view' or 'create' something in the community area?\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+		                            dataoutp = dataoutp + "Oops, that post contained material that is inappropriate for ham radio. Please try a different query.\n-----\nWould you like to 'view' or 'create' something in the community area?\nCommands: |w |s |f |d |c |i\r";
 		                            logs = logs + rcall + " attempted to look at the post " + searchthing + "but was blocked\n";
 		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        } else {
 		                        	wstext = wstext.replaceAll("\\r", "");
-		                            dataoutp = dataoutp + wstext + "\n-----\nWould you like to 'view' or 'create' something in the community area?\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+		                            dataoutp = dataoutp + wstext + "\n-----\nWould you like to 'view' or 'create' something in the community area?\nCommands: |w |s |f |d |c |i\r";
 		                            logs = logs + rcall + " looked at the post " + searchthing + "\n";
 		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
 		                        }
@@ -1984,7 +1990,7 @@ public class mainclass {
 									} catch (java.nio.file.NoSuchFileException e) {
 										
 									}
-									dataoutp = "Your post has been uploaded!\nWould you like to 'view' or 'create' something in the community area?\nCommands: '|website', '|search', '|weather', '|download', '|community', '|status'. All commands are case sensitive.\r";
+									dataoutp = "Your post has been uploaded!\nWould you like to 'view' or 'create' something in the community area?\nCommands: |w |s |f |d |c |i\r";
 									if (termconnect == false) {
 										dataoutp = dataoutp.length() + " " + dataoutp;
 										byte[] datadata = dataoutp.getBytes();
@@ -2000,7 +2006,7 @@ public class mainclass {
 									option = 6;
 									usabled = "";
 
-					        //System.out.println("remade local repo");
+					        //System.out.println("remade local repo"); 
 						     
 						}
 					}
