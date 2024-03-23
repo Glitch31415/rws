@@ -45,7 +45,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 
-class getstream1 implements Runnable {
+class getstream1 implements Runnable { // reads commands from modem
 	public static String gcmdsin = "";
 	public static String gcmdsout;
 	public static Socket cmds = null;
@@ -85,7 +85,7 @@ class getstream1 implements Runnable {
 	}
 }
 
-class getstream2 implements Runnable {
+class getstream2 implements Runnable { // reads data from modem
 	public static String gdatain = "";
 	public static String gdataout;
 	public static Socket data = null;
@@ -201,7 +201,7 @@ class getstream2 implements Runnable {
 	}
 }
 
-class getstream3 implements Runnable {
+class getstream3 implements Runnable { // reads commands from terminal
 	public static String termin = "";
 
 	public void run() {
@@ -270,6 +270,10 @@ public class mainclass {
 		String prevtermin = "";
 		int prevrcind = 0;
 		int curbuf = 0;
+		String softver = "v1-1";
+		int totalconnections = 0;
+		long starttime = System.currentTimeMillis();
+		boolean intaccess = true;
 		// TODO Auto-generated method stub
 		getstream1.cmds = new Socket("127.0.0.1", 8300);
 		getstream2.data = new Socket("127.0.0.1", 8301);
@@ -290,6 +294,8 @@ public class mainclass {
         Scanner callinp = new Scanner(System.in);
         System.out.println("Enter callsign without suffixes or prefixes (example: KJ7QQG)");
         String callsign = callinp.nextLine();
+        System.out.println("Enter server welcome message (leave blank if none)");
+        String welcomemessage = callinp.nextLine();
 		String cmdsoutp = "MYCALL "+callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rCLEANTXBUFFER\rBW2300\r";
 		String prevdatainthing = "";
 		boolean weatherbroke = false;
@@ -440,6 +446,23 @@ public class mainclass {
 					}
 				}
 				if (usablec.contains("CONNECTED")) {
+					String dummyload = "";
+                    try {
+                            URLConnection connectiontest = new URL("https://www.google.com").openConnection();
+                            Scanner webscantest = new Scanner(connectiontest.getInputStream());
+                            webscantest.useDelimiter("\\Z");
+                            dummyload = webscantest.next();
+                            webscantest.close();
+
+                    }
+                    catch (Exception ex) {
+                        ex.printStackTrace();
+                       dummyload = ex.toString();
+                       intaccess = false;
+                    }
+                    if (dummyload.contains("Privacy")) {
+                    	intaccess = true;
+                    }
 					if (termconnect == false) {
 						if (usablec.contains("DISCONN")) {
 							if (usablec.lastIndexOf("CONNECTED") > (usablec.lastIndexOf("DISCONN") + 3)) {
@@ -487,28 +510,54 @@ public class mainclass {
 								//rcallind = rcallind + 1;
 							//}
 								dataoutp = "";
-								dataoutp = "Welcome, " + rcall + "\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create posts in the community folder on the github\n|i : Print server info\r";
-								logs = logs + rcall + " connected\n";
-								//System.out.println("Logs:\n-----\n" + logs + "\n-----");
-		                        dataoutp = dataoutp.length() + " " + dataoutp;
-								byte[] datadata = dataoutp.getBytes();
-								
-								dataout.write(datadata);
-								curbuf = 1;
-								connmsg = false;
+								dataoutp = "-----\nWelcome, " + rcall;
+								if (welcomemessage != "") {
+									dataoutp = dataoutp + "\n\n" + welcomemessage;
+								}
+								if (intaccess == true) {
+									dataoutp = dataoutp + "\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create posts in the community folder on the github\n|i : Print server info\r";
+									
+									logs = logs + rcall + " connected\n";
+									//System.out.println("Logs:\n-----\n" + logs + "\n-----");
+			                        dataoutp = dataoutp.length() + " " + dataoutp;
+									byte[] datadata = dataoutp.getBytes();
+									
+									dataout.write(datadata);
+									curbuf = 1;
+									connmsg = false;
+								}
+								else {
+									dataoutp = dataoutp + "\n-----\nSorry, but this server doesn't have access to the internet. Please let the server operator know this and/or try again later.\r";
+									
+									logs = logs + rcall + " connected, but the server did not have internet access\n";
+									//System.out.println("Logs:\n-----\n" + logs + "\n-----");
+			                        dataoutp = dataoutp.length() + " " + dataoutp;
+									byte[] datadata = dataoutp.getBytes();
+									
+									dataout.write(datadata);
+									curbuf = 1;
+									connmsg = false;
+								}
+
 						}
 						else {
 							curbuf = 0;
 							dataoutp = "";
 							rcall = callsign;
-							dataoutp = "Welcome, " + rcall + "\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create posts in the community folder on the github\n|i : Print server info\n[You can disconnect by saying '|disc' because you are using the terminal.]\r";
+							dataoutp = "";
+							dataoutp = "-----\nWelcome, " + rcall;
+							if (welcomemessage != "") {
+								dataoutp = dataoutp + "\n\n" + welcomemessage;
+							}
+							dataoutp = dataoutp + "\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create posts in the community folder on the github\n|i : Print server info\n[You can disconnect by saying '|disc' because you are using the terminal.]\r";
+							
 							logs = logs + rcall + " connected\n";
 							//System.out.println("Logs:\n-----\n" + logs + "\n-----");
 	                        System.out.println(dataoutp);
 	                        dataoutp = "";
 							connmsg = false;
 						}
-						
+						totalconnections = totalconnections + 1;
 
 					}
 					if (usabled.contains("|w")) {
@@ -574,7 +623,8 @@ public class mainclass {
 				if (usabled.contains("|i")) {
 					if (curbuf == 0) {
 						option = 4;
-						dataoutp = "Logs:\n-----\n" + logs + "\n-----\nCommands: |w |s |f |d |c |i\r";
+						String uptimestring = ((System.currentTimeMillis() - starttime)/1000) + " seconds (" + ((System.currentTimeMillis() - starttime)/3600000) + " hours)";
+						dataoutp = "Total connections: " + totalconnections + "\nUptime: " + uptimestring + "\nServer version: " + softver + "\nLogs:\n-----\n" + logs + "\n-----\nCommands: |w |s |f |d |c |i\r";
 						if (termconnect == false) {
 	                        dataoutp = dataoutp.length() + " " + dataoutp;
 							byte[] datadata = dataoutp.getBytes();
@@ -645,6 +695,7 @@ public class mainclass {
 								usabled = usabled.replace("^", "");
 								usabled = usabled.replaceAll("\\r|\\n", "");
 								URLConnection connection = null;
+								
 		                        try {
 			                            connection = new URL(usabled).openConnection();
 			                            webscan = new Scanner(connection.getInputStream());
@@ -778,6 +829,7 @@ public class mainclass {
 								textscanthing = usabled;
 								usabled = "https://www.w3.org/services/html2txt?url=" + usabled;
 								URLConnection connection = null;
+								
 		                        try {
 			                            connection = new URL(usabled).openConnection();
 			                            webscan = new Scanner(connection.getInputStream());
@@ -912,6 +964,7 @@ public class mainclass {
 							usabled = usabled.replaceAll("\\+", "%20");
 							usabled = "https://www.w3.org/services/html2txt?url=https://duckduckgo.com/html/?q=" + usabled + "&kp=1&kz=-1&kc=-1&kav=1&kac=-1&kd=-1&ko=-2&k1=-1";
 							URLConnection connection = null;
+							
 	                        try {
 
 		                            connection = new URL(usabled).openConnection();
@@ -1051,6 +1104,7 @@ public class mainclass {
 					            String url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + URLEncoder.encode(address, "UTF-8") + "&key=" + key;
 					            URL obj = new URL(url);
 					            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+					            
 					            con.setRequestMethod("GET");
 					            con.setRequestProperty("User-Agent", "Mozilla/5.0");
 
@@ -1088,6 +1142,7 @@ public class mainclass {
 						            String url = "https://api.weather.gov/points/" + latLng[0]+","+latLng[1];
 						            URL obj = new URL(url);
 						            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+						            
 						            con.setRequestMethod("GET");
 						            con.setRequestProperty("User-Agent", "Mozilla/5.0");
 
@@ -1125,6 +1180,7 @@ public class mainclass {
 						            url = "https://api.weather.gov/gridpoints/"+ gridId + "/" + gridX + ","+ gridY + "/forecast";
 						            obj = new URL(url);
 						            con = (HttpURLConnection) obj.openConnection();
+						            
 						            con.setRequestMethod("GET");
 						            con.setRequestProperty("User-Agent", "Mozilla/5.0");
 
