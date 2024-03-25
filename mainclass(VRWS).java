@@ -270,7 +270,7 @@ public class mainclass {
 		String prevtermin = "";
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v55";
+		String softver = "v56";
 		int totalconnections = 0;
 		long starttime = System.currentTimeMillis();
 		boolean intaccess = true;
@@ -437,23 +437,46 @@ public class mainclass {
 					recentsn = Float.parseFloat(sncqframestrings[1]);
 				}
 				if (usablec.contains("CQFRAME")) {
+					String dummyload = "";
+                    try {
+                            URLConnection connectiontest = new URL("https://www.google.com").openConnection();
+                            Scanner webscantest = new Scanner(connectiontest.getInputStream());
+                            webscantest.useDelimiter("\\Z");
+                            dummyload = webscantest.next();
+                            webscantest.close();
 
+                    }
+                    catch (Exception ex) {
+                        ex.printStackTrace();
+                       dummyload = ex.toString();
+                       intaccess = false;
+                    }
+                    if (dummyload.contains("Privacy")) {
+                    	intaccess = true;
+                    }
 					if (conn == false && intaccess == true) {
+						
 						cmdsoutp = "";
-
+						String cqusablec = usablec.substring(usablec.lastIndexOf("CQFRAME"));
+						String[] cqcqframestrings = cqusablec.split("\r");
+							if (cqcqframestrings[0].contains(" 500")) {
+								cmdsoutp = "BW500\r";
+							}
+							String[] cqrx = cqcqframestrings[0].split(" ");
+							String[] cqrxcall = cqrx[1].split("-");
 						if (varalicensed == false) {
 
 							if (recentsn >= -10) {
-								logs = logs + "CQ heard, vara not licensed, S/N " + recentsn + ", waiting 80 sec before response\n";
+								logs = logs + "CQ heard from " + cqrxcall[0] + ", vara not licensed, S/N " + recentsn + ", waiting 80 sec before response\n";
 							}
 							else {
 								if (recentsn >= -15) {
-									logs = logs + "CQ heard, vara not licensed, S/N " + recentsn + ", waiting 100 sec before response\n";
+									logs = logs + "CQ heard from " + cqrxcall[0] + ", vara not licensed, S/N " + recentsn + ", waiting 100 sec before response\n";
 									Thread.sleep(20000);
 
 								}
 								else {
-									logs = logs + "CQ heard, vara not licensed, S/N " + recentsn + ", waiting 120 sec before response\n";
+									logs = logs + "CQ heard from " + cqrxcall[0] + ", vara not licensed, S/N " + recentsn + ", waiting 120 sec before response\n";
 									Thread.sleep(40000);
 
 								}
@@ -462,45 +485,45 @@ public class mainclass {
 						}
 						else {
 							if (recentsn >= 20) {
-								logs = logs + "CQ heard, S/N " + recentsn + ", waiting 10 sec before response\n";
+								logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 10 sec before response\n";
 							}
 							else {
 								if (recentsn >= 15) {
-									logs = logs + "CQ heard, S/N " + recentsn + ", waiting 20 sec before response\n";
+									logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 20 sec before response\n";
 									Thread.sleep(10000);
 								}
 								else {
 									if (recentsn >= 10) {
-										logs = logs + "CQ heard, S/N " + recentsn + ", waiting 30 sec before response\n";
+										logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 30 sec before response\n";
 										Thread.sleep(20000);
 									}
 									else {
 										if (recentsn >= 5) {
-											logs = logs + "CQ heard, S/N " + recentsn + ", waiting 40 sec before response\n";
+											logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 40 sec before response\n";
 											Thread.sleep(30000);
 										}
 										else {
 											if (recentsn >= 0) {
-												logs = logs + "CQ heard, S/N " + recentsn + ", waiting 50 sec before response\n";
+												logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 50 sec before response\n";
 												Thread.sleep(40000);
 											}
 											else {
 												if (recentsn >= -5) {
-													logs = logs + "CQ heard, S/N " + recentsn + ", waiting 60 sec before response\n";
+													logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 60 sec before response\n";
 													Thread.sleep(50000);
 												}
 												else {
 													if (recentsn >= -10) {
-														logs = logs + "CQ heard, S/N " + recentsn + ", waiting 70 sec before response\n";
+														logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 70 sec before response\n";
 														Thread.sleep(60000);
 													}
 													else {
 														if (recentsn >= -15) {
-															logs = logs + "CQ heard, S/N " + recentsn + ", waiting 90 sec before response\n";
+															logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 90 sec before response\n";
 															Thread.sleep(80000);
 														}
 														else {
-															logs = logs + "CQ heard, S/N " + recentsn + ", waiting 110 sec before response\n";
+															logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 110 sec before response\n";
 															Thread.sleep(100000);
 														}
 													}
@@ -512,13 +535,6 @@ public class mainclass {
 							}
 						}
 						Thread.sleep(10000);
-						String cqusablec = usablec.substring(usablec.lastIndexOf("CQFRAME"));
-						String[] cqcqframestrings = cqusablec.split("\r");
-							if (cqcqframestrings[0].contains(" 500")) {
-								cmdsoutp = "BW500\r";
-							}
-							String[] cqrx = cqcqframestrings[0].split(" ");
-							String[] cqrxcall = cqrx[1].split("-");
 							cmdsoutp = cmdsoutp + "CONNECT " + callsign + " " + cqrxcall[0] + "\r";
 
 							cmdsdata = cmdsoutp.getBytes();
