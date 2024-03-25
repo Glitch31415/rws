@@ -241,7 +241,7 @@ public class mainclass {
 		String textscanthing = "";
 		Scanner webscan;
 		int option = 0;
-		String dataoutp;
+		String dataoutp = "";
 		String rcall = "";
 		String searchthing = "";
 		String weatherthing = "";
@@ -270,10 +270,11 @@ public class mainclass {
 		String prevtermin = "";
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v1-1";
+		String softver = "v55";
 		int totalconnections = 0;
 		long starttime = System.currentTimeMillis();
 		boolean intaccess = true;
+		boolean pexists = false;
 		// TODO Auto-generated method stub
 		getstream1.cmds = new Socket("127.0.0.1", 8300);
 		getstream2.data = new Socket("127.0.0.1", 8301);
@@ -302,11 +303,14 @@ public class mainclass {
 		byte[] cmdsdata = cmdsoutp.getBytes();
 		String postname = "";
 		String postbody = "";
+		String stp = "";
+		boolean varalicensed = false;
+		float recentsn = (float) 0.00;
 		cmdsout.write(cmdsdata);
 		Thread.sleep(1000);
 		Thread object3 = new Thread(new getstream3());
 		object3.start();
-		System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create posts in the community folder on the github\n|i : Print server info\nIf you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'.");
+		System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\nIf you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'.");
 		while (0==0) {
 			usabled = "";
 			if (termconnect == true) {
@@ -423,19 +427,97 @@ public class mainclass {
 							}
 						}
 					}
+				if (usablec.contains("REGISTERED")) {
+					varalicensed = true;
+				}
+				if (usablec.contains("SN ")) {
+					String snusablec = usablec.substring(usablec.lastIndexOf("SN "));
+					snusablec = snusablec.substring(0, snusablec.indexOf("\r"));
+					String[] sncqframestrings = snusablec.split(" ");
+					recentsn = Float.parseFloat(sncqframestrings[1]);
+				}
 				if (usablec.contains("CQFRAME")) {
 
-					if (conn == false) {
+					if (conn == false && intaccess == true) {
 						cmdsoutp = "";
+
+						if (varalicensed == false) {
+
+							if (recentsn >= -10) {
+								logs = logs + "CQ heard, vara not licensed, S/N " + recentsn + ", waiting 80 sec before response\n";
+							}
+							else {
+								if (recentsn >= -15) {
+									logs = logs + "CQ heard, vara not licensed, S/N " + recentsn + ", waiting 100 sec before response\n";
+									Thread.sleep(20000);
+
+								}
+								else {
+									logs = logs + "CQ heard, vara not licensed, S/N " + recentsn + ", waiting 120 sec before response\n";
+									Thread.sleep(40000);
+
+								}
+							}
+							Thread.sleep(70000);
+						}
+						else {
+							if (recentsn >= 20) {
+								logs = logs + "CQ heard, S/N " + recentsn + ", waiting 10 sec before response\n";
+							}
+							else {
+								if (recentsn >= 15) {
+									logs = logs + "CQ heard, S/N " + recentsn + ", waiting 20 sec before response\n";
+									Thread.sleep(10000);
+								}
+								else {
+									if (recentsn >= 10) {
+										logs = logs + "CQ heard, S/N " + recentsn + ", waiting 30 sec before response\n";
+										Thread.sleep(20000);
+									}
+									else {
+										if (recentsn >= 5) {
+											logs = logs + "CQ heard, S/N " + recentsn + ", waiting 40 sec before response\n";
+											Thread.sleep(30000);
+										}
+										else {
+											if (recentsn >= 0) {
+												logs = logs + "CQ heard, S/N " + recentsn + ", waiting 50 sec before response\n";
+												Thread.sleep(40000);
+											}
+											else {
+												if (recentsn >= -5) {
+													logs = logs + "CQ heard, S/N " + recentsn + ", waiting 60 sec before response\n";
+													Thread.sleep(50000);
+												}
+												else {
+													if (recentsn >= -10) {
+														logs = logs + "CQ heard, S/N " + recentsn + ", waiting 70 sec before response\n";
+														Thread.sleep(60000);
+													}
+													else {
+														if (recentsn >= -15) {
+															logs = logs + "CQ heard, S/N " + recentsn + ", waiting 90 sec before response\n";
+															Thread.sleep(80000);
+														}
+														else {
+															logs = logs + "CQ heard, S/N " + recentsn + ", waiting 110 sec before response\n";
+															Thread.sleep(100000);
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 						Thread.sleep(10000);
-						int randomNum = ThreadLocalRandom.current().nextInt(0, 10);
-						Thread.sleep(8000*randomNum);
-						usablec = usablec.substring(usablec.lastIndexOf("CQFRAME"));
-						String[] cqframestrings = usablec.split("\r");
-							if (cqframestrings[0].contains(" 500")) {
+						String cqusablec = usablec.substring(usablec.lastIndexOf("CQFRAME"));
+						String[] cqcqframestrings = cqusablec.split("\r");
+							if (cqcqframestrings[0].contains(" 500")) {
 								cmdsoutp = "BW500\r";
 							}
-							String[] cqrx = cqframestrings[0].split(" ");
+							String[] cqrx = cqcqframestrings[0].split(" ");
 							String[] cqrxcall = cqrx[1].split("-");
 							cmdsoutp = cmdsoutp + "CONNECT " + callsign + " " + cqrxcall[0] + "\r";
 
@@ -515,7 +597,14 @@ public class mainclass {
 									dataoutp = dataoutp + "\n\n" + welcomemessage;
 								}
 								if (intaccess == true) {
-									dataoutp = dataoutp + "\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create posts in the community folder on the github\n|i : Print server info\r";
+									if (varalicensed == true) {
+										dataoutp = dataoutp + "\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\r";
+										
+									}
+									else {
+										dataoutp = dataoutp + "(This server does not use a licensed copy of VARA. Download speeds will be limited to speed level 4.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\r";
+										
+									}
 									
 									logs = logs + rcall + " connected\n";
 									//System.out.println("Logs:\n-----\n" + logs + "\n-----");
@@ -549,7 +638,7 @@ public class mainclass {
 							if (welcomemessage != "") {
 								dataoutp = dataoutp + "\n\n" + welcomemessage;
 							}
-							dataoutp = dataoutp + "\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create posts in the community folder on the github\n|i : Print server info\n[You can disconnect by saying '|disc' because you are using the terminal.]\r";
+							dataoutp = dataoutp + "\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n[You can disconnect by saying '|disc' because you are using the terminal.]\r";
 							
 							logs = logs + rcall + " connected\n";
 							//System.out.println("Logs:\n-----\n" + logs + "\n-----");
@@ -670,19 +759,138 @@ public class mainclass {
 				}
 				if (usabled.contains("|c")) {
 					if (curbuf == 0) {
-						option = 6;
-						dataoutp = "Would you like to 'view' or 'create' something in the community area?\nCommands: |w |s |f |d |c |i\r";
-						if (termconnect == false) {
-	                        dataoutp = dataoutp.length() + " " + dataoutp;
-							byte[] datadata = dataoutp.getBytes();
-							
+						wstext = "";
+						dataoutp = "";
+						URLConnection connection = null;
+                        try {
+	                            connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/community/index").openConnection();
+	                            webscan = new Scanner(connection.getInputStream());
+	                            webscan.useDelimiter("\\Z");
+	                            wstext = webscan.next();
+	                            webscan.close();
+
+                        }
+                        catch (Exception ex) {
+                            ex.printStackTrace();
+                            wstext = ex.toString();
+                        }
+                        String lesswstext = "";
+                        int i2=0;
+                        while (i2 < wstext.split("\n").length) {
+                        	if (i2 < 25) {
+                        		lesswstext = lesswstext + wstext.split("\n")[i2] + "\n"; 
+                        	}
+                        	i2 = i2 + 1;
+                        }
+                        wstext = lesswstext;
+                        	wstext = wstext.replaceAll("\\r", "");
+                            dataoutp = wstext + "\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i";
+                            logs = logs + rcall + " looked at the community index page\n";
+                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
+                        encodedString = dataoutp;
+                        
+
+                        if (termconnect == false) {
+                        	filebytesleft = encodedString.length();
+							//System.out.println(filebytesleft + " bytes to send");
+							dataoutp = (encodedString.length()+2) + " \n\r";
+	                        byte[] datadata = dataoutp.getBytes();
+	                        
 							dataout.write(datadata);
 							curbuf = 1;
-						}
-						else {
-							System.out.println(dataoutp);
 							dataoutp = "";
-						}
+
+								while (filebytesleft > 1024) {
+									if (getstream1.readingcmds == prevrcind) {
+										Thread.sleep(100);
+										if (getstream1.readingcmds == prevrcind) {
+											readyforreadingc = true;
+
+										}
+
+									}
+									else {
+										readyforreadingc = false;
+										prevrcind = getstream1.readingcmds;
+									}
+									if (getstream1.gcmdsin != null) {
+										if (readyforreadingc == true) {
+											if (getstream1.gcmdsin.length() > cind) {
+
+												usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+												cind = getstream1.gcmdsin.length();
+												//System.out.println("CMD: " + usablec);
+											} else {
+												usablec = "";
+											}
+										}
+										else {
+											usablec = "";
+										}
+
+									}
+			        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
+			        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
+			        							int thing = 7;
+			        							String thingcounter = "";
+			        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
+			        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
+			        								thing = thing + 1;
+			        							}
+			        							if (thingcounter != "") {
+			        								curbuf = Integer.parseInt(thingcounter);
+			        							}
+			        						}
+			        					}
+									if (usablec.contains("BUFFER")) {
+										int i = 7;
+										String numbuild = "";
+										
+										if (usablec.lastIndexOf("BUFFER")+i < (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
+											if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+												boolean kloop = true;
+												while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
+													numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+													i = i + 1;
+													if (i >= (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
+														kloop = false;
+													}
+												}
+												numbuf = Integer.parseInt(numbuild);
+											}
+										}
+
+									}
+									if (usablec.contains("DISCONN")) {
+										filebytesleft = 0;
+										dataoutp = "";
+										option = 0;
+									}
+									if (numbuf < 31744) {
+										encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+										dataoutp = dataoutp + encodedStringpart;
+				                        datadata = dataoutp.getBytes();
+										dataout.write(datadata);
+										dataoutp = "";
+										filebytesleft = filebytesleft - 1024;
+										numbuf = numbuf + 1024;
+									}
+								}
+								encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+								dataoutp = dataoutp + encodedStringpart;
+		                        datadata = dataoutp.getBytes();
+								dataout.write(datadata);
+								dataoutp = "";
+								filebytesleft = 0;
+								usabled = "";
+                        }
+                        else {
+                        	System.out.println(dataoutp);
+                        	dataoutp = "";
+                        	usabled = "";
+                        }
+						option = 6;
 						
 					}
 					usabled = "";
@@ -723,7 +931,7 @@ public class mainclass {
 		                        	encodedString = dataoutp;
 			                        filebytesleft = encodedString.length();
 									//System.out.println(filebytesleft + " bytes to send");
-									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+									dataoutp = (encodedString.length()+2) + " \n\r";
 			                        byte[] datadata = dataoutp.getBytes();
 			                       
 									dataout.write(datadata);
@@ -856,7 +1064,7 @@ public class mainclass {
 		                        	encodedString = dataoutp;
 			                        filebytesleft = encodedString.length();
 									//System.out.println(filebytesleft + " bytes to send");
-									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+									dataoutp = (encodedString.length()+2) + " \n\r";
 			                        byte[] datadata = dataoutp.getBytes();
 			                       
 									dataout.write(datadata);
@@ -992,7 +1200,7 @@ public class mainclass {
 	                        	encodedString = dataoutp;
 		                        filebytesleft = encodedString.length();
 								//System.out.println(filebytesleft + " bytes to send");
-								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+								dataoutp = (encodedString.length()+2) + " \n\r";
 		                        byte[] datadata = dataoutp.getBytes();
 		                        
 								dataout.write(datadata);
@@ -1218,7 +1426,7 @@ public class mainclass {
 		                        encodedString = dataoutp;
 		                        filebytesleft = encodedString.length();
 								//System.out.println(filebytesleft + " bytes to send");
-								dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+								dataoutp = (encodedString.length()+2) + " \n\r";
 		                        byte[] datadata = dataoutp.getBytes();
 		                        
 								dataout.write(datadata);
@@ -1345,7 +1553,7 @@ public class mainclass {
 							filebytesleft = encodedString.length();
 							//System.out.println(filebytesleft + " bytes to send");
 	                        if (termconnect == false) {
-								dataoutp = (encodedString.length()+23+269) + " Download started.\n-----\r";
+								dataoutp = (encodedString.length()+23+269) + " Download started.\n-----\n\r";
 	                        	byte[] datadata = dataoutp.getBytes();
 	                        	
 								dataout.write(datadata);
@@ -1456,152 +1664,25 @@ public class mainclass {
 					if (option == 6) {
 						if (usabled != "") {
 								if (usabled.contains("view")) {
-									//view posts
-									dataoutp = "Please send the name of the post you would like to view. You can also send '|all' to view all posts; this is just the most recent 25.\n-----\n";
-									searchthing = usabled;
-									usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/index";
-									URLConnection connection = null;
-			                        try {
-				                            connection = new URL(usabled).openConnection();
-				                            webscan = new Scanner(connection.getInputStream());
-				                            webscan.useDelimiter("\\Z");
-				                            wstext = webscan.next();
-				                            webscan.close();
-
-			                        }
-			                        catch (Exception ex) {
-			                            ex.printStackTrace();
-			                            wstext = ex.toString();
-			                        }
-			                        String lesswstext = "";
-			                        int i2=0;
-			                        while (i2 < wstext.split("\n").length) {
-			                        	if (i2 < 25) {
-			                        		lesswstext = lesswstext + wstext.split("\n")[i2] + "\n"; 
-			                        	}
-			                        	i2 = i2 + 1;
-			                        }
-			                        wstext = lesswstext;
-			                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-			                            dataoutp = dataoutp + "Oops, the index page contained material that is inappropriate for ham radio. Please try a different query.\n-----\nCommands: |w |s |f |d |c |i\r";
-			                            logs = logs + rcall + " attempted to look at the community index page but was blocked\n";
-			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
-			                        } else {
-			                        	wstext = wstext.replaceAll("\\r", "");
-			                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
-			                            logs = logs + rcall + " looked at the community index page\n";
-			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
-			                        }
-			                        encodedString = dataoutp;
-			                        
-
-			                        if (termconnect == false) {
-			                        	filebytesleft = encodedString.length();
-										//System.out.println(filebytesleft + " bytes to send");
-										dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
-				                        byte[] datadata = dataoutp.getBytes();
-				                        
+									dataoutp = "Please send the name of the thread you would like to view. (Or, send '|all' to list all threads)\r";
+									if (termconnect == false) {
+										dataoutp = dataoutp.length() + " " + dataoutp;
+										byte[] datadata = dataoutp.getBytes();
+										
 										dataout.write(datadata);
 										curbuf = 1;
-										dataoutp = "";
-
-											while (filebytesleft > 1024) {
-												if (getstream1.readingcmds == prevrcind) {
-													Thread.sleep(100);
-													if (getstream1.readingcmds == prevrcind) {
-														readyforreadingc = true;
-
-													}
-
-												}
-												else {
-													readyforreadingc = false;
-													prevrcind = getstream1.readingcmds;
-												}
-												if (getstream1.gcmdsin != null) {
-													if (readyforreadingc == true) {
-														if (getstream1.gcmdsin.length() > cind) {
-
-															usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
-
-															cind = getstream1.gcmdsin.length();
-															//System.out.println("CMD: " + usablec);
-														} else {
-															usablec = "";
-														}
-													}
-													else {
-														usablec = "";
-													}
-
-												}
-						        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
-						        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
-						        							int thing = 7;
-						        							String thingcounter = "";
-						        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
-						        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
-						        								thing = thing + 1;
-						        							}
-						        							if (thingcounter != "") {
-						        								curbuf = Integer.parseInt(thingcounter);
-						        							}
-						        						}
-						        					}
-												if (usablec.contains("BUFFER")) {
-													int i = 7;
-													String numbuild = "";
-													
-													if (usablec.lastIndexOf("BUFFER")+i < (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
-														if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
-															boolean kloop = true;
-															while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
-																numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
-																i = i + 1;
-																if (i >= (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
-																	kloop = false;
-																}
-															}
-															numbuf = Integer.parseInt(numbuild);
-														}
-													}
-
-												}
-												if (usablec.contains("DISCONN")) {
-													filebytesleft = 0;
-													dataoutp = "";
-													option = 0;
-												}
-												if (numbuf < 31744) {
-													encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
-													dataoutp = dataoutp + encodedStringpart;
-							                        datadata = dataoutp.getBytes();
-													dataout.write(datadata);
-													dataoutp = "";
-													filebytesleft = filebytesleft - 1024;
-													numbuf = numbuf + 1024;
-												}
-											}
-											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
-											dataoutp = dataoutp + encodedStringpart;
-					                        datadata = dataoutp.getBytes();
-											dataout.write(datadata);
-											dataoutp = "";
-											filebytesleft = 0;
-											usabled = "";
-											option = 7;
-			                        }
-			                        else {
-			                        	System.out.println(dataoutp);
-			                        	dataoutp = "";
-			                        	usabled = "";
 										option = 7;
-			                        }
-			                        
+										usabled = "";
+									}
+									else {
+										System.out.println(dataoutp);
+										option = 7;
+										usabled = "";
+									}
 								}
 								if (usabled.contains("create")) {
 									//create posts
-									dataoutp = "Please send the name of the post you would like to create.\r";
+									dataoutp = "Please send the name of the thread you would like to create (or leave a comment on)\r";
 									if (termconnect == false) {
 										dataoutp = dataoutp.length() + " " + dataoutp;
 										byte[] datadata = dataoutp.getBytes();
@@ -1625,7 +1706,7 @@ public class mainclass {
 							if (usabled.contains("|")) {
 								if (usabled.contains("|all")) {
 									//view posts
-									dataoutp = "Please send the name of the post you would like to view.\n-----\n";
+									dataoutp = "Please send the name of the thread you would like to view.\n-----\n";
 									searchthing = usabled;
 									usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/index";
 									URLConnection connection = null;
@@ -1641,23 +1722,18 @@ public class mainclass {
 			                            ex.printStackTrace();
 			                            wstext = ex.toString();
 			                        }
-			                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-			                            dataoutp = dataoutp + "Oops, the index page contained material that is inappropriate for ham radio. Please try a different query.\n-----\nCommands: |w |s |f |d |c |i\r";
-			                            logs = logs + rcall + " attempted to look at the community index page but was blocked\n";
-			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
-			                        } else {
+
 			                        	wstext = wstext.replaceAll("\\r", "");
 			                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
 			                            logs = logs + rcall + " looked at the community index page\n";
 			                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
-			                        }
 			                        encodedString = dataoutp;
 			                        
 
 			                        if (termconnect == false) {
 			                        	filebytesleft = encodedString.length();
 										//System.out.println(filebytesleft + " bytes to send");
-										dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+										dataoutp = (encodedString.length()+2) + " \n\r";
 				                        byte[] datadata = dataoutp.getBytes();
 				                        
 										dataout.write(datadata);
@@ -1759,7 +1835,7 @@ public class mainclass {
 								}
 							}
 							else {
-								dataoutp = "Here is the post you requested.\n-----\n";
+								dataoutp = "";
 								searchthing = usabled;
 									usabled = URLEncoder.encode(usabled, StandardCharsets.UTF_8);
 									usabled = usabled.replaceAll("\\+", "%20");
@@ -1779,21 +1855,43 @@ public class mainclass {
 			                            wstext = ex.toString();
 			                        }
 								
-		                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-		                            dataoutp = dataoutp + "Oops, that post contained material that is inappropriate for ham radio. Please try a different query.\n-----\nWould you like to 'view' or 'create' something in the community area?\nCommands: |w |s |f |d |c |i\r";
-		                            logs = logs + rcall + " attempted to look at the post " + searchthing + "but was blocked\n";
-		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
-		                        } else {
+
 		                        	wstext = wstext.replaceAll("\\r", "");
-		                            dataoutp = dataoutp + wstext + "\n-----\nWould you like to 'view' or 'create' something in the community area?\nCommands: |w |s |f |d |c |i\r";
-		                            logs = logs + rcall + " looked at the post " + searchthing + "\n";
+		                            dataoutp = dataoutp + wstext + "\n-----\n";
+		                            logs = logs + rcall + " looked at the thread " + searchthing + "\n";
 		                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
+								connection = null;
+		                        try {
+			                            connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/community/index").openConnection();
+			                            webscan = new Scanner(connection.getInputStream());
+			                            webscan.useDelimiter("\\Z");
+			                            wstext = webscan.next();
+			                            webscan.close();
+
 		                        }
+		                        catch (Exception ex) {
+		                            ex.printStackTrace();
+		                            wstext = ex.toString();
+		                        }
+		                        String lesswstext = "";
+		                        int i2=0;
+		                        while (i2 < wstext.split("\n").length) {
+		                        	if (i2 < 25) {
+		                        		lesswstext = lesswstext + wstext.split("\n")[i2] + "\n"; 
+		                        	}
+		                        	i2 = i2 + 1;
+		                        }
+		                        wstext = lesswstext;
+		                        	wstext = wstext.replaceAll("\\r", "");
+		                            dataoutp = dataoutp + "\n" + wstext + "\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i\r";
+		                            logs = logs + rcall + " looked at the community index page\n";
+		                        encodedString = dataoutp;
+		                        
+
 		                        if (termconnect == false) {
-			                        encodedString = dataoutp;
-			                        filebytesleft = encodedString.length();
+		                        	filebytesleft = encodedString.length();
 									//System.out.println(filebytesleft + " bytes to send");
-									dataoutp = (encodedString.length()+19) + " Transfer started.\n\r";
+									dataoutp = (encodedString.length()+2) + " \n\r";
 			                        byte[] datadata = dataoutp.getBytes();
 			                        
 									dataout.write(datadata);
@@ -1883,13 +1981,14 @@ public class mainclass {
 										dataout.write(datadata);
 										dataoutp = "";
 										filebytesleft = 0;
-										option = 6;
+										usabled = "";
 		                        }
 		                        else {
 		                        	System.out.println(dataoutp);
 		                        	dataoutp = "";
-		                        	option = 6;
+		                        	usabled = "";
 		                        }
+								option = 6;
 
 							}
 
@@ -1916,8 +2015,9 @@ public class mainclass {
 							}
 							else {
 								//usabled = URLEncoder.encode(usabled, StandardCharsets.UTF_8);
+
 								postname = usabled;
-								dataoutp = "Please send the body of the post you would like to create.\r";
+								dataoutp = "Please send the body of the thread/comment you would like to create.\r";
 								if (termconnect == false) {
 
 									dataoutp = dataoutp.length() + " " + dataoutp;
@@ -1941,130 +2041,294 @@ public class mainclass {
 					}
 					if (option == 9) {
 						if (usabled != "") {
-							dataoutp = "Uploading...\r";
+							boolean postsafe = true;
+							dataoutp = "";
 							postbody = usabled;
-							logs = logs + rcall + " requested an upload for a post with title '" + postname + "' with body '" + postbody + "'\n";
+
+	                        if (postname.contains("porn") || postname.contains(" sex ") || postname.contains("fuck") || postname.contains("shit") || postname.contains("bitch") || postname.contains(" ass ") || postname.contains("pussy") || postname.contains("hentai") || postname.contains("xvideos")) {
+	                            logs = logs + rcall + " attempted to post a thread named '"+postname+"' but was blocked\n";
+	                            postsafe = false;
+	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
+	                        }
+	                        if (postbody.contains("porn") || postbody.contains(" sex ") || postbody.contains("fuck") || postbody.contains("shit") || postbody.contains("bitch") || postbody.contains(" ass ") || postbody.contains("pussy") || postbody.contains("hentai") || postbody.contains("xvideos")) {
+	                            logs = logs + rcall + " attempted to post a thread or comment with content '"+postbody+"' but was blocked\n";
+	                            postsafe = false;
+	                            //System.out.println("Logs:\n-----\n" + logs + "\n-----");
+	                        }
                             //System.out.println("Logs:\n-----\n" + logs + "\n-----");
-                            if (termconnect == false) {
-    							dataoutp = dataoutp.length() + " " + dataoutp;
-    							byte[] datadata = dataoutp.getBytes();
-    							
-								dataout.write(datadata);
-								curbuf = 1;
-    							dataoutp = "";
-    							st = "";
+
+                            if (postsafe == true) {
+    							logs = logs + rcall + " requested an upload for a thread with title '" + postname + "' with contents '" + postbody + "'\n";
+                                st = "";
+    							String pathToClone = "./repo";
+    							Path directory = Path.of(pathToClone);
+    							try {
+    								Files.walk(directory)
+    				                .sorted(Comparator.reverseOrder())
+    				                .map(Path::toFile)
+    				                .forEach(File::delete);
+    							} catch (java.nio.file.NoSuchFileException e) {
+    								
+    							}
+
+    						        Git git = Git.cloneRepository()
+    						                .setURI("https://github.com/Glitch31415/rws.git")
+    						                .setDirectory(new File(pathToClone))
+    						                .call();
+
+    							        try {
+    							        	try {
+    							        		File myObjp;
+    							        		stp = "";
+    							        		pexists = false;
+    								        	      myObjp = new File(git.getRepository().getDirectory().getParent() + "/community/", postname);
+
+
+    							        	      Scanner myReaderp = new Scanner(myObjp);
+    							        	      while (myReaderp.hasNextLine()) {
+    							        	        stp = stp + myReaderp.nextLine() + "\n";
+    							        	        pexists = true;
+    							        	      }
+    							        	      myReaderp.close();
+    							        	    } catch (FileNotFoundException e) {
+    							        	    	
+    							        	    }
+    							            //System.out.println("index was read as '" + st + "'");
+    							            FileWriter myWriterp;
+
+    								            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/" + postname);
+    								            Instant instantp = Instant.now();
+
+    								            // Set the time zone to GMT
+    								            ZoneId zonep = ZoneId.of("GMT");
+
+    								            // Format the date and time as a string
+    								            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    								            String dateTime = instantp.atZone(zonep).format(formatter);
+    								            if (pexists == false) {
+    									        	myWriterp.write(postname+"\n\n"+rcall+"\n"+dateTime+" UTC"+"\n----------\n"+postbody+"\n----------\n\n");
+    								            }
+    								            else {
+    								            	myWriterp.write(stp + "\n"+rcall+"\n"+dateTime+" UTC"+"\n----------\n"+postbody+"\n----------\n\n");
+    								            }
+    								       myWriterp.close();
+    							          } catch (IOException e) {
+    							            e.printStackTrace();
+    							        }
+    							        //git.add().addFilepattern(postname).call();
+    							       //if (windows == true) {
+    							        	//git.add().addFilepattern(".").call();
+    						            //}
+    						            //else {
+    						            	//git.add().addFilepattern(".").call();
+    						            //}
+    							        try {
+    							        	try {
+    							        		File myObj;
+    								        	      myObj = new File(git.getRepository().getDirectory().getParent() + "/community/index");
+
+
+    							        	      Scanner myReader = new Scanner(myObj);
+    							        	      while (myReader.hasNextLine()) {
+    							        	    	  String tempnextline = myReader.nextLine();
+    							        	    	  if (tempnextline.contains("'" + postname + "'")) {
+    							        	    		  
+    							        	    	  }
+    							        	    	  else {
+    									        	        st = st + tempnextline + "\n";
+    							        	    	  }
+
+    							        	      }
+    							        	      myReader.close();
+    							        	    } catch (FileNotFoundException e) {
+    							        	      e.printStackTrace();
+    							        	    }
+    							            //System.out.println("index was read as '" + st + "'");
+    							            FileWriter myWriter;
+
+    								            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/index");
+    								            Instant instant = Instant.now();
+
+    								            // Set the time zone to GMT
+    								            ZoneId zone = ZoneId.of("GMT");
+
+    								            // Format the date and time as a string
+    								            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    								            String dateTime = instant.atZone(zone).format(formatter);
+    								        	myWriter.write("'"+postname+"'"+" - "+rcall+", "+dateTime+" UTC"+ "\n" + st);
+    								       myWriter.close();
+    							          } catch (IOException e) {
+    							            e.printStackTrace();
+    							        }
+    							        //git.add().addFilepattern("/community/index").call();
+    							        //if (windows == true) {
+    							        	//git.add().addFilepattern("\\community\\index").call();
+    						            //}
+    						            //else {
+    						            	//git.add().addFilepattern("/community/index").call();
+    						            //}
+    							        git.add().addFilepattern(".").call();
+    							        git.commit().setMessage("Committed from server").call();
+    							        byte[] decodedBytes = Base64.getDecoder().decode(Base64.getDecoder().decode("WjJod1gxRlVSRlJoWlZSaU5qSmtSbVkwVkdwNmVESXlXSFE1U1d0NlpHUnVSekZGVERsME53PT0="));
+    							        String decodedString = new String(decodedBytes);
+    							        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(decodedString, "")).call(); // if anyone else sees this please don't break everything
+    							        git.close();
+    							        git = null;
+    							        //Git.shutdown();
+    							        
+    							        try {
+    										Files.walk(directory)
+    						                .sorted(Comparator.reverseOrder())
+    						                .map(Path::toFile)
+    						                .forEach(File::delete);
+    									} catch (java.nio.file.NoSuchFileException e) {
+    										
+    									}
+
+    									option = 6;
+    									usabled = "";
                             }
-                            else {
-                            	System.out.println(dataoutp);
-                            }
-                            st = "";
-							String pathToClone = "./repo";
-							Path directory = Path.of(pathToClone);
-							try {
-								Files.walk(directory)
-				                .sorted(Comparator.reverseOrder())
-				                .map(Path::toFile)
-				                .forEach(File::delete);
-							} catch (java.nio.file.NoSuchFileException e) {
-								
-							}
+									URLConnection connection = null;
+			                        try {
+				                            connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/community/index").openConnection();
+				                            webscan = new Scanner(connection.getInputStream());
+				                            webscan.useDelimiter("\\Z");
+				                            wstext = webscan.next();
+				                            webscan.close();
 
-						        Git git = Git.cloneRepository()
-						                .setURI("https://github.com/Glitch31415/rws.git")
-						                .setDirectory(new File(pathToClone))
-						                .call();
+			                        }
+			                        catch (Exception ex) {
+			                            ex.printStackTrace();
+			                            wstext = ex.toString();
+			                        }
+			                        String lesswstext = "";
+			                        int i2=0;
+			                        while (i2 < wstext.split("\n").length) {
+			                        	if (i2 < 25) {
+			                        		lesswstext = lesswstext + wstext.split("\n")[i2] + "\n"; 
+			                        	}
+			                        	i2 = i2 + 1;
+			                        }
+			                        wstext = lesswstext;
+			                        	wstext = wstext.replaceAll("\\r", "");
+			                        	if (postsafe == true) {
+				                        	dataoutp = wstext + "\nYour thread/comment has been uploaded!\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i";
+			                        	}
+			                        	else {
+			                        		dataoutp = wstext + "\nOops, that contained material that is inappropriate for ham radio. Please try something else.\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i";
+			                        	}
+			                            logs = logs + rcall + " looked at the community index page\n";
 
-								   new File(git.getRepository().getDirectory().getParent() + "/community/", postname);
-							        try {
-							        	FileWriter myWriter;
-								            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/" + postname);
-							            myWriter.write(postbody);
-							            //System.out.println("wrote " + postbody);
-							            myWriter.close();
-							          } catch (IOException e) {
-							            e.printStackTrace();
-							        }
-							        //git.add().addFilepattern(postname).call();
-							       //if (windows == true) {
-							        	//git.add().addFilepattern(".").call();
-						            //}
-						            //else {
-						            	//git.add().addFilepattern(".").call();
-						            //}
-							        try {
-							        	try {
-							        		File myObj;
-								        	      myObj = new File(git.getRepository().getDirectory().getParent() + "/community/index");
+			                        encodedString = dataoutp;
+			                        
 
-
-							        	      Scanner myReader = new Scanner(myObj);
-							        	      while (myReader.hasNextLine()) {
-							        	        st = st + myReader.nextLine() + "\n";
-							        	      }
-							        	      myReader.close();
-							        	    } catch (FileNotFoundException e) {
-							        	      e.printStackTrace();
-							        	    }
-							            //System.out.println("index was read as '" + st + "'");
-							            FileWriter myWriter;
-
-								            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/index");
-								            Instant instant = Instant.now();
-
-								            // Set the time zone to GMT
-								            ZoneId zone = ZoneId.of("GMT");
-
-								            // Format the date and time as a string
-								            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-								            String dateTime = instant.atZone(zone).format(formatter);
-								        	myWriter.write("'"+postname+"'"+" - "+rcall+", "+dateTime+" UTC"+ "\n" + st);
-								       myWriter.close();
-							          } catch (IOException e) {
-							            e.printStackTrace();
-							        }
-							        //git.add().addFilepattern("/community/index").call();
-							        //if (windows == true) {
-							        	//git.add().addFilepattern("\\community\\index").call();
-						            //}
-						            //else {
-						            	//git.add().addFilepattern("/community/index").call();
-						            //}
-							        git.add().addFilepattern(".").call();
-							        git.commit().setMessage("Committed from server").call();
-							        byte[] decodedBytes = Base64.getDecoder().decode(Base64.getDecoder().decode("WjJod1gxRlVSRlJoWlZSaU5qSmtSbVkwVkdwNmVESXlXSFE1U1d0NlpHUnVSekZGVERsME53PT0="));
-							        String decodedString = new String(decodedBytes);
-							        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(decodedString, "")).call(); //if anyone else sees this please don't break everything
-							        git.close();
-							        git = null;
-							        //Git.shutdown();
-							        
-							        try {
-										Files.walk(directory)
-						                .sorted(Comparator.reverseOrder())
-						                .map(Path::toFile)
-						                .forEach(File::delete);
-									} catch (java.nio.file.NoSuchFileException e) {
-										
-									}
-									dataoutp = "Your post has been uploaded!\nWould you like to 'view' or 'create' something in the community area?\nCommands: |w |s |f |d |c |i\r";
-									if (termconnect == false) {
-										dataoutp = dataoutp.length() + " " + dataoutp;
-										byte[] datadata = dataoutp.getBytes();
-										
+			                        if (termconnect == false) {
+			                        	filebytesleft = encodedString.length();
+										//System.out.println(filebytesleft + " bytes to send");
+										dataoutp = (encodedString.length()+2) + " \n\r";
+				                        byte[] datadata = dataoutp.getBytes();
+				                        
 										dataout.write(datadata);
 										curbuf = 1;
-									}
-									else {
-										System.out.println(dataoutp);
 										dataoutp = "";
-									}
 
+											while (filebytesleft > 1024) {
+												if (getstream1.readingcmds == prevrcind) {
+													Thread.sleep(100);
+													if (getstream1.readingcmds == prevrcind) {
+														readyforreadingc = true;
+
+													}
+
+												}
+												else {
+													readyforreadingc = false;
+													prevrcind = getstream1.readingcmds;
+												}
+												if (getstream1.gcmdsin != null) {
+													if (readyforreadingc == true) {
+														if (getstream1.gcmdsin.length() > cind) {
+
+															usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+															cind = getstream1.gcmdsin.length();
+															//System.out.println("CMD: " + usablec);
+														} else {
+															usablec = "";
+														}
+													}
+													else {
+														usablec = "";
+													}
+
+												}
+						        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
+						        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
+						        							int thing = 7;
+						        							String thingcounter = "";
+						        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
+						        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
+						        								thing = thing + 1;
+						        							}
+						        							if (thingcounter != "") {
+						        								curbuf = Integer.parseInt(thingcounter);
+						        							}
+						        						}
+						        					}
+												if (usablec.contains("BUFFER")) {
+													int i = 7;
+													String numbuild = "";
+													
+													if (usablec.lastIndexOf("BUFFER")+i < (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
+														if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+															boolean kloop = true;
+															while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
+																numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+																i = i + 1;
+																if (i >= (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
+																	kloop = false;
+																}
+															}
+															numbuf = Integer.parseInt(numbuild);
+														}
+													}
+
+												}
+												if (usablec.contains("DISCONN")) {
+													filebytesleft = 0;
+													dataoutp = "";
+													option = 0;
+												}
+												if (numbuf < 31744) {
+													encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+													dataoutp = dataoutp + encodedStringpart;
+							                        datadata = dataoutp.getBytes();
+													dataout.write(datadata);
+													dataoutp = "";
+													filebytesleft = filebytesleft - 1024;
+													numbuf = numbuf + 1024;
+												}
+											}
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+											dataoutp = dataoutp + encodedStringpart;
+					                        datadata = dataoutp.getBytes();
+											dataout.write(datadata);
+											dataoutp = "";
+											filebytesleft = 0;
+											usabled = "";
+			                        }
+			                        else {
+			                        	System.out.println(dataoutp);
+			                        	dataoutp = "";
+			                        	usabled = "";
+			                        }
 									option = 6;
-									usabled = "";
+
 
 					        //System.out.println("remade local repo"); 
 						     
 						}
+						usabled = "";
 					}
 					
 
@@ -2076,6 +2340,11 @@ public class mainclass {
 					cmdsdata = cmdsoutp.getBytes();
 					cmdsout.write(cmdsdata);
 					initwait = 2;
+					if (termconnect == true) {
+						cmdsoutp = "DISCONNECT\r";
+						cmdsdata = cmdsoutp.getBytes();
+						cmdsout.write(cmdsdata);
+					}
 				}
 				else {
 					initwait = initwait + 1;
