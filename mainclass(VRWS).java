@@ -239,9 +239,9 @@ public class mainclass {
 		boolean termconnect = false;
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v57";
+		String softver = "v58";
 		int totalconnections = 0;
-		long starttime = System.currentTimeMillis();
+
 		boolean intaccess = true;
 		boolean pexists = false;
 		getstream1.cmds = new Socket("127.0.0.1", 8300);
@@ -270,6 +270,7 @@ public class mainclass {
 			Thread.sleep(1000);
 			Thread object3 = new Thread(new getstream3());
 			object3.start();
+			long starttime = System.currentTimeMillis();
 			System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\nIf you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'.");
 			while (0==0) {
 				usabled = "";
@@ -1497,7 +1498,7 @@ public class mainclass {
 								filebytesleft = encodedString.length();
 
 			                    if (termconnect == false) {
-									dataoutp = (encodedString.length()+23+269) + " Download started.\n-----\n\r";
+									dataoutp = (encodedString.length()+23+270) + " Download started.\n-----\n\r";
 			                    	byte[] datadata = dataoutp.getBytes();
 			                    	
 									dataout.write(datadata);
