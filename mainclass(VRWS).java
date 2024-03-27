@@ -239,7 +239,7 @@ public class mainclass {
 		boolean termconnect = false;
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v58";
+		String softver = "v59";
 		int totalconnections = 0;
 
 		boolean intaccess = true;
@@ -257,6 +257,10 @@ public class mainclass {
 			String callsign = callinp.nextLine();
 			System.out.println("Enter server welcome message (leave blank if none)");
 			String welcomemessage = callinp.nextLine();
+			System.out.println("Enter frequency (example: 14.110)");
+			String servfreq = callinp.nextLine();
+			System.out.println("Enter 6 character locator (example: CN84OR)");
+			String servlocator = callinp.nextLine();
 			String cmdsoutp = "MYCALL "+callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rCLEANTXBUFFER\rBW2300\r";
 			String prevdatainthing = "";
 			boolean weatherbroke = false;
@@ -271,6 +275,11 @@ public class mainclass {
 			Thread object3 = new Thread(new getstream3());
 			object3.start();
 			long starttime = System.currentTimeMillis();
+			long prevupd = System.currentTimeMillis();
+			int cqwaittime = 130;
+			long cqresp = 0;
+			String cqbw = "";
+			String cqrespcall = "";
 			System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\nIf you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'.");
 			while (0==0) {
 				usabled = "";
@@ -399,76 +408,92 @@ public class mainclass {
 			            	intaccess = true;
 			            }
 						if (conn == false && intaccess == true) {
-							
+							String pcqbw = "";
 							cmdsoutp = "";
 							String cqusablec = usablec.substring(usablec.lastIndexOf("CQFRAME"));
 							String[] cqcqframestrings = cqusablec.split("\r");
 								if (cqcqframestrings[0].contains(" 500")) {
-									cmdsoutp = "BW500\r";
+									pcqbw = "BW500\r";
 								}
 								String[] cqrx = cqcqframestrings[0].split(" ");
 								String[] cqrxcall = cqrx[1].split("-");
+							int pcqwaittime = 0;
+							long pcqresp = 0;
+							String pcqrespcall = cqrxcall[0];
 							if (varalicensed == false) {
 
 								if (recentsn >= -10) {
 									logs = logs + "CQ heard from " + cqrxcall[0] + ", vara not licensed, S/N " + recentsn + ", waiting 80 sec before response\n";
+									pcqwaittime = 80;
+									pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 								}
 								else {
 									if (recentsn >= -15) {
 										logs = logs + "CQ heard from " + cqrxcall[0] + ", vara not licensed, S/N " + recentsn + ", waiting 100 sec before response\n";
-										Thread.sleep(20000);
+										pcqwaittime = 100;
+										pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 
 									}
 									else {
 										logs = logs + "CQ heard from " + cqrxcall[0] + ", vara not licensed, S/N " + recentsn + ", waiting 120 sec before response\n";
-										Thread.sleep(40000);
+										pcqwaittime = 120;
+										pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 
 									}
 								}
-								Thread.sleep(70000);
 							}
 							else {
 								if (recentsn >= 20) {
 									logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 10 sec before response\n";
+									pcqwaittime = 10;
+									pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 								}
 								else {
 									if (recentsn >= 15) {
 										logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 20 sec before response\n";
-										Thread.sleep(10000);
+										pcqwaittime = 20;
+										pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 									}
 									else {
 										if (recentsn >= 10) {
 											logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 30 sec before response\n";
-											Thread.sleep(20000);
+											pcqwaittime = 30;
+											pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 										}
 										else {
 											if (recentsn >= 5) {
 												logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 40 sec before response\n";
-												Thread.sleep(30000);
+												pcqwaittime = 40;
+												pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 											}
 											else {
 												if (recentsn >= 0) {
 													logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 50 sec before response\n";
-													Thread.sleep(40000);
+													pcqwaittime = 50;
+													pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 												}
 												else {
 													if (recentsn >= -5) {
 														logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 60 sec before response\n";
-														Thread.sleep(50000);
+														pcqwaittime = 60;
+														pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 													}
 													else {
 														if (recentsn >= -10) {
 															logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 70 sec before response\n";
-															Thread.sleep(60000);
+															pcqwaittime = 70;
+															pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 														}
 														else {
 															if (recentsn >= -15) {
 																logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 90 sec before response\n";
-																Thread.sleep(80000);
+																pcqwaittime = 90;
+																pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 															}
 															else {
 																logs = logs + "CQ heard from " + cqrxcall[0] + ", S/N " + recentsn + ", waiting 110 sec before response\n";
-																Thread.sleep(100000);
+																pcqwaittime = 110;
+																pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 															}
 														}
 													}
@@ -478,11 +503,15 @@ public class mainclass {
 									}
 								}
 							}
-							Thread.sleep(10000);
-								cmdsoutp = cmdsoutp + "CONNECT " + callsign + " " + cqrxcall[0] + "\r";
-
-								cmdsdata = cmdsoutp.getBytes();
-								cmdsout.write(cmdsdata);
+						if (pcqwaittime < cqwaittime) {
+							cqwaittime = pcqwaittime;
+							cqresp = pcqresp;
+							cqrespcall = pcqrespcall;
+							cqbw = pcqbw;
+						}
+						else {
+							logs = logs + "Above CQ was ignored because it was the same or weaker than the CQ we are waiting to respond to\n";
+						}
 
 
 						}
@@ -662,19 +691,123 @@ public class mainclass {
 					if (usabled.contains("|i")) {
 						if (curbuf == 0) {
 							option = 4;
+							String totserv = "";
+							URLConnection connection = null;
+			                try {
+			                        connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/activeservers").openConnection();
+			                        webscan = new Scanner(connection.getInputStream());
+			                        webscan.useDelimiter("\\Z");
+			                        totserv = webscan.next();
+			                        webscan.close();
+
+			                }
+			                catch (Exception ex) {
+			                    ex.printStackTrace();
+			                    totserv = ex.toString();
+			                }
 							String uptimestring = ((System.currentTimeMillis() - starttime)/1000) + " seconds (" + ((System.currentTimeMillis() - starttime)/3600000) + " hours)";
-							dataoutp = "Total connections: " + totalconnections + "\nUptime: " + uptimestring + "\nServer version: " + softver + "\nLogs:\n-----\n" + logs + "\n-----\nCommands: |w |s |f |d |c |i\r";
-							if (termconnect == false) {
-			                    dataoutp = dataoutp.length() + " " + dataoutp;
-								byte[] datadata = dataoutp.getBytes();
-								
+							dataoutp = "Total connections: " + totalconnections + "\nUptime: " + uptimestring + "\nServer version: " + softver + "\n\nActive servers around the globe:\n-----\n" + totserv + "\n\n-----\nLogs:\n-----\n" + logs + "\n\n-----\nCommands: |w |s |f |d |c |i\r";
+							encodedString = dataoutp;
+	                        if (termconnect == false) {
+	                        	filebytesleft = encodedString.length();
+
+								dataoutp = (encodedString.length()+2) + " \n\r";
+		                        byte[] datadata = dataoutp.getBytes();
+		                        
 								dataout.write(datadata);
 								curbuf = 1;
-							}
-							else {
-								System.out.println(dataoutp);
 								dataoutp = "";
-							}
+
+									while (filebytesleft > 1024) {
+										if (getstream1.readingcmds == prevrcind) {
+											Thread.sleep(100);
+											if (getstream1.readingcmds == prevrcind) {
+												readyforreadingc = true;
+
+											}
+
+										}
+										else {
+											readyforreadingc = false;
+											prevrcind = getstream1.readingcmds;
+										}
+										if (getstream1.gcmdsin != null) {
+											if (readyforreadingc == true) {
+												if (getstream1.gcmdsin.length() > cind) {
+
+													usablec = getstream1.gcmdsin.substring(cind,getstream1.gcmdsin.length());
+
+													cind = getstream1.gcmdsin.length();
+
+												} else {
+													usablec = "";
+												}
+											}
+											else {
+												usablec = "";
+											}
+
+										}
+				        					if (usablec.length() > usablec.lastIndexOf("BUFFER")+6) {
+				        						if (usablec.charAt(usablec.lastIndexOf("BUFFER")+6) == ' ') {
+				        							int thing = 7;
+				        							String thingcounter = "";
+				        							while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+thing))) {
+				        								thingcounter = thingcounter + usablec.charAt(usablec.lastIndexOf("BUFFER")+thing);
+				        								thing = thing + 1;
+				        							}
+				        							if (thingcounter != "") {
+				        								curbuf = Integer.parseInt(thingcounter);
+				        							}
+				        						}
+				        					}
+										if (usablec.contains("BUFFER")) {
+											int i = 7;
+											String numbuild = "";
+											
+											if (usablec.lastIndexOf("BUFFER")+i < (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
+												if (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i))) {
+													boolean kloop = true;
+													while (Character.isDigit(usablec.charAt(usablec.lastIndexOf("BUFFER")+i)) && kloop == true) {
+														numbuild = numbuild + usablec.charAt(usablec.lastIndexOf("BUFFER")+i);
+														i = i + 1;
+														if (i >= (usablec.length()-usablec.lastIndexOf("BUFFER"))) {
+															kloop = false;
+														}
+													}
+													numbuf = Integer.parseInt(numbuild);
+												}
+											}
+
+										}
+										if (usablec.contains("DISCONN")) {
+											filebytesleft = 0;
+											dataoutp = "";
+											option = 0;
+										}
+										if (numbuf < 31744) {
+											encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length()-filebytesleft+1024);
+											dataoutp = dataoutp + encodedStringpart;
+					                        datadata = dataoutp.getBytes();
+											dataout.write(datadata);
+											dataoutp = "";
+											filebytesleft = filebytesleft - 1024;
+											numbuf = numbuf + 1024;
+										}
+									}
+									encodedStringpart = encodedString.substring(encodedString.length()-filebytesleft, encodedString.length());
+									dataoutp = dataoutp + encodedStringpart;
+			                        datadata = dataoutp.getBytes();
+									dataout.write(datadata);
+									dataoutp = "";
+									filebytesleft = 0;
+									usabled = "";
+	                        }
+	                        else {
+	                        	System.out.println(dataoutp);
+	                        	dataoutp = "";
+	                        	usabled = "";
+	                        }
 							option = 0;
 							
 						}
@@ -713,7 +846,7 @@ public class mainclass {
 							dataoutp = "";
 							URLConnection connection = null;
 			                try {
-			                        connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/community/index").openConnection();
+			                        connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/index").openConnection();
 			                        webscan = new Scanner(connection.getInputStream());
 			                        webscan.useDelimiter("\\Z");
 			                        wstext = webscan.next();
@@ -735,7 +868,6 @@ public class mainclass {
 			                wstext = lesswstext;
 			                	wstext = wstext.replaceAll("\\r", "");
 			                    dataoutp = wstext + "\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i";
-			                    logs = logs + rcall + " looked at the community index page\n";
 			                encodedString = dataoutp;
 			                
 
@@ -1652,7 +1784,7 @@ public class mainclass {
 										//view posts
 										dataoutp = "Please send the name of the thread you would like to view.\n-----\n";
 										searchthing = usabled;
-										usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/community/index";
+										usabled = "https://raw.githubusercontent.com/Glitch31415/rws/main/index";
 										URLConnection connection = null;
 				                        try {
 					                            connection = new URL(usabled).openConnection();
@@ -1669,7 +1801,7 @@ public class mainclass {
 
 				                        	wstext = wstext.replaceAll("\\r", "");
 				                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
-				                            logs = logs + rcall + " looked at the community index page\n";
+				                            logs = logs + rcall + " looked at the entire community index page\n";
 
 				                        encodedString = dataoutp;
 				                        
@@ -1806,7 +1938,7 @@ public class mainclass {
 
 									connection = null;
 			                        try {
-				                            connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/community/index").openConnection();
+				                            connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/index").openConnection();
 				                            webscan = new Scanner(connection.getInputStream());
 				                            webscan.useDelimiter("\\Z");
 				                            wstext = webscan.next();
@@ -1828,7 +1960,6 @@ public class mainclass {
 			                        wstext = lesswstext;
 			                        	wstext = wstext.replaceAll("\\r", "");
 			                            dataoutp = dataoutp + "\n" + wstext + "\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i\r";
-			                            logs = logs + rcall + " looked at the community index page\n";
 			                        encodedString = dataoutp;
 			                        
 
@@ -1940,8 +2071,8 @@ public class mainclass {
 						}
 						if (option == 8) {
 							if (usabled != "") {
-								if (usabled.contains("README") || usabled == "index" || usabled.contains("|")) {
-									dataoutp = "Oops, that title is invalid! Please make a title that does not include 'README' or '|' and is not 'index'.\r";
+								if (usabled.contains(".") || usabled.contains("~") || usabled.contains("|") || usabled.contains("/")) {
+									dataoutp = "Oops, that title is invalid! Please make a title that does not include '.', '~', '/' or '|'.\r";
 									if (termconnect == false) {
 										dataoutp = dataoutp.length() + " " + dataoutp;
 										byte[] datadata = dataoutp.getBytes();
@@ -2063,7 +2194,7 @@ public class mainclass {
 									        try {
 									        	try {
 									        		File myObj;
-										        	      myObj = new File(git.getRepository().getDirectory().getParent() + "/community/index");
+										        	      myObj = new File(git.getRepository().getDirectory().getParent() + "/index");
 
 
 									        	      Scanner myReader = new Scanner(myObj);
@@ -2084,7 +2215,7 @@ public class mainclass {
 
 									            FileWriter myWriter;
 
-										            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/index");
+										            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/index");
 										            Instant instant = Instant.now();
 
 
@@ -2122,7 +2253,7 @@ public class mainclass {
 			                    }
 										URLConnection connection = null;
 				                        try {
-					                            connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/community/index").openConnection();
+					                            connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/index").openConnection();
 					                            webscan = new Scanner(connection.getInputStream());
 					                            webscan.useDelimiter("\\Z");
 					                            wstext = webscan.next();
@@ -2149,7 +2280,6 @@ public class mainclass {
 				                        	else {
 				                        		dataoutp = wstext + "\nOops, that contained material that is inappropriate for ham radio. Please try something else.\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i";
 				                        	}
-				                            logs = logs + rcall + " looked at the community index page\n";
 
 				                        encodedString = dataoutp;
 				                        
@@ -2275,6 +2405,99 @@ public class mainclass {
 							cmdsoutp = "DISCONNECT\r";
 							cmdsdata = cmdsoutp.getBytes();
 							cmdsout.write(cmdsdata);
+						}
+						if (System.currentTimeMillis() >= cqresp && cqresp != 0) {
+							if (conn == false) {
+								if (cqbw.contains("500")) {
+									cmdsoutp = cmdsoutp + cqbw;
+									cqbw = "";
+								}
+
+								cmdsoutp = cmdsoutp + "CONNECT " + callsign + " " + cqrespcall + "\r";
+								System.out.println("CONNECT " + callsign + " " + cqrespcall + "\r");
+								cmdsdata = cmdsoutp.getBytes();
+								cmdsout.write(cmdsdata);
+								cqresp = 0;
+								cqwaittime = 130;
+							}
+							else {
+								cqresp = 0;
+								cqwaittime = 130;
+							}
+
+						}
+
+						if (System.currentTimeMillis() > prevupd) {
+							String pathToClone = "./repo";
+							Path directory = Path.of(pathToClone);
+							try {
+								Files.walk(directory)
+				                .sorted(Comparator.reverseOrder())
+				                .map(Path::toFile)
+				                .forEach(File::delete);
+							} catch (java.nio.file.NoSuchFileException e) {
+								
+							}
+
+						        Git git = Git.cloneRepository()
+						                .setURI("https://github.com/Glitch31415/rws.git")
+						                .setDirectory(new File(pathToClone))
+						                .call();
+
+							        try {
+							        	try {
+							        		File myObjp;
+							        		stp = "";
+							        		pexists = false;
+								        	      myObjp = new File(git.getRepository().getDirectory().getParent(), "activeservers");
+
+
+							        	      Scanner myReaderp = new Scanner(myObjp);
+							        	      while (myReaderp.hasNextLine()) {
+							        	    	String servupdtemp = myReaderp.nextLine();
+							        	    	if (servupdtemp != "") {
+								        	    	if (Long.parseLong(servupdtemp.substring(0, servupdtemp.indexOf(" "))) < (System.currentTimeMillis()-2700000) || servupdtemp.contains(callsign)) {
+								        	    		
+								        	    	}
+								        	    	else {
+									        	        stp = stp + servupdtemp + "\n";
+								        	    	}
+							        	    	}
+
+
+							        	      }
+							        	      myReaderp.close();
+							        	    } catch (FileNotFoundException e) {
+							        	    	
+							        	    }
+
+							            FileWriter myWriterp;
+
+								            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + "/activeservers");
+
+								            	myWriterp.write(System.currentTimeMillis() + " " + callsign + " " + servfreq + " " + servlocator + "\n" + stp);
+								       myWriterp.close();
+							          } catch (IOException e) {
+							        }
+
+							        git.add().addFilepattern(".").call();
+							        git.commit().setMessage("Committed from server").call();
+							        byte[] decodedBytes = Base64.getDecoder().decode(Base64.getDecoder().decode("WjJod1gxRlVSRlJoWlZSaU5qSmtSbVkwVkdwNmVESXlXSFE1U1d0NlpHUnVSekZGVERsME53PT0="));
+							        String decodedString = new String(decodedBytes);
+							        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(decodedString, "")).call(); // if anyone else sees this please don't break everything
+							        git.close();
+							        git = null;
+
+							        
+							        try {
+										Files.walk(directory)
+						                .sorted(Comparator.reverseOrder())
+						                .map(Path::toFile)
+						                .forEach(File::delete);
+									} catch (java.nio.file.NoSuchFileException e) {
+										
+									}
+							prevupd = (long) (System.currentTimeMillis() + 900000 + (Math.random()*900000));
 						}
 					}
 					else {
