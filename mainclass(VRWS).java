@@ -2414,7 +2414,6 @@ public class mainclass {
 								}
 
 								cmdsoutp = cmdsoutp + "CONNECT " + callsign + " " + cqrespcall + "\r";
-								System.out.println("CONNECT " + callsign + " " + cqrespcall + "\r");
 								cmdsdata = cmdsoutp.getBytes();
 								cmdsout.write(cmdsdata);
 								cqresp = 0;
