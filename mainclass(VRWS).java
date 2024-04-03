@@ -239,7 +239,7 @@ public class mainclass {
 		boolean termconnect = false;
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v59";
+		String softver = "v60";
 		int totalconnections = 0;
 
 		boolean intaccess = true;
@@ -2181,10 +2181,10 @@ public class mainclass {
 										            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 										            String dateTime = instantp.atZone(zonep).format(formatter);
 										            if (pexists == false) {
-											        	myWriterp.write(postname+"\n\n"+rcall+"\n"+dateTime+" UTC"+"\n----------\n"+postbody+"\n----------\n\n");
+											        	myWriterp.write(postname+"\n"+rcall+"\n"+dateTime+" UTC"+"\n----------\n"+postbody+"\n----------\n");
 										            }
 										            else {
-										            	myWriterp.write(stp + "\n"+rcall+"\n"+dateTime+" UTC"+"\n----------\n"+postbody+"\n----------\n\n");
+										            	myWriterp.write(stp + "\n"+rcall+", "+dateTime+" UTC:"+"\n"+postbody+"\n");
 										            }
 										       myWriterp.close();
 									          } catch (IOException e) {
@@ -2474,7 +2474,7 @@ public class mainclass {
 
 								            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + "/activeservers");
 
-								            	myWriterp.write(System.currentTimeMillis() + " " + callsign + " " + servfreq + " " + servlocator + "\n" + stp);
+								            	myWriterp.write(System.currentTimeMillis() + " " + callsign + " " + servfreq + " " + servlocator + " " + softver + "\n" + stp);
 								       myWriterp.close();
 							          } catch (IOException e) {
 							        }
