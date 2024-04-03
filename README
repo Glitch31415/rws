@@ -20,6 +20,6 @@ KISS Interface should be checked (not used at the moment but might be in the fut
 I would recommend setting Retries to 2, at most. It causes less interference to other stations answering CQs and for the server to be used effectively the link should be strong enough to not need more than 2 retries.
 
 Finally, open cmd.exe and type in "java -jar [path to jar]" replacing [path to jar] with the full path of the vrws.jar file (example: C:\Users\glitch\Downloads\vrws.jar).
-Type in your callsign when it prompts and your server will be active! Set your radio frequency to 14.110 MHz USB, and PTT to VOX.
+Fill in the extra data as it asks and your server will be active! Set your radio frequency to 14.110 MHz USB, and PTT to VOX.
 
 (If you have any problems, email me at jpradiophone@gmail.com. Linux support is offered, email me for help.)
