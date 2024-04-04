@@ -239,7 +239,7 @@ public class mainclass {
 		boolean termconnect = false;
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v60";
+		String softver = "v61";
 		int totalconnections = 0;
 
 		boolean intaccess = true;
@@ -393,6 +393,7 @@ public class mainclass {
 						String dummyload = "";
 			            try {
 			                    URLConnection connectiontest = new URL("https://www.google.com").openConnection();
+					            connectiontest.setRequestProperty("User-Agent", "Mozilla/5.0");
 			                    Scanner webscantest = new Scanner(connectiontest.getInputStream());
 			                    webscantest.useDelimiter("\\Z");
 			                    dummyload = webscantest.next();
@@ -520,6 +521,7 @@ public class mainclass {
 						String dummyload = "";
 			            try {
 			                    URLConnection connectiontest = new URL("https://www.google.com").openConnection();
+					            connectiontest.setRequestProperty("User-Agent", "Mozilla/5.0");
 			                    Scanner webscantest = new Scanner(connectiontest.getInputStream());
 			                    webscantest.useDelimiter("\\Z");
 			                    dummyload = webscantest.next();
@@ -695,6 +697,7 @@ public class mainclass {
 							URLConnection connection = null;
 			                try {
 			                        connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/activeservers").openConnection();
+						            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 			                        webscan = new Scanner(connection.getInputStream());
 			                        webscan.useDelimiter("\\Z");
 			                        totserv = webscan.next();
@@ -847,6 +850,7 @@ public class mainclass {
 							URLConnection connection = null;
 			                try {
 			                        connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/index").openConnection();
+						            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 			                        webscan = new Scanner(connection.getInputStream());
 			                        webscan.useDelimiter("\\Z");
 			                        wstext = webscan.next();
@@ -985,6 +989,7 @@ public class mainclass {
 									
 			                        try {
 				                            connection = new URL(usabled).openConnection();
+								            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 				                            webscan = new Scanner(connection.getInputStream());
 				                            webscan.useDelimiter("\\Z");
 				                            wstext = webscan.next();
@@ -1118,6 +1123,7 @@ public class mainclass {
 									
 			                        try {
 				                            connection = new URL(usabled).openConnection();
+								            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 				                            webscan = new Scanner(connection.getInputStream());
 				                            webscan.useDelimiter("\\Z");
 				                            wstext = webscan.next();
@@ -1253,6 +1259,7 @@ public class mainclass {
 			                    try {
 
 			                            connection = new URL(usabled).openConnection();
+							            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 			                            webscan = new Scanner(connection.getInputStream());
 			                            webscan.useDelimiter("\\Z");
 			                            wstext = webscan.next();
@@ -1788,6 +1795,7 @@ public class mainclass {
 										URLConnection connection = null;
 				                        try {
 					                            connection = new URL(usabled).openConnection();
+									            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 					                            webscan = new Scanner(connection.getInputStream());
 					                            webscan.useDelimiter("\\Z");
 					                            wstext = webscan.next();
@@ -1921,6 +1929,7 @@ public class mainclass {
 				                        try {
 
 					                            connection = new URL(usabled).openConnection();
+									            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 					                            webscan = new Scanner(connection.getInputStream());
 					                            webscan.useDelimiter("\\Z");
 					                            wstext = webscan.next();
@@ -1939,6 +1948,7 @@ public class mainclass {
 									connection = null;
 			                        try {
 				                            connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/index").openConnection();
+								            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 				                            webscan = new Scanner(connection.getInputStream());
 				                            webscan.useDelimiter("\\Z");
 				                            wstext = webscan.next();
@@ -2254,6 +2264,7 @@ public class mainclass {
 										URLConnection connection = null;
 				                        try {
 					                            connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/index").openConnection();
+									            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 					                            webscan = new Scanner(connection.getInputStream());
 					                            webscan.useDelimiter("\\Z");
 					                            wstext = webscan.next();
