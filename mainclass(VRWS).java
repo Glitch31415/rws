@@ -239,20 +239,41 @@ public class mainclass {
 		boolean termconnect = false;
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v61";
+		String softver = "v62";
 		int totalconnections = 0;
 
 		boolean intaccess = true;
 		boolean pexists = false;
-		getstream1.cmds = new Socket("127.0.0.1", 8300);
-		getstream2.data = new Socket("127.0.0.1", 8301);
-		OutputStream cmdsout = getstream1.cmds.getOutputStream();
-		OutputStream dataout = getstream2.data.getOutputStream();
-		Thread object = new Thread(new getstream1());
-		object.start();
-		Thread object2 = new Thread(new getstream2());
-		object2.start();
         try (Scanner callinp = new Scanner(System.in)) {
+        	int cmdport = 8300;
+        	int dataport = 8301;
+        	int kissport = 8100;
+			System.out.println("Enter VARA command port (default: 8300)");
+			String tempenterstr = callinp.nextLine();
+			if (tempenterstr != "") {
+				cmdport = Integer.valueOf(tempenterstr);
+				tempenterstr = "";
+			}
+			System.out.println("Enter VARA data port (default: 8301)");
+			tempenterstr = callinp.nextLine();
+			if (tempenterstr != "") {
+				dataport = Integer.valueOf(tempenterstr);
+				tempenterstr = "";
+			}
+			System.out.println("Enter VARA KISS port (default: 8100)");
+			tempenterstr = callinp.nextLine();
+			if (tempenterstr != "") {
+				kissport = Integer.valueOf(tempenterstr);
+				tempenterstr = "";
+			}
+			getstream1.cmds = new Socket("127.0.0.1", cmdport);
+			getstream2.data = new Socket("127.0.0.1", dataport);
+			OutputStream cmdsout = getstream1.cmds.getOutputStream();
+			OutputStream dataout = getstream2.data.getOutputStream();
+			Thread object = new Thread(new getstream1());
+			object.start();
+			Thread object2 = new Thread(new getstream2());
+			object2.start();
 			System.out.println("Enter callsign without suffixes or prefixes (example: KJ7QQG)");
 			String callsign = callinp.nextLine();
 			System.out.println("Enter server welcome message (leave blank if none)");
@@ -280,6 +301,7 @@ public class mainclass {
 			long cqresp = 0;
 			String cqbw = "";
 			String cqrespcall = "";
+			String cmdoption = "";
 			System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\nIf you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'.");
 			while (0==0) {
 				usabled = "";
@@ -632,19 +654,26 @@ public class mainclass {
 						}
 						if (usabled.contains("|w")) {
 							if (curbuf == 0) {
-								option = 1;
-								dataoutp = "Please provide the exact URL of the website you want to fetch. Example: 'https://www.example.com'. If you want the raw HTML from the website, please add a carat (^) behind the start of the URL. Example: '^https://www.example.com'.\nCommands: |w |s |f |d |c |i\r";
-			                    if (termconnect == false) {
-									dataoutp = dataoutp.length() + " " + dataoutp;
-									byte[] datadata = dataoutp.getBytes();
-									
-									dataout.write(datadata);
-									curbuf = 1;
-			                    }
-			                    else {
-			                    	System.out.println(dataoutp);
-			                    	dataoutp = "";
-			                    }
+								if (usabled.contains("|w ")) {
+									cmdoption = usabled.substring(usabled.indexOf("|w ")+3);
+									option = 1;
+								}
+								else {
+									option = 1;
+									dataoutp = "Please provide the exact URL of the website you want to fetch. Example: 'https://www.example.com'. If you want the raw HTML from the website, please add a carat (^) behind the start of the URL. Example: '^https://www.example.com'.\nCommands: |w |s |f |d |c |i\r";
+				                    if (termconnect == false) {
+										dataoutp = dataoutp.length() + " " + dataoutp;
+										byte[] datadata = dataoutp.getBytes();
+										
+										dataout.write(datadata);
+										curbuf = 1;
+				                    }
+				                    else {
+				                    	System.out.println(dataoutp);
+				                    	dataoutp = "";
+				                    }
+								}
+
 			                    
 							}
 							usabled = "";
@@ -652,19 +681,26 @@ public class mainclass {
 					}
 					if (usabled.contains("|s")) {
 						if (curbuf == 0) {
-							option = 2;
-							dataoutp = "Please provide your query.\nCommands: |w |s |f |d |c |i\r";
-							if (termconnect == false) {
-			                    dataoutp = dataoutp.length() + " " + dataoutp;
-								byte[] datadata = dataoutp.getBytes();
-								
-								dataout.write(datadata);
-								curbuf = 1;
+							if (usabled.contains("|s ")) {
+								cmdoption = usabled.substring(usabled.indexOf("|s ")+3);
+								option = 2;
 							}
 							else {
-								System.out.println(dataoutp);
-								dataoutp = "";
+								option = 2;
+								dataoutp = "Please provide your query.\nCommands: |w |s |f |d |c |i\r";
+								if (termconnect == false) {
+				                    dataoutp = dataoutp.length() + " " + dataoutp;
+									byte[] datadata = dataoutp.getBytes();
+									
+									dataout.write(datadata);
+									curbuf = 1;
+								}
+								else {
+									System.out.println(dataoutp);
+									dataoutp = "";
+								}
 							}
+
 							
 						}
 						usabled = "";
@@ -672,19 +708,26 @@ public class mainclass {
 					}
 					if (usabled.contains("|f")) {
 						if (curbuf == 0) {
-							option = 3;
-							dataoutp = "Please provide the city and state you would like the weather for in the format of 'city state'. If the command returns blank, try reformatting your query.\nCommands: |w |s |f |d |c |i\r";
-							if (termconnect == false) {
-			                    dataoutp = dataoutp.length() + " " + dataoutp;
-								byte[] datadata = dataoutp.getBytes();
-								
-								dataout.write(datadata);
-								curbuf = 1;
+							if (usabled.contains("|f ")) {
+								cmdoption = usabled.substring(usabled.indexOf("|f ")+3);
+								option = 3;
 							}
 							else {
-								System.out.println(dataoutp);
-								dataoutp = "";
+								option = 3;
+								dataoutp = "Please provide the city and state you would like the weather for in the format of 'city state'. If the command returns blank, try reformatting your query.\nCommands: |w |s |f |d |c |i\r";
+								if (termconnect == false) {
+				                    dataoutp = dataoutp.length() + " " + dataoutp;
+									byte[] datadata = dataoutp.getBytes();
+									
+									dataout.write(datadata);
+									curbuf = 1;
+								}
+								else {
+									System.out.println(dataoutp);
+									dataoutp = "";
+								}
 							}
+
 								
 						}
 						usabled = "";
@@ -823,19 +866,26 @@ public class mainclass {
 						}
 						else {
 							if (curbuf == 0) {
-								option = 5;
-								dataoutp = "Please provide the URL of the file you would like to download.\nCommands: |w |s |f |d |c |i\r";
-								if (termconnect == false) {
-			                        dataoutp = dataoutp.length() + " " + dataoutp;
-									byte[] datadata = dataoutp.getBytes();
-									
-									dataout.write(datadata);
-									curbuf = 1;
+								if (usabled.contains("|d ")) {
+									cmdoption = usabled.substring(usabled.indexOf("|d ")+3);
+									option = 5;
 								}
 								else {
-									System.out.println(dataoutp);
-									dataoutp = "";
+									option = 5;
+									dataoutp = "Please provide the URL of the file you would like to download.\nCommands: |w |s |f |d |c |i\r";
+									if (termconnect == false) {
+				                        dataoutp = dataoutp.length() + " " + dataoutp;
+										byte[] datadata = dataoutp.getBytes();
+										
+										dataout.write(datadata);
+										curbuf = 1;
+									}
+									else {
+										System.out.println(dataoutp);
+										dataoutp = "";
+									}
 								}
+
 								
 							}
 							usabled = "";
@@ -846,6 +896,14 @@ public class mainclass {
 					if (usabled.contains("|c")) {
 						if (curbuf == 0) {
 							wstext = "";
+							if (usabled.contains("|c ") && usabled != "|c ") {
+								option = 6;
+								cmdoption = usabled.substring(usabled.indexOf("|c ")+3);
+								usabled = "";
+								
+
+							}
+							else {
 							dataoutp = "";
 							URLConnection connection = null;
 			                try {
@@ -974,12 +1032,16 @@ public class mainclass {
 			                	usabled = "";
 			                }
 							option = 6;
-							
+							}
 						}
 						usabled = "";
 							
 					}
 						if (option == 1) {
+							if (cmdoption != "") {
+								usabled = cmdoption;
+								cmdoption = "";
+							}
 							if (usabled != "") {
 								if (usabled.contains("^")) {
 									dataoutp = "Here is the raw HTML from the website you provided.\n-----\n";
@@ -1248,6 +1310,10 @@ public class mainclass {
 							}
 						}
 						if (option == 2) {
+							if (cmdoption != "") {
+								usabled = cmdoption;
+								cmdoption = "";
+							}
 							if (usabled != "") {
 								dataoutp = "Here are the results of your search.\n-----\n";
 								searchthing = usabled;
@@ -1382,6 +1448,10 @@ public class mainclass {
 							}
 						}
 						if (option == 3) {
+							if (cmdoption != "") {
+								usabled = cmdoption;
+								cmdoption = "";
+							}
 							if (usabled != "") {
 								dataoutp = "Here is the weather forecast for the location you provided.\n-----\n";
 								weatherbroke = false;
@@ -1610,6 +1680,10 @@ public class mainclass {
 							}
 						}
 						if (option == 5) {
+							if (cmdoption != "") {
+								usabled = cmdoption;
+								cmdoption = "";
+							}
 							if (usabled != "") {
 								try {
 										InputStream in = new URL(usabled).openStream();
@@ -1745,46 +1819,70 @@ public class mainclass {
 							}
 						}
 						if (option == 6) {
+							if (cmdoption != "") {
+								usabled = cmdoption;
+								cmdoption = "";
+							}
 							if (usabled != "") {
 									if (usabled.contains("view")) {
-										dataoutp = "Please send the name of the thread you would like to view. (Or, send '|all' to list all threads)\r";
-										if (termconnect == false) {
-											dataoutp = dataoutp.length() + " " + dataoutp;
-											byte[] datadata = dataoutp.getBytes();
-											
-											dataout.write(datadata);
-											curbuf = 1;
+										if (usabled.contains("view ")) {
+											cmdoption = usabled.substring(usabled.indexOf("view ")+5);
 											option = 7;
 											usabled = "";
 										}
 										else {
-											System.out.println(dataoutp);
-											option = 7;
-											usabled = "";
+											dataoutp = "Please send the name of the thread you would like to view. (Or, send '|all' to list all threads)\r";
+											if (termconnect == false) {
+												dataoutp = dataoutp.length() + " " + dataoutp;
+												byte[] datadata = dataoutp.getBytes();
+												
+												dataout.write(datadata);
+												curbuf = 1;
+												option = 7;
+												usabled = "";
+											}
+											else {
+												System.out.println(dataoutp);
+												option = 7;
+												usabled = "";
+											}
 										}
+
 									}
 									if (usabled.contains("create")) {
 										//create posts
-										dataoutp = "Please send the name of the thread you would like to create (or leave a comment on)\r";
-										if (termconnect == false) {
-											dataoutp = dataoutp.length() + " " + dataoutp;
-											byte[] datadata = dataoutp.getBytes();
-											
-											dataout.write(datadata);
-											curbuf = 1;
+										if (usabled.contains("create ")) {
+											cmdoption = usabled.substring(usabled.indexOf("create ")+7);
 											option = 8;
 											usabled = "";
 										}
 										else {
-											System.out.println(dataoutp);
-											option = 8;
-											usabled = "";
+											dataoutp = "Please send the name of the thread you would like to create (or leave a comment on)\r";
+											if (termconnect == false) {
+												dataoutp = dataoutp.length() + " " + dataoutp;
+												byte[] datadata = dataoutp.getBytes();
+												
+												dataout.write(datadata);
+												curbuf = 1;
+												option = 8;
+												usabled = "";
+											}
+											else {
+												System.out.println(dataoutp);
+												option = 8;
+												usabled = "";
+											}
 										}
+
 
 									}
 							}
 						}
 						if (option == 7) {
+							if (cmdoption != "") {
+								usabled = cmdoption;
+								cmdoption = "";
+							}
 							if (usabled != "") {
 								if (usabled.contains("|")) {
 									if (usabled.contains("|all")) {
@@ -2080,6 +2178,10 @@ public class mainclass {
 							}
 						}
 						if (option == 8) {
+							if (cmdoption != "") {
+								usabled = cmdoption;
+								cmdoption = "";
+							}
 							if (usabled != "") {
 								if (usabled.contains(".") || usabled.contains("~") || usabled.contains("|") || usabled.contains("/")) {
 									dataoutp = "Oops, that title is invalid! Please make a title that does not include '.', '~', '/' or '|'.\r";
@@ -2125,6 +2227,10 @@ public class mainclass {
 							}
 						}
 						if (option == 9) {
+							if (cmdoption != "") {
+								usabled = cmdoption;
+								cmdoption = "";
+							}
 							if (usabled != "") {
 								boolean postsafe = true;
 								dataoutp = "";
