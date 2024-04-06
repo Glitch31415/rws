@@ -239,7 +239,7 @@ public class mainclass {
 		boolean termconnect = false;
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v62";
+		String softver = "v63";
 		int totalconnections = 0;
 
 		boolean intaccess = true;
@@ -302,7 +302,7 @@ public class mainclass {
 			String cqbw = "";
 			String cqrespcall = "";
 			String cmdoption = "";
-			System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\nIf you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'.");
+			System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\nIf you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'.");
 			while (0==0) {
 				usabled = "";
 				if (termconnect == true) {
@@ -604,11 +604,11 @@ public class mainclass {
 									}
 									if (intaccess == true) {
 										if (varalicensed == true) {
-											dataoutp = dataoutp + "\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\r";
+											dataoutp = dataoutp + "\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
 											
 										}
 										else {
-											dataoutp = dataoutp + "(This server does not use a licensed copy of VARA. Download speeds will be limited to speed level 4.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\r";
+											dataoutp = dataoutp + "(This server does not use a licensed copy of VARA. Download speeds will be limited to speed level 4.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
 											
 										}
 										
@@ -642,7 +642,7 @@ public class mainclass {
 								if (welcomemessage != "") {
 									dataoutp = dataoutp + "\n\n" + welcomemessage;
 								}
-								dataoutp = dataoutp + "\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n[You can disconnect by saying '|disc' because you are using the terminal.]\r";
+								dataoutp = dataoutp + "\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\n[You can disconnect by saying '|disc' because you are using the terminal.]\r";
 								
 								logs = logs + rcall + " connected\n";
 			                    System.out.println(dataoutp);
@@ -660,7 +660,7 @@ public class mainclass {
 								}
 								else {
 									option = 1;
-									dataoutp = "Please provide the exact URL of the website you want to fetch. Example: 'https://www.example.com'. If you want the raw HTML from the website, please add a carat (^) behind the start of the URL. Example: '^https://www.example.com'.\nCommands: |w |s |f |d |c |i\r";
+									dataoutp = "Please provide the exact URL of the website you want to fetch. Example: 'https://www.example.com'. If you want the raw HTML from the website, please add a carat (^) behind the start of the URL. Example: '^https://www.example.com'.\nCommands: |w |s |f |d |c |i |h\r";
 				                    if (termconnect == false) {
 										dataoutp = dataoutp.length() + " " + dataoutp;
 										byte[] datadata = dataoutp.getBytes();
@@ -687,7 +687,7 @@ public class mainclass {
 							}
 							else {
 								option = 2;
-								dataoutp = "Please provide your query.\nCommands: |w |s |f |d |c |i\r";
+								dataoutp = "Please provide your query.\nCommands: |w |s |f |d |c |i |h\r";
 								if (termconnect == false) {
 				                    dataoutp = dataoutp.length() + " " + dataoutp;
 									byte[] datadata = dataoutp.getBytes();
@@ -714,7 +714,7 @@ public class mainclass {
 							}
 							else {
 								option = 3;
-								dataoutp = "Please provide the city and state you would like the weather for in the format of 'city state'. If the command returns blank, try reformatting your query.\nCommands: |w |s |f |d |c |i\r";
+								dataoutp = "Please provide the city and state you would like the weather for in the format of 'city state'. If the command returns blank, try reformatting your query.\nCommands: |w |s |f |d |c |i |h\r";
 								if (termconnect == false) {
 				                    dataoutp = dataoutp.length() + " " + dataoutp;
 									byte[] datadata = dataoutp.getBytes();
@@ -752,7 +752,7 @@ public class mainclass {
 			                    totserv = ex.toString();
 			                }
 							String uptimestring = ((System.currentTimeMillis() - starttime)/1000) + " seconds (" + ((System.currentTimeMillis() - starttime)/3600000) + " hours)";
-							dataoutp = "Total connections: " + totalconnections + "\nUptime: " + uptimestring + "\nServer version: " + softver + "\n\nActive servers around the globe:\n-----\n" + totserv + "\n\n-----\nLogs:\n-----\n" + logs + "\n\n-----\nCommands: |w |s |f |d |c |i\r";
+							dataoutp = "Total connections: " + totalconnections + "\nUptime: " + uptimestring + "\nServer version: " + softver + "\n\nActive servers around the globe:\n-----\n" + totserv + "\n\n-----\nLogs:\n-----\n" + logs + "\n\n-----\nCommands: |w |s |f |d |c |i |h\r";
 							encodedString = dataoutp;
 	                        if (termconnect == false) {
 	                        	filebytesleft = encodedString.length();
@@ -872,7 +872,7 @@ public class mainclass {
 								}
 								else {
 									option = 5;
-									dataoutp = "Please provide the URL of the file you would like to download.\nCommands: |w |s |f |d |c |i\r";
+									dataoutp = "Please provide the URL of the file you would like to download.\nCommands: |w |s |f |d |c |i |h\r";
 									if (termconnect == false) {
 				                        dataoutp = dataoutp.length() + " " + dataoutp;
 										byte[] datadata = dataoutp.getBytes();
@@ -929,7 +929,7 @@ public class mainclass {
 			                }
 			                wstext = lesswstext;
 			                	wstext = wstext.replaceAll("\\r", "");
-			                    dataoutp = wstext + "\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i";
+			                    dataoutp = wstext + "\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i |h";
 			                encodedString = dataoutp;
 			                
 
@@ -1037,6 +1037,28 @@ public class mainclass {
 						usabled = "";
 							
 					}
+					if (usabled.contains("|h")) {
+						if (curbuf == 0) {
+
+							dataoutp = "\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
+								if (termconnect == false) {
+				                    dataoutp = dataoutp.length() + " " + dataoutp;
+									byte[] datadata = dataoutp.getBytes();
+									
+									dataout.write(datadata);
+									curbuf = 1;
+								}
+								else {
+									System.out.println(dataoutp);
+									dataoutp = "";
+								}
+
+
+								option = 0;
+						}
+						usabled = "";
+							
+					}
 						if (option == 1) {
 							if (cmdoption != "") {
 								usabled = cmdoption;
@@ -1064,12 +1086,12 @@ public class mainclass {
 			                            wstext = ex.toString();
 			                        }
 			                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-			                            dataoutp = dataoutp + "Oops, your website contained material that is inappropriate for ham radio. Please try a different website.\n-----\nCommands: |w |s |f |d |c |i\r";
+			                            dataoutp = dataoutp + "Oops, your website contained material that is inappropriate for ham radio. Please try a different website.\n-----\nCommands: |w |s |f |d |c |i |h\r";
 			                            logs = logs + rcall + " tried to fetch html from URL " + usabled + " but was blocked\n";
 
 			                        } else {
 			                        	wstext = wstext.replaceAll("\\r", "");
-			                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
+			                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i |h\r";
 			                            logs = logs + rcall + " fetched html from URL " + usabled + "\n";
 
 			                        }								
@@ -1197,12 +1219,12 @@ public class mainclass {
 			                            wstext = ex.toString();
 			                        }
 			                        if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-			                            dataoutp = dataoutp + "Oops, your website contained material that is inappropriate for ham radio. Please try a different website.\n-----\nCommands: |w |s |f |d |c |i\r";
+			                            dataoutp = dataoutp + "Oops, your website contained material that is inappropriate for ham radio. Please try a different website.\n-----\nCommands: |w |s |f |d |c |i |h\r";
 			                            logs = logs + rcall + " tried to fetch text from URL " + textscanthing + " but was blocked\n";
 
 			                        } else {
 			                        	wstext = wstext.replaceAll("\\r", "");
-			                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
+			                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i |h\r";
 			                            logs = logs + rcall + " fetched text from URL " + textscanthing + "\n";
 
 			                        }
@@ -1337,11 +1359,11 @@ public class mainclass {
 			                        wstext = ex.toString();
 			                    }
 			                    if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-			                        dataoutp = dataoutp + "Oops, your results contained material that is inappropriate for ham radio. Please try a different query.\n-----\nCommands: |w |s |f |d |c |i\r";
+			                        dataoutp = dataoutp + "Oops, your results contained material that is inappropriate for ham radio. Please try a different query.\n-----\nCommands: |w |s |f |d |c |i |h\r";
 			                        logs = logs + rcall + " attempted to search " + searchthing + " but was blocked\n";
 			                    } else {
 			                    	wstext = wstext.replaceAll("\\r", "");
-			                        dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
+			                        dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i |h\r";
 			                        logs = logs + rcall + " searched for " + searchthing + "\n";
 
 			                    }
@@ -1567,12 +1589,12 @@ public class mainclass {
 						        weatherend = weatherend.replaceAll("\n\n", "\n");
 						        wstext = weatherend;
 			                    if (wstext.contains("porn") || wstext.contains(" sex ") || wstext.contains("fuck") || wstext.contains("shit") || wstext.contains("bitch") || wstext.contains(" ass ") || wstext.contains("pussy") || wstext.contains("hentai") || wstext.contains("xvideos")) {
-			                        dataoutp = dataoutp + "Oops, your results contained material that is inappropriate for ham radio. Please try a different city.\n-----\nCommands: |w |s |f |d |c |i\r";
+			                        dataoutp = dataoutp + "Oops, your results contained material that is inappropriate for ham radio. Please try a different city.\n-----\nCommands: |w |s |f |d |c |i |h\r";
 			                        logs = logs + rcall + " attempted to get the weather for " + weatherthing + " but was blocked\n";
 
 			                    } else {
 			                    	wstext = wstext.replaceAll("\\r", "");
-			                        dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
+			                        dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i |h\r";
 			                        logs = logs + rcall + " got the weather for " + weatherthing + "\n";
 
 			                    }
@@ -1711,7 +1733,7 @@ public class mainclass {
 								filebytesleft = encodedString.length();
 
 			                    if (termconnect == false) {
-									dataoutp = (encodedString.length()+23+270) + " Download started.\n-----\n\r";
+									dataoutp = (encodedString.length()+23+273) + " Download started.\n-----\n\r";
 			                    	byte[] datadata = dataoutp.getBytes();
 			                    	
 									dataout.write(datadata);
@@ -1806,13 +1828,13 @@ public class mainclass {
 
 									
 									dataoutp = "";
-									dataoutp = dataoutp + "\n-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nCommands: |w |s |f |d |c |i\r";
+									dataoutp = dataoutp + "\n-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nCommands: |w |s |f |d |c |i |h\r";
 			                        datadata = dataoutp.getBytes();
 									dataout.write(datadata);
 			                    }
 			                    else {
 			                    	System.out.println("Download started.\n-----\n" + encodedString);
-			                    	System.out.println("-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nCommands: |w |s |f |d |c |i\r");
+			                    	System.out.println("-----\nYou can decode this info by copying the text between the dashes, saving the text as 'data.b64' then running 'certutil -decode data.b64 downloadedfile' in the command line in Windows or 'base64 -d data.b64 > downloadedfile' in Linux.\nCommands: |w |s |f |d |c |i |h\r");
 			                    	dataoutp = "";
 			                    }
 								
@@ -1906,7 +1928,7 @@ public class mainclass {
 				                        }
 
 				                        	wstext = wstext.replaceAll("\\r", "");
-				                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i\r";
+				                            dataoutp = dataoutp + wstext + "\n-----\nCommands: |w |s |f |d |c |i |h\r";
 				                            logs = logs + rcall + " looked at the entire community index page\n";
 
 				                        encodedString = dataoutp;
@@ -2067,7 +2089,7 @@ public class mainclass {
 			                        }
 			                        wstext = lesswstext;
 			                        	wstext = wstext.replaceAll("\\r", "");
-			                            dataoutp = dataoutp + "\n" + wstext + "\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i\r";
+			                            dataoutp = dataoutp + "\n" + wstext + "\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i |h\r";
 			                        encodedString = dataoutp;
 			                        
 
@@ -2392,10 +2414,10 @@ public class mainclass {
 				                        wstext = lesswstext;
 				                        	wstext = wstext.replaceAll("\\r", "");
 				                        	if (postsafe == true) {
-					                        	dataoutp = wstext + "\nYour thread/comment has been uploaded!\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i";
+					                        	dataoutp = wstext + "\nYour thread/comment has been uploaded!\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i |h";
 				                        	}
 				                        	else {
-				                        		dataoutp = wstext + "\nOops, that contained material that is inappropriate for ham radio. Please try something else.\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i";
+				                        		dataoutp = wstext + "\nOops, that contained material that is inappropriate for ham radio. Please try something else.\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i |h";
 				                        	}
 
 				                        encodedString = dataoutp;
