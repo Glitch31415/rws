@@ -239,7 +239,7 @@ public class mainclass {
 		boolean termconnect = false;
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v63-1";
+		String softver = "v63-2";
 		int totalconnections = 0;
 
 		boolean intaccess = true;
@@ -2274,7 +2274,7 @@ public class mainclass {
 			                    if (postsafe == true) {
 									logs = logs + rcall + " requested an upload for a thread with title '" + postname + "' with contents '" + postbody + "'\n";
 			                        st = "";
-									String pathToClone = "./repo";
+									String pathToClone = "."+File.separator+"repo";
 									Path directory = Path.of(pathToClone);
 									try {
 										Files.walk(directory)
@@ -2295,7 +2295,7 @@ public class mainclass {
 									        		File myObjp;
 									        		stp = "";
 									        		pexists = false;
-										        	      myObjp = new File(git.getRepository().getDirectory().getParent() + "/community/", postname);
+										        	      myObjp = new File(git.getRepository().getDirectory().getParent() + File.separator+"community"+File.separator, postname);
 
 
 									        	      Scanner myReaderp = new Scanner(myObjp);
@@ -2310,7 +2310,7 @@ public class mainclass {
 
 									            FileWriter myWriterp;
 
-										            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + "/community/" + postname);
+										            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"community"+File.separator + postname);
 										            Instant instantp = Instant.now();
 
 
@@ -2333,7 +2333,7 @@ public class mainclass {
 									        try {
 									        	try {
 									        		File myObj;
-										        	      myObj = new File(git.getRepository().getDirectory().getParent() + "/index");
+										        	      myObj = new File(git.getRepository().getDirectory().getParent() + File.separator+"index");
 
 
 									        	      Scanner myReader = new Scanner(myObj);
@@ -2354,7 +2354,7 @@ public class mainclass {
 
 									            FileWriter myWriter;
 
-										            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + "/index");
+										            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"index");
 										            Instant instant = Instant.now();
 
 
@@ -2567,7 +2567,7 @@ public class mainclass {
 						}
 
 						if (System.currentTimeMillis() > prevupd) {
-							String pathToClone = "./repo";
+							String pathToClone = "."+File.separator+"repo";
 							Path directory = Path.of(pathToClone);
 							try {
 								Files.walk(directory)
@@ -2612,7 +2612,7 @@ public class mainclass {
 
 							            FileWriter myWriterp;
 
-								            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + "/activeservers");
+								            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"activeservers");
 
 								            	myWriterp.write(System.currentTimeMillis() + " " + callsign + " " + servfreq + " " + servlocator + " " + softver + "\n" + stp);
 								       myWriterp.close();
