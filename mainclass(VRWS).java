@@ -239,12 +239,13 @@ public class mainclass {
 		boolean termconnect = false;
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v63";
+		String softver = "v63-1";
 		int totalconnections = 0;
 
 		boolean intaccess = true;
 		boolean pexists = false;
-        try (Scanner callinp = new Scanner(System.in)) {
+        @SuppressWarnings("resource")
+		Scanner callinp = new Scanner(System.in);
         	int cmdport = 8300;
         	int dataport = 8301;
         	int kissport = 8100;
@@ -2645,9 +2646,6 @@ public class mainclass {
 
 
 			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		}
 	}
 
 }
