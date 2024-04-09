@@ -297,7 +297,7 @@ public class mainclass {
 			Thread object3 = new Thread(new getstream3());
 			object3.start();
 			long starttime = System.currentTimeMillis();
-			long prevupd = System.currentTimeMillis();
+			long prevupd = System.currentTimeMillis() + 30000;
 			int cqwaittime = 130;
 			long cqresp = 0;
 			String cqbw = "";
