@@ -24,7 +24,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Comparator;
 
-class getstream1 implements Runnable { 
+class getstream1 implements Runnable {  // reads commands from modem
 	public static String gcmdsin = "";
 	public static String gcmdsout;
 	public static Socket cmds = null;
@@ -239,7 +239,7 @@ public class mainclass {
 		boolean termconnect = false;
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v63-2";
+		String softver = "v64";
 		int totalconnections = 0;
 
 		boolean intaccess = true;
@@ -283,7 +283,7 @@ public class mainclass {
 			String servfreq = callinp.nextLine();
 			System.out.println("Enter 6 character locator (example: CN84OR)");
 			String servlocator = callinp.nextLine();
-			String cmdsoutp = "MYCALL "+callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rCLEANTXBUFFER\rBW2300\r";
+			String cmdsoutp = "MYCALL "+callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rCLEANTXBUFFER\rBW2300\rCOMPRESSION FILES\r";
 			String prevdatainthing = "";
 			boolean weatherbroke = false;
 			byte[] cmdsdata = cmdsoutp.getBytes();
@@ -303,6 +303,7 @@ public class mainclass {
 			String cqbw = "";
 			String cqrespcall = "";
 			String cmdoption = "";
+
 			System.out.println("The server has started. You may interact with the server from this terminal by entering a command:"+"\n"+"|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\nIf you have entered a command through the terminal, you can disconnect from the server and allow other people to use it by saying '|disc'.");
 			while (0==0) {
 				usabled = "";
@@ -403,7 +404,7 @@ public class mainclass {
 								}
 							}
 						}
-					if (usablec.contains("REGISTERED")) {
+					if (usablec.contains("REGISTERED " + callsign)) {
 						varalicensed = true;
 					}
 					if (usablec.contains("SN ")) {
@@ -447,19 +448,19 @@ public class mainclass {
 							if (varalicensed == false) {
 
 								if (recentsn >= -10) {
-									logs = logs + "CQ heard from " + cqrxcall[0] + ", vara not licensed, S/N " + recentsn + ", waiting 80 sec before response\n";
+									logs = logs + "CQ heard from " + cqrxcall[0] + ", vara may not be licensed, S/N " + recentsn + ", waiting 80 sec before response\n";
 									pcqwaittime = 80;
 									pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 								}
 								else {
 									if (recentsn >= -15) {
-										logs = logs + "CQ heard from " + cqrxcall[0] + ", vara not licensed, S/N " + recentsn + ", waiting 100 sec before response\n";
+										logs = logs + "CQ heard from " + cqrxcall[0] + ", vara may not be licensed, S/N " + recentsn + ", waiting 100 sec before response\n";
 										pcqwaittime = 100;
 										pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 
 									}
 									else {
-										logs = logs + "CQ heard from " + cqrxcall[0] + ", vara not licensed, S/N " + recentsn + ", waiting 120 sec before response\n";
+										logs = logs + "CQ heard from " + cqrxcall[0] + ", vara may not be licensed, S/N " + recentsn + ", waiting 120 sec before response\n";
 										pcqwaittime = 120;
 										pcqresp = System.currentTimeMillis()+(pcqwaittime*1000);
 
@@ -564,10 +565,12 @@ public class mainclass {
 								if (usablec.lastIndexOf("CONNECTED") > (usablec.lastIndexOf("DISCONN") + 3)) {
 									conn = true;
 									connmsg = true;
+
 								}
 								else {
 									if (conn == true) {
 										conn = false;
+
 										logs = logs + rcall + " disconnected\n";
 										option = 0;
 									}
@@ -604,12 +607,27 @@ public class mainclass {
 										dataoutp = dataoutp + "\n\n" + welcomemessage;
 									}
 									if (intaccess == true) {
+
 										if (varalicensed == true) {
-											dataoutp = dataoutp + "\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
+											if (usablec.contains("LINK UNREGISTERED")) {
+												dataoutp = dataoutp + "\n(You are using an unregistered version of VARA, and manually connected to this server. This means transfer speeds will be limited to speed level 4.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
+												
+											}
+											else {
+												dataoutp = dataoutp + "\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
+												
+											}
 											
 										}
 										else {
-											dataoutp = dataoutp + "(This server does not use a licensed copy of VARA. Download speeds will be limited to speed level 4.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
+											if (usablec.contains("LINK UNREGISTERED")) {
+												dataoutp = dataoutp + "\n(This server uses an unregistered version of VARA. You are also using an unregistered version of VARA, and manually connected to this server. This means transfer speeds will be limited to speed level 4.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
+												
+											}
+											else {
+												dataoutp = dataoutp + "\n(This server uses an unregistered version of VARA. This means transfer speeds will be limited to speed level 4.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
+										
+											}
 											
 										}
 										
@@ -2613,8 +2631,13 @@ public class mainclass {
 							            FileWriter myWriterp;
 
 								            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"activeservers");
-
+								            if (varalicensed == true) {
 								            	myWriterp.write(System.currentTimeMillis() + " " + callsign + " " + servfreq + " " + servlocator + " " + softver + "\n" + stp);
+								            }
+								            else {
+								            	myWriterp.write(System.currentTimeMillis() + " " + callsign + " " + servfreq + " " + servlocator + " " + softver + " unlicensed" + "\n" + stp);
+								            }
+
 								       myWriterp.close();
 							          } catch (IOException e) {
 							        }
