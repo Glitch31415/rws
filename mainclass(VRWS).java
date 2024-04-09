@@ -239,7 +239,7 @@ public class mainclass {
 		boolean termconnect = false;
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v64";
+		String softver = "v64-1";
 		int totalconnections = 0;
 
 		boolean intaccess = true;
@@ -610,7 +610,7 @@ public class mainclass {
 
 										if (varalicensed == true) {
 											if (usablec.contains("LINK UNREGISTERED")) {
-												dataoutp = dataoutp + "\n(You are using an unregistered version of VARA, and manually connected to this server. This means transfer speeds will be limited to speed level 4.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
+												dataoutp = dataoutp + "\n(You are using an unregistered copy of VARA, and manually connected to this server. This means transfer speeds will be limited to speed level 4.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
 												
 											}
 											else {
@@ -621,12 +621,19 @@ public class mainclass {
 										}
 										else {
 											if (usablec.contains("LINK UNREGISTERED")) {
-												dataoutp = dataoutp + "\n(This server uses an unregistered version of VARA. You are also using an unregistered version of VARA, and manually connected to this server. This means transfer speeds will be limited to speed level 4.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
+												dataoutp = dataoutp + "\n(This server uses an unregistered copy of VARA. You are also using an unregistered copy of VARA, and manually connected to this server. This means transfer speeds will be limited to speed level 4.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
 												
 											}
 											else {
-												dataoutp = dataoutp + "\n(This server uses an unregistered version of VARA. This means transfer speeds will be limited to speed level 4.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
-										
+												if (usablec.contains("LINK REGISTERED")) {
+													dataoutp = dataoutp + "\n(This server uses an unregistered copy of VARA, but you connected to it with a licensed copy, so your transfer speeds will be unaffected.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
+													
+												}
+												else {
+													dataoutp = dataoutp + "\n(This server uses an unregistered copy of VARA. This means transfer speeds will be limited to speed level 4.)\n-----\nCommands:\n|w : Fetch text or raw html from a website\n|s : Quick text-only search\n|f : Get weather forecast for given city+state\n|d : Download a given url through base64\n|c : View or create threads in the community folder on the github\n|i : Print server info\n|h : List this again\r";
+													
+												}
+												
 											}
 											
 										}
