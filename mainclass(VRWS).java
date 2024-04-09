@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Scanner;
 import java.util.regex.Matcher;
