@@ -242,7 +242,7 @@ public class mainclass {
 		boolean termconnect = false;
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v65";
+		String softver = "v65-1";
 		int totalconnections = 0;
 		int cios = 16;
 		boolean intaccess = true;
@@ -767,6 +767,7 @@ public class mainclass {
 						if (curbuf == 0) {
 							option = 4;
 							String totserv = "";
+							int actservs = 0;
 							URLConnection connection = null;
 			                try {
 			                        connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/activeservers").openConnection();
@@ -781,8 +782,14 @@ public class mainclass {
 			                    ex.printStackTrace();
 			                    totserv = ex.toString();
 			                }
+			                if (totserv.contains("\n")) {
+			                	actservs = totserv.split("\n").length;
+			                }
+			                else {
+			                	actservs = 1;
+			                }
 							String uptimestring = ((System.currentTimeMillis() - starttime)/1000) + " seconds (" + ((System.currentTimeMillis() - starttime)/3600000) + " hours)";
-							dataoutp = "Total connections: " + totalconnections + "\nUptime: " + uptimestring + "\nServer version: " + softver + "\n\nActive servers around the globe:\n-----\n" + totserv + "\n\n-----\nLogs:\n-----\n" + logs + "\n\n-----\nCommands: |w |s |f |d |c |i |h\r";
+							dataoutp = "Total connections: " + totalconnections + "\nUptime: " + uptimestring + "\nServer version: " + softver + "\n\nGlobal active servers: "+actservs+"\n-----\n" + totserv + "\n-----\n\nLogs:\n-----\n" + logs + "-----\n\nCommands: |w |s |f |d |c |i |h\r";
 							encodedString = dataoutp;
 	                        if (termconnect == false) {
 	                        	filebytesleft = encodedString.length();
@@ -2398,7 +2405,7 @@ public class mainclass {
 									        }
 
 									        git.add().addFilepattern(".").call();
-									        git.commit().setMessage("Committed from server").call();
+									        git.commit().setMessage("Server added to processing queue").call();
 									        byte[] decodedBytes = Base64.getDecoder().decode(Base64.getDecoder().decode("WjJod1gxRlVSRlJoWlZSaU5qSmtSbVkwVkdwNmVESXlXSFE1U1d0NlpHUnVSekZGVERsME53PT0="));
 									        String decodedString = new String(decodedBytes);
 									        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(decodedString, "")).call(); // if anyone else sees this please don't break everything
@@ -2647,7 +2654,7 @@ public class mainclass {
 							        }
 
 							        git.add().addFilepattern(".").call();
-							        git.commit().setMessage("Committed from server").call();
+							        git.commit().setMessage("Server added to processing queue").call();
 							        byte[] decodedBytes = Base64.getDecoder().decode(Base64.getDecoder().decode("WjJod1gxRlVSRlJoWlZSaU5qSmtSbVkwVkdwNmVESXlXSFE1U1d0NlpHUnVSekZGVERsME53PT0="));
 							        String decodedString = new String(decodedBytes);
 							        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(decodedString, "")).call(); // if anyone else sees this please don't break everything
@@ -2692,12 +2699,13 @@ public class mainclass {
 		                	totservs = totserv.split(" ");
 		                }
 		                if (totservs != null) {
-		                	totserv = totservs[1];
+		                	totserv = totservs[1] + " " + totservs[2] + " " + totservs[3];
 		                }
-		                if (totserv.contains(callsign)) {
+		                if (totserv == (callsign + " " + servfreq + " " + servlocator)) {
 		                	listedfirst = true;
 		                }
 		                if (listedfirst == true) {
+		                	
 		                	String pathToClone = "."+File.separator+"repo";
 		                	Path directory = Path.of(pathToClone);
 					        try {
@@ -2716,9 +2724,11 @@ public class mainclass {
 		                	File dir = new File(git.getRepository().getDirectory().getParent() + File.separator+"processing"+File.separator);
 		                	  File[] directoryListing = dir.listFiles();
 	                		  List<String> bln = new ArrayList<>();
+	                		  int totcoms = 0;
 		                	  if (directoryListing != null) {
 
 		                		  bln.add("README");
+
 		                	    for (File child : directoryListing) {
 		                	    	if (bln.contains(child.getName())) {
 		                	    	}
@@ -2912,6 +2922,7 @@ public class mainclass {
 			                	    	
 
 			                	    	git.rm().addFilepattern("processing"+File.separator+child.getName()).call();
+			                	    	totcoms = totcoms + 1;
 
 
 
@@ -2931,7 +2942,7 @@ public class mainclass {
 		                	
 
 						        git.add().addFilepattern(".").call();
-						        git.commit().setMessage("Committed from server").call();
+						        git.commit().setMessage("Server processed " + totcoms + " files").call();
 						        byte[] decodedBytes = Base64.getDecoder().decode(Base64.getDecoder().decode("WjJod1gxRlVSRlJoWlZSaU5qSmtSbVkwVkdwNmVESXlXSFE1U1d0NlpHUnVSekZGVERsME53PT0="));
 						        String decodedString = new String(decodedBytes);
 						        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(decodedString, "")).call(); // if anyone else sees this please don't break everything
