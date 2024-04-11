@@ -11,6 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -23,6 +24,8 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
 
 class getstream1 implements Runnable {  // reads commands from modem
 	public static String gcmdsin = "";
@@ -190,7 +193,7 @@ class getstream3 implements Runnable { // reads commands from terminal
         String nameterm = "";
         while (0==0) {
         	try {
-				Thread.sleep(1000);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 
 				e.printStackTrace();
@@ -239,9 +242,9 @@ public class mainclass {
 		boolean termconnect = false;
 		int prevrcind = 0;
 		int curbuf = 0;
-		String softver = "v64-1";
+		String softver = "v65";
 		int totalconnections = 0;
-
+		int cios = 16;
 		boolean intaccess = true;
 		boolean pexists = false;
         @SuppressWarnings("resource")
@@ -297,7 +300,8 @@ public class mainclass {
 			Thread object3 = new Thread(new getstream3());
 			object3.start();
 			long starttime = System.currentTimeMillis();
-			long prevupd = System.currentTimeMillis() + 30000;
+			long prevupd = ((System.currentTimeMillis()/60000)+1)*60000;
+			long bprevupd = 0;
 			int cqwaittime = 130;
 			long cqresp = 0;
 			String cqbw = "";
@@ -2330,12 +2334,21 @@ public class mainclass {
 									        	      }
 									        	      myReaderp.close();
 									        	    } catch (FileNotFoundException e) {
-									        	    	
 									        	    }
 
 									            FileWriter myWriterp;
-
-										            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"community"+File.separator + postname);
+								        	    int leftLimit = 97; // letter 'a'
+								        	    int rightLimit = 122; // letter 'z'
+								        	    int targetStringLength = 16;
+								        	    Random random = new Random();
+								        	    StringBuilder buffer = new StringBuilder(targetStringLength);
+								        	    for (int i = 0; i < targetStringLength; i++) {
+								        	        int randomLimitedInt = leftLimit + (int) 
+								        	          (random.nextFloat() * (rightLimit - leftLimit + 1));
+								        	        buffer.append((char) randomLimitedInt);
+								        	    }
+								        	    String generatedString = buffer.toString();
+										            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"processing"+File.separator + postname + "." + generatedString);
 										            Instant instantp = Instant.now();
 
 
@@ -2348,7 +2361,7 @@ public class mainclass {
 											        	myWriterp.write(postname+"\n"+rcall+"\n"+dateTime+" UTC"+"\n----------\n"+postbody+"\n----------\n");
 										            }
 										            else {
-										            	myWriterp.write(stp + "\n"+rcall+", "+dateTime+" UTC:"+"\n"+postbody+"\n");
+										            	myWriterp.write("\n"+rcall+", "+dateTime+" UTC:"+"\n"+postbody+"\n");
 										            }
 										       myWriterp.close();
 									          } catch (IOException e) {
@@ -2356,30 +2369,20 @@ public class mainclass {
 									        }
 
 									        try {
-									        	try {
-									        		File myObj;
-										        	      myObj = new File(git.getRepository().getDirectory().getParent() + File.separator+"index");
-
-
-									        	      Scanner myReader = new Scanner(myObj);
-									        	      while (myReader.hasNextLine()) {
-									        	    	  String tempnextline = myReader.nextLine();
-									        	    	  if (tempnextline.contains("'" + postname + "'")) {
-									        	    		  
-									        	    	  }
-									        	    	  else {
-											        	        st = st + tempnextline + "\n";
-									        	    	  }
-
-									        	      }
-									        	      myReader.close();
-									        	    } catch (FileNotFoundException e) {
-									        	      e.printStackTrace();
-									        	    }
 
 									            FileWriter myWriter;
-
-										            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"index");
+								        	    int leftLimit = 97; // letter 'a'
+								        	    int rightLimit = 122; // letter 'z'
+								        	    int targetStringLength = 16;
+								        	    Random random = new Random();
+								        	    StringBuilder buffer = new StringBuilder(targetStringLength);
+								        	    for (int i = 0; i < targetStringLength; i++) {
+								        	        int randomLimitedInt = leftLimit + (int) 
+								        	          (random.nextFloat() * (rightLimit - leftLimit + 1));
+								        	        buffer.append((char) randomLimitedInt);
+								        	    }
+								        	    String generatedString = buffer.toString();
+										            myWriter = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"processing"+File.separator+".index."+generatedString);
 										            Instant instant = Instant.now();
 
 
@@ -2388,7 +2391,7 @@ public class mainclass {
 
 										            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 										            String dateTime = instant.atZone(zone).format(formatter);
-										        	myWriter.write("'"+postname+"'"+" - "+rcall+", "+dateTime+" UTC"+ "\n" + st);
+										        	myWriter.write("'"+postname+"'"+" - "+rcall+", "+dateTime+" UTC\n");
 										       myWriter.close();
 									          } catch (IOException e) {
 									            e.printStackTrace();
@@ -2440,7 +2443,7 @@ public class mainclass {
 				                        wstext = lesswstext;
 				                        	wstext = wstext.replaceAll("\\r", "");
 				                        	if (postsafe == true) {
-					                        	dataoutp = wstext + "\nYour thread/comment has been uploaded!\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i |h";
+					                        	dataoutp = wstext + "\nYour thread/comment has been submitted for processing!\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i |h";
 				                        	}
 				                        	else {
 				                        		dataoutp = wstext + "\nOops, that contained material that is inappropriate for ham radio. Please try something else.\n\nUse the command 'view' then '|all' to see all threads, this is just the most recently modified 25.\nWould you like to 'view' or 'create' a thread/comment in the community area?\nCommands: |w |s |f |d |c |i |h";
@@ -2561,7 +2564,7 @@ public class mainclass {
 					}
 
 					// main loop things end
-					if (initwait > 3) {
+					if (initwait > 30) {
 						cmdsoutp = "BW2300\r";
 						cmdsdata = cmdsoutp.getBytes();
 						cmdsout.write(cmdsdata);
@@ -2591,7 +2594,16 @@ public class mainclass {
 
 						}
 
-						if (System.currentTimeMillis() > prevupd) {
+
+					}
+					else {
+						initwait = initwait + 1;
+					}
+					if (System.currentTimeMillis() > prevupd+30000 && prevupd != bprevupd) {
+						bprevupd = prevupd;
+						cios = cios + 1;
+
+						if (cios >= 20) {
 							String pathToClone = "."+File.separator+"repo";
 							Path directory = Path.of(pathToClone);
 							try {
@@ -2609,40 +2621,25 @@ public class mainclass {
 						                .call();
 
 							        try {
-							        	try {
-							        		File myObjp;
-							        		stp = "";
-							        		pexists = false;
-								        	      myObjp = new File(git.getRepository().getDirectory().getParent(), "activeservers");
-
-
-							        	      Scanner myReaderp = new Scanner(myObjp);
-							        	      while (myReaderp.hasNextLine()) {
-							        	    	String servupdtemp = myReaderp.nextLine();
-							        	    	if (servupdtemp != "") {
-								        	    	if (Long.parseLong(servupdtemp.substring(0, servupdtemp.indexOf(" "))) < (System.currentTimeMillis()-2700000) || servupdtemp.contains(callsign)) {
-								        	    		
-								        	    	}
-								        	    	else {
-									        	        stp = stp + servupdtemp + "\n";
-								        	    	}
-							        	    	}
-
-
-							        	      }
-							        	      myReaderp.close();
-							        	    } catch (FileNotFoundException e) {
-							        	    	
-							        	    }
 
 							            FileWriter myWriterp;
-
-								            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"activeservers");
+						        	    int leftLimit = 97; // letter 'a'
+						        	    int rightLimit = 122; // letter 'z'
+						        	    int targetStringLength = 16;
+						        	    Random random = new Random();
+						        	    StringBuilder buffer = new StringBuilder(targetStringLength);
+						        	    for (int i = 0; i < targetStringLength; i++) {
+						        	        int randomLimitedInt = leftLimit + (int) 
+						        	          (random.nextFloat() * (rightLimit - leftLimit + 1));
+						        	        buffer.append((char) randomLimitedInt);
+						        	    }
+						        	    String generatedString = buffer.toString();
+								            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"processing"+File.separator+".activeservers." + generatedString);
 								            if (varalicensed == true) {
-								            	myWriterp.write(System.currentTimeMillis() + " " + callsign + " " + servfreq + " " + servlocator + " " + softver + "\n" + stp);
+								            	myWriterp.write(System.currentTimeMillis() + " " + callsign + " " + servfreq + " " + servlocator + " " + softver + "\n");
 								            }
 								            else {
-								            	myWriterp.write(System.currentTimeMillis() + " " + callsign + " " + servfreq + " " + servlocator + " " + softver + " unlicensed" + "\n" + stp);
+								            	myWriterp.write(System.currentTimeMillis() + " " + callsign + " " + servfreq + " " + servlocator + " " + softver + " unlicensed" + "\n");
 								            }
 
 								       myWriterp.close();
@@ -2666,14 +2663,296 @@ public class mainclass {
 									} catch (java.nio.file.NoSuchFileException e) {
 										
 									}
-							prevupd = (long) (System.currentTimeMillis() + 900000 + (Math.random()*900000));
+							cios = 0;
 						}
-					}
-					else {
-						initwait = initwait + 1;
-					}
-					Thread.sleep(1000);
 
+					}
+					if (System.currentTimeMillis() > prevupd+60000) {
+						boolean listedfirst = false;
+						String totserv = "";
+						URLConnection connection = null;
+		                try {
+		                        connection = new URL("https://raw.githubusercontent.com/Glitch31415/rws/main/activeservers").openConnection();
+					            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+		                        webscan = new Scanner(connection.getInputStream());
+		                        webscan.useDelimiter("\\Z");
+		                        totserv = webscan.next();
+		                        webscan.close();
+
+		                }
+		                catch (Exception ex) {
+		                    ex.printStackTrace();
+		                    totserv = ex.toString();
+		                }
+		                if (totserv.contains("\n")) {
+		                	totserv = totserv.substring(0, totserv.indexOf("\n"));
+		                }
+		                String[] totservs = null;
+		                if (totserv.contains(" ")) {
+		                	totservs = totserv.split(" ");
+		                }
+		                if (totservs != null) {
+		                	totserv = totservs[1];
+		                }
+		                if (totserv.contains(callsign)) {
+		                	listedfirst = true;
+		                }
+		                if (listedfirst == true) {
+		                	String pathToClone = "."+File.separator+"repo";
+		                	Path directory = Path.of(pathToClone);
+					        try {
+								Files.walk(directory)
+				                .sorted(Comparator.reverseOrder())
+				                .map(Path::toFile)
+				                .forEach(File::delete);
+							} catch (java.nio.file.NoSuchFileException e) {
+								
+							}
+					        Git git = Git.cloneRepository()
+					                .setURI("https://github.com/Glitch31415/rws.git")
+					                .setDirectory(new File(pathToClone))
+					                .call();
+
+		                	File dir = new File(git.getRepository().getDirectory().getParent() + File.separator+"processing"+File.separator);
+		                	  File[] directoryListing = dir.listFiles();
+	                		  List<String> bln = new ArrayList<>();
+		                	  if (directoryListing != null) {
+
+		                		  bln.add("README");
+		                	    for (File child : directoryListing) {
+		                	    	if (bln.contains(child.getName())) {
+		                	    	}
+		                	    	else {
+		                	    		bln.add((String)child.getName());
+			                	    	if (child.getName().contains(".activeservers.")) {
+			                	    		
+									        try {
+								        	      List<String> sutlist = new ArrayList<>();
+									        	try {
+									        		File myObjp;
+									        	      myObjp = new File(git.getRepository().getDirectory().getParent(), "activeservers");
+									        		stp = "";
+									        		
+									        	      Scanner myReaderp = new Scanner(myObjp);
+
+									        	      while (myReaderp.hasNextLine()) {
+									        	    	String servupdtemp = myReaderp.nextLine();
+
+									        	    	if (servupdtemp != "") { 
+
+											        	        stp = stp + servupdtemp + "\n"; // read into stp
+
+									        	    	}
+
+
+									        	      }
+									        	      myReaderp.close();
+
+
+												            FileWriter myWriterp;
+
+												            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"activeservers");
+											            	myWriterp.write(Files.readString(child.toPath()) + stp); // write the new thing before the rest of stp and into the file
+
+												            	
+												            	
+
+												       myWriterp.close();
+												       stp = ""; // clear stp
+												       myReaderp = new Scanner(myObjp);
+									        	      while (myReaderp.hasNextLine()) {
+									        	    	String servupdtemp = myReaderp.nextLine();
+
+									        	    	if (servupdtemp != "") {
+										        	    	String[] sutstuff = servupdtemp.split(" ");
+										        	    	if (Long.parseLong(servupdtemp.substring(0, servupdtemp.indexOf(" "))) < (System.currentTimeMillis()-1800000) || (sutlist.contains((sutstuff[1] + " " + sutstuff[2] + " " + sutstuff[3])))) {
+										        	    		
+										        	    	}
+										        	    	else {
+											        	        stp = stp + servupdtemp + "\n";  // reread the file and correct things
+											        	    	sutlist.add((String)(sutstuff[1] + " " + sutstuff[2] + " " + sutstuff[3]));
+										        	    	}
+									        	    	}
+
+
+									        	      }
+									        	      myReaderp.close();
+
+											            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"activeservers");
+										            	myWriterp.write(stp); // write the full corrected stp to the file
+
+											            	
+											            	
+
+											       myWriterp.close();
+									        	    } catch (FileNotFoundException e) {
+									        	    	
+									        	    }
+
+
+									          } catch (IOException e) {
+									        }
+			                	    	}
+			                	    	else {
+				                	    	if (child.getName().contains(".index.")) {
+				                	    		
+				                	    		
+										        try {
+										        	List<String> listedposts = new ArrayList<>();
+										        	try {
+										        		File myObjp;
+										        	      myObjp = new File(git.getRepository().getDirectory().getParent(), "index");
+										        		stp = "";
+										        		
+										        	      Scanner myReaderp = new Scanner(myObjp);
+
+										        	      while (myReaderp.hasNextLine()) {
+										        	    	String servupdtemp = myReaderp.nextLine();
+
+										        	    	if (servupdtemp != "") { 
+
+												        	        stp = stp + "\n" + servupdtemp; // read into stp
+
+
+										        	    	}
+
+
+										        	      }
+										        	      myReaderp.close();
+
+
+													            FileWriter myWriterp;
+
+													            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"index");
+												            	myWriterp.write(Files.readString(child.toPath()) + stp); // write the new thing before the rest of stp and into the file
+
+													            	
+													            	
+
+													       myWriterp.close();
+													       stp = ""; // clear stp
+													       myReaderp = new Scanner(myObjp);
+										        	      while (myReaderp.hasNextLine()) {
+										        	    	String servupdtemp = myReaderp.nextLine();
+										        	    	if (servupdtemp.contains("'")) {
+											        	    		  String tempnextname = servupdtemp.split("'")[1];
+											        	    	  if (listedposts.contains("'"+tempnextname+"'")) {
+											        	    	  }
+											        	    	  else {
+											        	    		  if (stp == "") {
+												        	    		    stp = servupdtemp;
+											        	    		  }
+											        	    		  else {
+												        	    		    stp = stp + "\n" + servupdtemp;
+											        	    		  }
+
+													        	        listedposts.add((String)"'"+tempnextname+"'");
+											        	    	  }
+										        	    	}
+
+
+										        	      }
+										        	      myReaderp.close();
+
+												            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"index");
+											            	myWriterp.write(stp); // write the full corrected stp to the file
+
+												            	
+												            	
+
+												       myWriterp.close();
+										        	    } catch (FileNotFoundException e) {
+										        	    	
+										        	    }
+
+
+										          } catch (IOException e) {
+										        }
+				                	    		
+			                	    		
+
+				                	    	}
+				                	    	else {
+				                	    		
+				                	    		
+				                	    		try {
+				                	    			String caname = "[error]";
+				                	    			if (child.getName().contains(".")) {
+					                	    			caname = child.getName().substring(0, child.getName().indexOf("."));
+				                	    			}
+
+										        	try {
+										        		File myObjp;
+										        		stp = "";
+											        	      myObjp = new File(git.getRepository().getDirectory().getParent() + File.separator+"community"+File.separator, caname);
+
+
+										        	      Scanner myReaderp = new Scanner(myObjp);
+										        	      while (myReaderp.hasNextLine()) {
+										        	        stp = stp + myReaderp.nextLine() + "\n";
+										        	      }
+										        	      myReaderp.close();
+										        	    } catch (FileNotFoundException e) {
+										        	    	
+										        	    }
+
+										            FileWriter myWriterp;
+
+											            myWriterp = new FileWriter(git.getRepository().getDirectory().getParent() + File.separator+"community"+File.separator + caname);
+											            	myWriterp.write(stp + Files.readString(child.toPath()));
+											       myWriterp.close();
+										          } catch (IOException e) {
+										            e.printStackTrace();
+										        }
+
+				                	    		
+				                	    		
+				                	    	}
+			                	    	}
+			                	    	
+
+			                	    	git.rm().addFilepattern("processing"+File.separator+child.getName()).call();
+
+
+
+		                	    	}
+
+		                	    		
+		                	    }
+		                	    
+		                	    
+		                	    
+		                	  } else {
+		                	    // Handle the case where dir is not really a directory.
+		                	    // Checking dir.isDirectory() above would not be sufficient
+		                	    // to avoid race conditions with another process that deletes
+		                	    // directories.
+		                	  }
+		                	
+
+						        git.add().addFilepattern(".").call();
+						        git.commit().setMessage("Committed from server").call();
+						        byte[] decodedBytes = Base64.getDecoder().decode(Base64.getDecoder().decode("WjJod1gxRlVSRlJoWlZSaU5qSmtSbVkwVkdwNmVESXlXSFE1U1d0NlpHUnVSekZGVERsME53PT0="));
+						        String decodedString = new String(decodedBytes);
+						        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(decodedString, "")).call(); // if anyone else sees this please don't break everything
+						        git.close();
+						        git = null;
+
+						        
+						        try {
+									Files.walk(directory)
+					                .sorted(Comparator.reverseOrder())
+					                .map(Path::toFile)
+					                .forEach(File::delete);
+								} catch (java.nio.file.NoSuchFileException e) {
+									
+								}
+		                }
+
+						prevupd = (long)(prevupd+60000);
+					}
+					Thread.sleep(100);
+					
 
 			}
 	}
