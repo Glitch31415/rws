@@ -6,7 +6,7 @@ https://www.oracle.com/java/technologies/downloads/
 Next, install the VARA modem. If you want to put the server on 14.110 (recommended), choose the VARA HF version.
 https://rosmodem.wordpress.com
 
-Now, download "vrws.jar" from https://github.com/Glitch31415/rws.
+Now, download "vrws.jar" from the Releases tab on https://github.com/Glitch31415/rws.
 
 To run the server, first start the VARA modem (VARA.exe), and make sure your settings are as follows:
 TCP Ports:
