@@ -19,7 +19,7 @@ CW ID should be checked if you are in the US (and is good practice in general)
 KISS Interface should be checked (not used at the moment but might be in the future)
 I would recommend setting Retries to 2, at most. It causes less interference to other stations answering CQs and for the server to be used effectively the link should be strong enough to not need more than 2 retries.
 
-Finally, open cmd.exe (in administrator mode; in Windows, the server clones the repo into a directory deep in Program Files, which is completely safe, but Windows doesn't want anything unprivileged writing to that directory) and type in "java -jar [path to jar]" replacing [path to jar] with the full path of the vrws.jar file (example: C:\Users\glitch\Downloads\vrws.jar).
+Finally, open cmd.exe and type in "java -jar [path to jar]" replacing [path to jar] with the full path of the vrws.jar file (example: C:\Users\glitch\Downloads\vrws.jar).
 Fill in the extra data as it asks and your server will be active! Set your radio frequency to 14.110 MHz USB, and PTT to VOX.
 
 *** If you want an external helper for dealing with the downloads and base64, KC3VPB has created a helper that can decode base64 automatically and save it to a file. https://github.com/Caleb-J773/rws-tools-release/releases ***
