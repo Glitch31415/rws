@@ -1,0 +1,1 @@
+This is the intermediary step to make sure multiple servers don't try to commit the same file at the same time.
