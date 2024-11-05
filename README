@@ -9,10 +9,10 @@ https://rosmodem.wordpress.com
 Now, download the latest "vrws.jar" from https://github.com/Glitch31415/rws/releases.
 
 To run the server, first start the VARA modem (VARA.exe), and make sure your settings are as follows:
-TCP Ports:
-Command: 8300
-Data: 8301
-KISS: 8100 (not used at the moment)
+
+Command Port: 8300
+Data Port: 8301
+KISS Port: 8100 (not used at the moment)
 Accept 500 Hz Connections should be checked
 Tuner enhancement should be unchecked
 CW ID should be checked if you are in the US (and is good practice in general)
