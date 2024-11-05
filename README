@@ -12,16 +12,20 @@ To run the server, first start the VARA modem (VARA.exe), and make sure your set
 
 Command Port: 8300
 Data Port: 8301
-KISS Port: 8100 (not used at the moment)
 Accept 500 Hz Connections should be checked
 Tuner Enhancement should be unchecked
 CW ID should be checked if you are in the US (and is good practice in general)
-KISS Interface should be checked (not used at the moment but might be in the future)
-I would recommend setting Retries to 2, at most. It causes less interference to other stations answering CQs and for the server to be used effectively the link should be strong enough to not need more than 2 retries.
+
+Unused at the moment but might be in the future:
+KISS Port: 8100
+KISS Interface should be checked
+Ignore KISS DCD should be unchecked
+
+I would recommend setting Retries to 3, at most. It causes less interference to other stations answering CQs and for the server to be used effectively the link should be strong enough to not need more than 3 retries.
 
 Finally, open cmd.exe and type in "java -jar [path to jar]" replacing [path to jar] with the full path of the vrws.jar file (example: C:\Users\glitch\Downloads\vrws.jar).
 Fill in the extra data as it asks and your server will be active! Set your radio frequency to 14.110 MHz USB, and PTT to VOX.
 
-*** If you want an external helper for dealing with the downloads and base64, KC3VPB has created a helper that can decode base64 automatically and save it to a file. https://github.com/Caleb-J773/rws-tools-release/releases ***
+*** For client use: if you want an external helper for dealing with the downloads and base64, KC3VPB has created a helper that can decode base64 automatically and save it to a file. https://github.com/Caleb-J773/rws-tools-release/releases ***
 
 (If you have any problems, email me at jpradiophone@gmail.com. Linux support is offered, email me for help. Discord link: https://discord.gg/mjzadeyNUs)
