@@ -24,7 +24,7 @@ Ignore KISS DCD should be unchecked
 I would recommend setting Retries to 3, at most. It causes less interference to other stations answering CQs and for the server to be used effectively the link should be strong enough to not need more than 3 retries.
 
 Finally, open cmd.exe and type in "java -jar [path to jar]" replacing [path to jar] with the full path of the vrws.jar file (example: C:\Users\glitch\Downloads\vrws.jar).
-Fill in the extra data as it asks and your server will be active! Set your radio frequency to 14.110 MHz USB, and PTT to VOX. I am starting to offer rudimentary flrig support, if you want to try using that for PTT and freqency control. Expect bugs, let me know if you need help.
+Fill in the extra data as it asks and your server will be active! Set your radio frequency to 14.109 MHz USB, and PTT to VOX. I am starting to offer rudimentary flrig support, if you want to try using that for PTT and freqency control. Expect bugs, let me know if you need help.
 
 *** For client use: if you want an external helper for dealing with the downloads and base64, KC3VPB has created a helper that can decode base64 automatically and save it to a file. https://github.com/Caleb-J773/rws-tools-release/releases ***
 
