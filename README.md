@@ -1,12 +1,10 @@
 Thank you for wanting to set up your own RWS server!
 
 
-First, install the latest Java Runtime Environment.
-https://www.java.com/en/download/manual.jsp
+First, install the latest Java Runtime Environment. https://www.java.com/en/download/manual.jsp
 
 
-Next, install the VARA modem. If you want to put the server on 14.109 (recommended), choose the VARA HF version.
-https://rosmodem.wordpress.com
+Next, install the VARA modem. If you want to put the server on 14.109 (recommended), choose the VARA HF version. https://rosmodem.wordpress.com
 
 
 Now, download the latest "vrws.jar" from https://github.com/Glitch31415/rws/releases.
