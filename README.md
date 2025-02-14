@@ -1,8 +1,8 @@
 Thank you for wanting to set up your own RWS server!
 
 
-First, install the latest JDK.
-https://www.oracle.com/java/technologies/downloads/
+First, install the latest Java Runtime Environment.
+https://www.java.com/en/download/manual.jsp
 
 
 Next, install the VARA modem. If you want to put the server on 14.109 (recommended), choose the VARA HF version.
