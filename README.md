@@ -7,7 +7,7 @@ First, install the latest Java Development Kit (not the Java Runtime Environment
 Next, install the VARA modem. If you want to put the server on 14.109 (recommended), choose the VARA HF version. https://rosmodem.wordpress.com
 
 
-Now, download the latest "vrws.jar" from https://github.com/Glitch31415/rws/releases.
+Now, download the latest "rws.jar" from https://github.com/Glitch31415/rws/releases.
 
 
 To run the server, first start the VARA modem (VARA.exe), and make sure your settings are as follows:
@@ -36,7 +36,7 @@ Ignore KISS DCD should be unchecked
 I would recommend setting Retries to 3, at most. It causes less interference to other stations answering CQs and for the server to be used effectively the link should be strong enough to not need more than 3 retries.
 
 
-Finally, open cmd.exe and type in "java -jar [path to jar]" replacing [path to jar] with the full path of the vrws.jar file (example: C:\Users\glitch\Downloads\vrws.jar).
+Finally, open cmd.exe and type in "java -jar [path to jar]" replacing [path to jar] with the full path of the rws.jar file (example: C:\Users\glitch\Downloads\rws.jar).
 
 Fill in the extra data as it asks and your server will be active! Set your radio frequency to 14.109 MHz USB, and PTT to VOX. I am starting to offer rudimentary flrig support, if you want to try using that for PTT and freqency control. Expect bugs, let me know if you need help.
 
