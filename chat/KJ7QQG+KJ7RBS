@@ -48,3 +48,11 @@
 [2025-06-04 04:02:14 UTC] KJ7QQG : 	                        	if(getstream4.debug==true){System.out.println("loopingbc2");}
 [2025-06-04 04:02:20 UTC] KJ7QQG : 							getstream4.curbuf = 1;
 [2025-06-04 04:02:25 UTC] KJ7QQG : }
+[2025-06-04 04:20:42 UTC] KJ7QQG : test
+[2025-06-04 04:20:54 UTC] KJ7QQG : test3
+[2025-06-04 04:20:54 UTC] KJ7QQG : test4
+[2025-06-04 04:20:55 UTC] KJ7QQG : test5
+[2025-06-04 04:20:56 UTC] KJ7QQG : test6
+[2025-06-04 04:20:59 UTC] KJ7QQG : test7
+[2025-06-04 04:21:00 UTC] KJ7QQG : test9
+[2025-06-04 04:21:00 UTC] KJ7QQG : test10
