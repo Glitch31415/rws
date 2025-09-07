@@ -1,6 +1,6 @@
-Time of this commit: 1757203646015
+Time of this commit: 1757203953501
 Since last commit:
-Requests made to backend: 10848
-Connections approximate busy time: 97.12918%
-Processing approximate busy time: 4352.68086%
+Requests made to backend: 3516
+Connections approximate busy time: 30.97064%
+Processing approximate busy time: 1596.84028%
 Threads responded: 95/100
