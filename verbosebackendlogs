@@ -1,6 +1,4 @@
 EOFExceptions: 0
 Connections reset: 0
 UTFDataFormatExceptions: 0
-Everything else: (1)
-
-java.nio.file.NoSuchFileException: /home/webapp/repofolder/userdata/W7JSP
+Everything else: (0)
