@@ -1,9 +1,10 @@
 EOFExceptions: 98
 Connections reset: 0
 UTFDataFormatExceptions: 3
-Everything else: (4)
+Everything else: (5)
 
 org.eclipse.jgit.api.errors.TransportException: https://github.com/Glitch31415/rws.git: 503 Service Unavailable
+org.eclipse.jgit.api.errors.TransportException: https://github.com/Glitch31415/rws.git: 500 Internal Server Error
 org.eclipse.jgit.api.errors.TransportException: https://github.com/Glitch31415/rws.git: 500 Internal Server Error
 org.eclipse.jgit.api.errors.TransportException: https://github.com/Glitch31415/rws.git: 500 Internal Server Error
 org.eclipse.jgit.api.errors.TransportException: https://github.com/Glitch31415/rws.git: 500 Internal Server Error
