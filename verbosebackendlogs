@@ -1,5 +1,7 @@
-EOFExceptions: 1205
+EOFExceptions: 1211
 Connections reset: 203
 UTFDataFormatExceptions: 23
 TransportExceptions: 0
-Everything else: (0)
+Everything else: (1)
+
+java.net.SocketException: Broken pipe
