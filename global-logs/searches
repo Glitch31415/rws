@@ -22,3 +22,5 @@ TEST: aprs
 TEST: wiki cristal radio
 IW0ZZZ-1: dds
 IW0ZZZ-1: pll radio
+IW0HJZ-6: npn
+IW0HJZ-6: npn transistor
