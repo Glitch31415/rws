@@ -1,8 +1,6 @@
-EOFExceptions: 553
-Connections reset: 48
-UTFDataFormatExceptions: 10
+EOFExceptions: 1
+Connections reset: 0
+UTFDataFormatExceptions: 0
 TransportExceptions: 0
 Broken pipes: 0
-Everything else: (1)
-
-java.io.IOException: Is a directory
+Everything else: (0)
