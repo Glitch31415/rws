@@ -3,4 +3,6 @@ Connections reset: 42
 UTFDataFormatExceptions: 8
 TransportExceptions: 0
 Broken pipes: 0
-Everything else: (0)
+Everything else: (1)
+
+java.io.IOException: Is a directory
