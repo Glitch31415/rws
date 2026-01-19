@@ -6,7 +6,7 @@ If you're on Linux and you're having trouble getting VARA to run, contact me usi
 
   
 
-Instructions:
+Instructions for starting an RWS server on Windows:
 
 
 First, install the latest Java Development Kit (not the Java Runtime Environment). https://www.oracle.com/java/technologies/downloads/#java24
@@ -50,5 +50,6 @@ Fill in the extra data as it asks and your server will be active! Set your radio
 
 
 *** For client use: if you want an external helper for dealing with the downloads and base64, KC3VPB has created a helper that can decode base64 automatically and save it to a file. https://github.com/Caleb-J773/rws-tools-release/releases ***
+
 
 
