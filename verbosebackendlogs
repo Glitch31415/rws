@@ -1,6 +1,6 @@
-EOFExceptions: 2596
+EOFExceptions: 2619
 Connections reset: 86
-UTFDataFormatExceptions: 55
+UTFDataFormatExceptions: 56
 TransportExceptions: 8
 Broken pipes: 0
 Everything else: (0)
