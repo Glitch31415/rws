@@ -1,4 +1,4 @@
-EOFExceptions: 500
+EOFExceptions: 503
 Connections reset: 67
 UTFDataFormatExceptions: 10
 TransportExceptions: 0
