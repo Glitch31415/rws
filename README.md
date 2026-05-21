@@ -14,9 +14,9 @@ If you have any questions, email me at jpradiophone@gmail.com or ask in our Disc
 
 **|download : Download a file at a given URL, encoded and sent through base64**
 
-**|forum : View or create threads in the forum hosted on this GitHub repo**
+**|forum : View or create threads in the forum hosted on a private GitHub repo**
 
-**|chat : Send and receive direct messages with a callsign in real time, with messages also saved on this GitHub repo**
+**|chat : Send and receive direct messages with a callsign in real time, with messages also saved on the private GitHub repo**
 
 ### Compatible modems
 
@@ -34,7 +34,7 @@ TCP: Any port
 
 ## Connecting to a server
 
-The main calling frequency for the project is 14.109 MHz USB. Look at https://github.com/Glitch31415/rws/blob/main/activeservers to see what frequency each server is on and what modem it's using.
+The main calling frequency for the project is 14.109 MHz USB. Look at the active servers list in the status channel on the discord to see what frequency each server is on and what modem it's using.
 
 If you want an external tool for dealing with the downloads and base64, KC3VPB has created a helper that can decode base64 automatically and save it to a file. https://github.com/Caleb-J773/rws-tools-release/releases
 
