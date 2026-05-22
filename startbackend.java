@@ -783,7 +783,7 @@ class p1 implements Runnable {
 	        stime = System.nanoTime() - stime;
 	        sgh.btime = sgh.btime + stime;
 			} catch (Exception e) {
-				if (!e.toString().contains("Accept timed out")) {
+				if (!e.toString().contains("Accept timed out") && !e.toString().contains("Read timed out")) {
 				e.printStackTrace(); if (e.toString().contains("EOFException")) {sgh.ee = sgh.ee + 1;} else { if (e.toString().contains("SocketException: Connection reset")) {sgh.cr = sgh.cr + 1;} else { if (e.toString().contains("UTFDataFormatException")) {sgh.utfe = sgh.utfe + 1;} else {sgh.otherrs = sgh.otherrs + 1; sgh.vlogs = sgh.vlogs + "\n"+e.toString();} } }
 				}
 			}
