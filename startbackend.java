@@ -754,13 +754,14 @@ class p1 implements Runnable {
 		//ss.setPerformancePreferences(2, 1, 0);
 	      InetSocketAddress socketAddress = new InetSocketAddress(5000+tindex);  
 	      ss.bind(socketAddress); 
-		ss.setSoTimeout(6000);
+	      ss.setSoTimeout(6000);
 		
 		while (0==0) {
 			try {
 	        Socket socket = ss.accept(); // blocking call, this will wait until a connection is attempted on this port.
+	        
 	        long stime = System.nanoTime();
-			
+	        socket.setSoTimeout(5000);
 	        System.out.println("connection from " + socket);
 
 	        // get the input stream from the connected socket
