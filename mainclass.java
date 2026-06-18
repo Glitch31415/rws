@@ -19,6 +19,7 @@ import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
@@ -41,14 +42,18 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.jsoup.*;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.select.Elements;
 
 import gnu.io.NRSerialPort;
 
 class stuff {
 	public static String backendips = "";
 	public static int modem = 1;
-	public static String rwskey1 = "[rwskey1]";
-	public static String rwskey2 = "[rwskey2]";
+	public static String rwskey1 = "rwskey1";
+	public static String rwskey2 = "rwskey2";
 	public static String weatherkey;
 	public static String weatherkey2;
 	public static boolean intaccess = true;
@@ -171,11 +176,12 @@ class stuff {
 					else {
 						if (getstream4.conn == false) {
 							getstream4.conn = true;
+							getstream4.termconnect = true;
 							getstream4.rcall = getstream4.callsign.replaceAll("[^a-zA-Z0-9 -]", "").toUpperCase();
 							getstream4.connmsg = true;
 							stuff.connectinit(true);
 						}
-						getstream4.termconnect = true;
+						
 						getstream4.curbuf = 0;
 						if (getstream4.usabled != "") {
 							getstream4.usabled = getstream4.usabled + "\n" + getstream3.termin;
@@ -1276,7 +1282,7 @@ public class mainclass {
 		getstream4.termconnect = false;
 
 
-		getstream4.softver = "v130";
+		getstream4.softver = "v131";
 		System.out.println("Starting RWS server (version " + getstream4.softver + ")");
 		System.out.println("Fetching backend IPs...");
 		stuff.backendips = Jsoup.parse(new URI("https://raw.githubusercontent.com/Glitch31415/rws/refs/heads/main/backendips").toURL(), 10000).wholeText().replaceAll("\n", "").replaceAll("\r", "");
@@ -1982,7 +1988,7 @@ public class mainclass {
 									getstream4.usabled = getstream4.usabled.replaceAll("\\r|\\n", "");
 									
 									try {
-									wstext = Jsoup.parse(new URI(getstream4.usabled).toURL(), 10000).html().toString();
+									wstext = Jsoup.connect(new URI(getstream4.usabled).toURL().toString()).get().toString();
 									} catch (Exception e) { wstext = e.toString(); }
 			                        
 			                        //int ind = 0;
@@ -2004,7 +2010,32 @@ public class mainclass {
 									getstream4.usabled = getstream4.usabled.replaceAll("\\r|\\n", "");
 									
 									try {
-									wstext = Jsoup.parse(new URI(getstream4.usabled).toURL(), 10000).wholeText();
+										Document document = Jsoup.connect(new URI(getstream4.usabled).toURL().toString()).get();
+										for (Element elem : document.getAllElements()) {
+										    String href = elem.absUrl("href");
+										    String text = elem.wholeText();
+										    if (href != "") {
+										    	
+										    	if (text != "") {
+										    		elem.replaceWith(new TextNode(text.strip() + " [" + href + "]"));
+										    	}
+										    	else {
+										    		elem.replaceWith(new TextNode("[" + href + "]"));
+										    	}
+										    	
+										    }
+										    
+										    	if (elem.hasText()) {
+											    	elem.appendText("\n");
+											    }
+										    	if (text.isBlank()) {
+										    		elem.remove();
+										    	}
+										    
+										    
+										}
+										wstext = document.wholeText().strip();
+
 									} catch (Exception e) { wstext = e.toString(); }
 			                        wstext = wstext.replaceAll("	", " ");
 			                        while (wstext.contains("  ")) {
@@ -2043,10 +2074,41 @@ public class mainclass {
 								searchthing = getstream4.usabled;
 								getstream4.usabled = URLEncoder.encode(getstream4.usabled, StandardCharsets.UTF_8);
 								getstream4.usabled = getstream4.usabled.replaceAll("\\+", "%20");
-								getstream4.usabled = "https://duckduckgo.com/html/?q=" + getstream4.usabled + "&kp=1&kz=-1&kc=-1&kav=1&kac=-1&kd=-1&ko=-2&k1=-1";
+
 								try {
-									wstext = Jsoup.parse(new URI(getstream4.usabled).toURL(), 10000).wholeText();
-									} catch (Exception e) { wstext = e.toString(); }
+									wstext = "Unfortunately, bots use DuckDuckGo too";
+									while (wstext.contains("Unfortunately, bots use DuckDuckGo too")) { // sorry lmao
+										Document document = Jsoup.connect("https://lite.duckduckgo.com/lite?q=" + URLEncoder.encode(getstream4.usabled, "UTF-8")).get();
+										for (Element elem : document.getAllElements()) {
+										    String href = elem.absUrl("href");
+										    String text = elem.wholeText();
+										    
+										    if (href != "") {
+										    	if (!href.startsWith("http")) {
+											        elem.remove(); // Ads/news/etc.
+											    }
+										    	if (text != "") {
+										    		elem.replaceWith(new TextNode(text.strip() + " [" + href + "]"));
+										    	}
+										    	else {
+										    		elem.replaceWith(new TextNode("[" + href + "]"));
+										    	}
+										    	
+										    }
+										    
+										    	if (elem.hasText()) {
+											    	elem.appendText("\n");
+											    }
+										    	if (text.isBlank()) {
+										    		elem.remove();
+										    	}
+										    
+										}
+										wstext = document.wholeText().strip();
+									}
+									
+
+								} catch (Exception e) { wstext = e.toString(); }
 			                        wstext = wstext.replaceAll("	", " ");
 			                        while (wstext.contains("  ")) {
 				                        wstext = wstext.replaceAll("  ", " ");
@@ -2057,7 +2119,7 @@ public class mainclass {
 			                        while (wstext.contains("\n\n")) {
 			                        	wstext = wstext.replaceAll("\n\n", "\n");
 			                        }
-			                        wstext = wstext.substring(wstext.indexOf("Past Month\n Past Year")+21);
+			                        wstext = wstext.substring(wstext.indexOf("1.")).stripTrailing();
 		                        //int ind = 0;
 		                        //while (ind < badwords.size()) {
 		                        	//if(getstream4.debug==true){System.out.println("looping6");}
