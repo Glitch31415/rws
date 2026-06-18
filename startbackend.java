@@ -42,8 +42,8 @@ class sgh implements Runnable {
 	public static int bp = 0;
 	public static String vlogs = "";
 	public static boolean busy = false;
-	public static String rwskey1 = "[rwskey1]";
-	public static String rwskey2 = "[rwskey2]";
+	public static String rwskey1 = "rwskey1";
+	public static String rwskey2 = "rwskey2";
 	public static String discordkey;
 	public static String githubkey;
 	public void run() {
