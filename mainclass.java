@@ -52,8 +52,8 @@ import gnu.io.NRSerialPort;
 class stuff {
 	public static String backendips = "";
 	public static int modem = 1;
-	public static String rwskey1 = "[rwskey1]";
-	public static String rwskey2 = "[rwskey2]";
+	public static String rwskey1 = "rwskey1";
+	public static String rwskey2 = "rwskey2";
 	public static String weatherkey;
 	public static String weatherkey2;
 	public static boolean intaccess = true;
