@@ -52,8 +52,8 @@ import gnu.io.NRSerialPort;
 class stuff {
 	public static String backendips = "";
 	public static int modem = 1;
-	public static String rwskey1 = "rwskey1";
-	public static String rwskey2 = "rwskey2";
+	public static String rwskey1 = "[rwskey1]";
+	public static String rwskey2 = "[rwskey2]";
 	public static String weatherkey;
 	public static String weatherkey2;
 	public static boolean intaccess = true;
@@ -69,67 +69,102 @@ class stuff {
 	public static String homestring = "";
 	public static String commandslist = "-----\nCommands:\n|home : Exits commands and reprints this page\n|website : Fetch text or raw html from a website\n|search : Quick text-only search\n|weather : Get weather forecast for given city+state\n|download : Download a given url through base64\n|forum : View or create threads in the forum folder on the github\n|chat : Send and receive direct messages with a callsign\n|info : Print server info\n|charlimit : Set maximum length of responses from the server (useful for slow connections)\r";
 	public static String commandslistshort = "\nCommands: |home |website |search |weather |download |forum |chat |info |charlimit\r";
+	public static boolean varim = false;
+	static String prevusabled = "";
 	static String backend(String option, String body) throws SocketException {
 		String output = "";
-		try {
-		
-		boolean success = false;
-		int attempt = 0;
-		while (success == false) {
 			try {
-				Socket socket = new Socket();
-				socket.setTcpNoDelay(true);
-				socket.setSoTimeout(5000);
-			int port = new Random().nextInt(10)+1;
-			
-			InetAddress inetAddress=InetAddress.getByName(backendips);  
-		      SocketAddress socketAddress=new InetSocketAddress(inetAddress, 5000+port);  
-		      if(getstream4.debug==true){System.out.println(backendips + ":" + (5000+port));}
-		      if(getstream4.debug==true){System.out.println(option);}
-		      if(getstream4.debug==true){System.out.println(body.replaceAll(rwskey1, "[rwskey1]").replaceAll(rwskey2, "[rwskey2]"));}
-		      socket.connect(socketAddress,(int) (1000+(Math.random()*4000))); // just in case of extremely high ping or extremely intense backend usage (load balancing)
-		      
-			
-	        // get the input stream from the connected socket
-	        InputStream inputStream = socket.getInputStream();
-	        // create a DataInputStream so we can read data from it.
-	        DataInputStream dataInputStream = new DataInputStream(inputStream);
-	        OutputStream outputStream = socket.getOutputStream();
-	        // create a data output stream from the output stream so we can send data through it
-	        DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-	        // read the message from the socket
-	        dataOutputStream.writeUTF(stuff.rwskey1 + option + stuff.rwskey2 + body);
-            dataOutputStream.flush(); // send the message
-	        
-	        output = dataInputStream.readUTF();
-	        dataOutputStream.close();
-	        dataInputStream.close();
-	        success = true;
-	        socket.close();
-	        if(getstream4.debug==true){System.out.println("success");}
-			} catch (Exception e) {
-				//if(getstream4.debug==true){System.out.println(e.toString() + "\nbackend down or busy, refetching backendips, waiting, and retrying...");}
-				attempt = attempt + 1;
-				if(getstream4.debug==true){e.printStackTrace();System.out.println("\nbackend down or busy, refetching backendips, waiting, and retrying with randomized port, attempt " + attempt + "...");}
-				
-				
-				
-				try {
-					stuff.backendips = Jsoup.parse(new URI("https://raw.githubusercontent.com/Glitch31415/rws/refs/heads/main/backendips").toURL(), 10000).wholeText().replaceAll("\n", "").replaceAll("\r", "");
-					//Thread.sleep((long) (Math.random()*500));
-				} catch (Exception e1) {
-					if(getstream4.debug==true){e1.printStackTrace();}
+				if (backendips == "" || stuff.intaccess == false) {
+						try {
+							stuff.backendips = Jsoup.parse(new URI("https://raw.githubusercontent.com/Glitch31415/rws/refs/heads/main/backendips").toURL(), 10000).wholeText().replaceAll("\n", "").replaceAll("\r", "");
+							System.out.println("Found " + stuff.backendips);
+							if (stuff.intaccess == false) {
+								stuff.intaccess = true;
+								System.out.println("Internet access found!");
+								getstream4.logs = getstream4.logs + "Internet access found\n";
+							}
+
+						} catch (Exception e) {
+							if (stuff.intaccess == true) {
+								stuff.intaccess = false;
+								System.out.println("Internet access lost!");
+								getstream4.logs = getstream4.logs + "Internet access lost\n";
+							}
+							output = "Backend access failed, server has no internet";
+						}
 				}
-			}
-			
-		}
+				else {
+					boolean success = false;
+					int attempt = 0;
+					while (success == false && stuff.intaccess == true) {
+						try {
+							Socket socket = new Socket();
+							socket.setTcpNoDelay(true);
+							socket.setSoTimeout(5000);
+						int port = new Random().nextInt(10)+1;
+						
+						InetAddress inetAddress=InetAddress.getByName(backendips);  
+					      SocketAddress socketAddress=new InetSocketAddress(inetAddress, 5000+port);  
+					      if(getstream4.debug==true){System.out.println(backendips + ":" + (5000+port));}
+					      if(getstream4.debug==true){System.out.println(option);}
+					      if(getstream4.debug==true){System.out.println(body.replaceAll(rwskey1, "[rwskey1]").replaceAll(rwskey2, "[rwskey2]"));}
+					      socket.connect(socketAddress,(int) (1000+(Math.random()*4000))); // just in case of extremely high ping or extremely intense backend usage (load balancing)
+					      
+						
+				        // get the input stream from the connected socket
+				        InputStream inputStream = socket.getInputStream();
+				        // create a DataInputStream so we can read data from it.
+				        DataInputStream dataInputStream = new DataInputStream(inputStream);
+				        OutputStream outputStream = socket.getOutputStream();
+				        // create a data output stream from the output stream so we can send data through it
+				        DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+				        // read the message from the socket
+				        dataOutputStream.writeUTF(stuff.rwskey1 + option + stuff.rwskey2 + body);
+			            dataOutputStream.flush(); // send the message
+				        
+				        output = dataInputStream.readUTF();
+				        dataOutputStream.close();
+				        dataInputStream.close();
+				        success = true;
+				        socket.close();
+				        if(getstream4.debug==true){System.out.println("success");}
+						} catch (Exception e) {
+							//if(getstream4.debug==true){System.out.println(e.toString() + "\nbackend down or busy, refetching backendips, waiting, and retrying...");}
+							attempt = attempt + 1;
+							if(getstream4.debug==true){e.printStackTrace();System.out.println("\nbackend down or busy, refetching backendips, waiting, and retrying with randomized port, attempt " + attempt + "...");}
+							
+							
+							
+							try {
+								stuff.backendips = Jsoup.parse(new URI("https://raw.githubusercontent.com/Glitch31415/rws/refs/heads/main/backendips").toURL(), 10000).wholeText().replaceAll("\n", "").replaceAll("\r", "");
+								System.out.println("Found " + stuff.backendips);
+								if (stuff.intaccess == false) {
+									stuff.intaccess = true;
+									System.out.println("Internet access found!");
+									getstream4.logs = getstream4.logs + "Internet access found\n";
+								}
+
+							} catch (Exception e1) {
+								if (stuff.intaccess == true) {
+									stuff.intaccess = false;
+									System.out.println("Internet access lost!");
+									getstream4.logs = getstream4.logs + "Internet access lost\n";
+								}
+								output = "Backend access failed, server has no internet";
+							}
+						}
+						
+					}
+					
+					output = output.replaceAll(stuff.rwskey1, "");
+				}
+				
+		        
+				
+				} catch (Exception e) {
+					if(getstream4.debug == true) {e.printStackTrace();}
+				}
 		
-		output = output.replaceAll(stuff.rwskey1, "");
-        
-		
-		} catch (Exception e) {
-			if(getstream4.debug == true) {e.printStackTrace();}
-		}
 		return output;
 	}
 	static void updusabled() throws IOException, InterruptedException, XmlRpcException {
@@ -196,10 +231,7 @@ class stuff {
 			
 		}
 		if (getstream4.termconnect == false && stuff.modem == 1) {
-			if (getstream4.prevdatainthing == getstream2.gdatain) {
-				//getstream4.usabled = "";
-			}
-			else {
+			if (getstream2.gdatain != "") {
 				if (getstream2.gdatain.contains("&IT&") || getstream2.gdatain.contains(getstream4.rcall + " <R") ) {
 					//getstream4.usabled = "";
 				}
@@ -210,12 +242,16 @@ class stuff {
 					else {
 						getstream4.usabled = getstream2.gdatain;
 					}
-					getstream4.prevdatainthing = getstream2.gdatain;
 
 				}
-
+				getstream2.gdatain = "";
 			}
 		}
+		if (prevusabled == getstream4.usabled) {
+			getstream4.usabled = "";
+			prevusabled = "";
+		}
+		prevusabled = getstream4.usabled;
 		if (getstream4.usabled != "" && getstream4.debug == true) {
 			System.out.println("usabled: '" + getstream4.usabled + "'");
 		}
@@ -333,13 +369,12 @@ class stuff {
 		if (fc == false) { // banned calls
 			String notifs = stuff.backend("cn", getstream4.rcall);
 			if (welcomemessage != "") {
-				getstream4.encodedString = "\n-----\nWelcome, " + getstream4.rcall + "\n" + welcomemessage + notifs;
+				getstream4.encodedString = "-----\nWelcome, " + getstream4.rcall + "\n" + welcomemessage + notifs;
 			}
 			else {
-				getstream4.encodedString = "\n-----\nWelcome, " + getstream4.rcall + notifs;
+				getstream4.encodedString = "-----\nWelcome, " + getstream4.rcall + notifs;
 			}
 		
-			if (intaccess == true) {
 				Thread.sleep(1000);
 				if (stuff.modem == 1) {
 					if (getstream1.gcmdsin != null) {
@@ -367,6 +402,9 @@ class stuff {
 					}
 
 				}
+				if (stuff.intaccess == false) {
+					getstream4.encodedString = getstream4.encodedString + "\nThis server appears to not be connected to the Internet. If you have trouble accessing websites, the forum, chats, etc, try a different server.\n";
+				}
 				getstream4.encodedString = getstream4.encodedString + stuff.commandslist;
 				if (stuff.modem == 0 || stuff.modem == 3 || stuff.modem == 4) {
 					// manual connection, not modem controlled, so inform about |disc
@@ -393,15 +431,6 @@ class stuff {
 				stuff.transmit();
 				stuff.interactiontimeout = System.currentTimeMillis() + 300000;
 				getstream4.connmsg = false;
-			}
-			else {
-				getstream4.encodedString = getstream4.encodedString + "\n-----\nSorry, but this server doesn't have access to the internet. Please let the server operator know this and/or try again later.\r";
-				
-				getstream4.logs = getstream4.logs + getstream4.rcall + " connected, but the server did not have internet access\n";
-				totalconnections = totalconnections + 1;
-				stuff.transmit();
-				getstream4.connmsg = false;
-			}
 	}
 	else {
 		getstream4.encodedString = getstream4.encodedString + "\n-----\nSorry, but you are banned from using RWS. Talk to KJ7QQG if you want to be unbanned, email jpradiophone@gmail.com\r";
@@ -444,6 +473,7 @@ class stuff {
 			getstream4.option = 0;
 			getstream4.usabled = "";
 			getstream4.rcall = "";
+			stuff.varim = false;
 		}
 	}
 		
@@ -458,6 +488,7 @@ class stuff {
 		getstream4.option = 0;
 		getstream4.usabled = "";
 		getstream4.rcall = "";
+		stuff.varim = false;
 
 		
 	}
@@ -474,7 +505,9 @@ class stuff {
 				getstream1.gcmdsin = getstream1.gcmdsin.replaceAll("DISCONNECTED", ""); // please stop triggering dkill somehow
 	        	getstream4.filebytesleft = getstream4.encodedString.length();
 	        	//System.out.println("total length of tranfer: " + (int)(getstream4.encodedString.length()+2) + " bytes");
-				getstream4.dataoutp = (getstream4.encodedString.length()+2) + " \n";
+	        	if (varim == false) {
+	        		getstream4.dataoutp = (getstream4.encodedString.length()+1) + " ";
+	        	}
 	            byte[] datadata = getstream4.dataoutp.getBytes();
 	            
 				getstream4.dataout.write(datadata);
@@ -805,7 +838,6 @@ class getstream2 implements Runnable { // reads data from modem
 
 
         InputStreamReader isr2 = new InputStreamReader(datain,StandardCharsets.UTF_8);
-        BufferedReader br2 = new BufferedReader(isr2);
         boolean erasenext = false;
         String totalnumbuild = "";
         int totalnum = 0;
@@ -816,79 +848,104 @@ class getstream2 implements Runnable { // reads data from modem
 		while (0==0) {
 
 	        try {
-				datachar = (char)br2.read();
-
-				if (Character.isDigit(datachar)) {
-					if (buildingtotalnum == true) {
-						if (pgdi == "") {
-							buildingtotalnum = true;
-							if (totalnumbuild == "") {
-								if (datachar == '0') {
-									varacfuckedup = true;
+	        	datachar = (char)isr2.read();
+				if (stuff.varim == false) {
+					if (Character.isDigit(datachar)) {
+						if (buildingtotalnum == true) {
+							if (pgdi == "") {
+								buildingtotalnum = true;
+								if (totalnumbuild == "") {
+									if (datachar == '0') {
+										varacfuckedup = true;
+										erasenext = true;
+									}
+								}
+								if (varacfuckedup == false) {
+									totalnumbuild = totalnumbuild + datachar;
 									erasenext = true;
 								}
+
 							}
-							if (varacfuckedup == false) {
-								totalnumbuild = totalnumbuild + datachar;
-								erasenext = true;
+							else {
+								
+							}
+						}
+						else {
+							pgdi = pgdi + datachar;
+							charnum = charnum + 1;
+							if (charnum == totalnum) {
+								gdatain = pgdi;
+								pgdi = "";
+								totalnum = 0;
+								erasenext = false;
+								totalnumbuild = "";
+								charnum = 0;
+								lookingforletters = false;
+								buildingtotalnum = true;
+								
+							}
+						}
+
+					}
+					else {
+						if (erasenext == true) {
+							if (varacfuckedup == true) {
+								erasenext = false;
+								varacfuckedup = false;
+							}
+							else {
+								erasenext = false;
+								buildingtotalnum = false;
+								lookingforletters = true;
+								totalnum = Integer.parseInt(totalnumbuild);
 							}
 
 						}
 						else {
-							
-						}
-					}
-					else {
-						pgdi = pgdi + datachar;
-						charnum = charnum + 1;
-						if (charnum == totalnum) {
-							gdatain = pgdi;
-							pgdi = "";
-							totalnum = 0;
-							erasenext = false;
-							totalnumbuild = "";
-							charnum = 0;
-							lookingforletters = false;
-							buildingtotalnum = true;
-							
-						}
-					}
+								if (lookingforletters == true) {
+									pgdi = pgdi + datachar;
+									charnum = charnum + 1;
+									if (charnum == totalnum) {
+										gdatain = pgdi;
+										pgdi = "";
+										totalnum = 0;
+										erasenext = false;
+										totalnumbuild = "";
+										charnum = 0;
+										lookingforletters = false;
+										buildingtotalnum = true;
+										
+									}
+								}
+								else {
+									// doesn't use the message length prefix that varac and vara chat use
+									stuff.varim = true;
+									pgdi = pgdi + datachar;
+								}
 
+							
+						}
+					}
 				}
 				else {
-					if (erasenext == true) {
-						if (varacfuckedup == true) {
-							erasenext = false;
-							varacfuckedup = false;
-						}
-						else {
-							erasenext = false;
-							buildingtotalnum = false;
-							lookingforletters = true;
-							totalnum = Integer.parseInt(totalnumbuild);
-						}
-
+					pgdi = pgdi + datachar;
+					while (isr2.ready()) {
+						pgdi = pgdi + (char)isr2.read();
 					}
-					else {
-							if (lookingforletters == true) {
-								pgdi = pgdi + datachar;
-								charnum = charnum + 1;
-								if (charnum == totalnum) {
-									gdatain = pgdi;
-									pgdi = "";
-									totalnum = 0;
-									erasenext = false;
-									totalnumbuild = "";
-									charnum = 0;
-									lookingforletters = false;
-									buildingtotalnum = true;
-									
-								}
+					if (pgdi != "") {
+						if ((int)pgdi.charAt(pgdi.length()-1) == 10 && (int)pgdi.charAt(pgdi.length()-2) == 13) {
+							pgdi = pgdi.substring(0, pgdi.length()-2);
+						} else {
+							if ((int)pgdi.charAt(pgdi.length()-1) == 10 || (int)pgdi.charAt(pgdi.length()-1) == 13) {
+								pgdi = pgdi.substring(0, pgdi.length()-1);
 							}
-
-						
+						}
+						gdatain = pgdi;
+						pgdi = "";
+						totalnum = 0;
 					}
 				}
+				
 
 				
 	        } catch (Exception e) { e.printStackTrace(); }
@@ -1061,7 +1118,7 @@ class getstream4 implements Runnable { // handles timing things
 					    	   }
 					       }
 					       List<String> bannedcalls = new ArrayList<>();
-							while (bannedcalls.isEmpty()) {
+							while (bannedcalls.isEmpty() && stuff.intaccess == true) {
 								
 					            try {
 					                    int ind = 0;
@@ -1282,13 +1339,20 @@ public class mainclass {
 		getstream4.termconnect = false;
 
 
-		getstream4.softver = "v131";
+		getstream4.softver = "v132";
 		System.out.println("Starting RWS server (version " + getstream4.softver + ")");
 		System.out.println("Fetching backend IPs...");
+		stuff.intaccess = true;
+		try {
 		stuff.backendips = Jsoup.parse(new URI("https://raw.githubusercontent.com/Glitch31415/rws/refs/heads/main/backendips").toURL(), 10000).wholeText().replaceAll("\n", "").replaceAll("\r", "");
 		System.out.println("Found " + stuff.backendips);
+		} catch (Exception e) {
+			stuff.intaccess = false;
+			System.out.println("Server does not have access to the Internet. Many features will be broken.");
+		}
+		
 		stuff.totalconnections = 0;
-		stuff.intaccess = true;
+
 		getstream4.bwcheck = true; getstream1.dkill = false;
 		String lastchat = "";
 		getstream4.debug = false;
@@ -1316,8 +1380,7 @@ public class mainclass {
             //} catch (Exception e) { System.out.print("");if(getstream4.debug==true){e.printStackTrace();} }
 		//}
 		List<String> bannedcalls = new ArrayList<>();
-		while (bannedcalls.isEmpty()) {
-			
+		while (bannedcalls.isEmpty() && stuff.intaccess == true) {
             try {
                     int ind = 0;
                     String[] temparray = stuff.backend("gc", "bannedcalls").split("\n");
@@ -1332,7 +1395,6 @@ public class mainclass {
 		getstream4.bannedcalls = bannedcalls;
 		stuff.weatherkey = stuff.backend("k", "weatherkey");
 		stuff.weatherkey2 = stuff.backend("k", "weatherkey2");
-	        
 	                @SuppressWarnings("resource")
 		Scanner callinp = new Scanner(System.in);
 	        		getstream1.cmds = null;
@@ -2119,7 +2181,11 @@ public class mainclass {
 			                        while (wstext.contains("\n\n")) {
 			                        	wstext = wstext.replaceAll("\n\n", "\n");
 			                        }
+			                        try {
 			                        wstext = wstext.substring(wstext.indexOf("1.")).stripTrailing();
+			                        } catch (Exception e) {
+			                        	e.printStackTrace();
+			                        }
 		                        //int ind = 0;
 		                        //while (ind < badwords.size()) {
 		                        	//if(getstream4.debug==true){System.out.println("looping6");}
@@ -3009,7 +3075,7 @@ public class mainclass {
 				            if (dummyload.contains("Privacy")) {
 				            	stuff.intaccess = true;
 				            }
-							if (getstream4.conn == false && stuff.intaccess == true) {
+							if (getstream4.conn == false) {
 								String pcqbw = "";
 								getstream4.cmdsoutp = "";
 								String cqusablec = getstream4.usablec.substring(getstream4.usablec.lastIndexOf("CQFRAME"));
