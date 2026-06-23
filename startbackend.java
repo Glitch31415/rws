@@ -278,14 +278,17 @@ class sgh implements Runnable {
     			try {
     				FileWriter myWriterp;
             		while(writing==true){Thread.sleep(0);}writing=true;
-    				myWriterp = new FileWriter(sgh.git.getRepository().getDirectory().getParent() + File.separator+"chat"+File.separator+bodytext);
-    				 myWriterp.write("---beginning of chat---\n");
-    	 	       myWriterp.close();
-    			//} catch (Exception e) {e.printStackTrace(); if (e.toString().contains("EOFException")) {sgh.ee = sgh.ee + 1;} else { if (e.toString().contains("SocketException: Connection reset")) {sgh.cr = sgh.cr + 1;} else { if (e.toString().contains("UTFDataFormatException")) {sgh.utfe = sgh.utfe + 1;} else { if (e.toString().contains("TransportException")) {sgh.te = sgh.te + 1;} else { if (e.toString().contains("Broken pipe")) { sgh.bp = sgh.bp + 1; } else { {sgh.otherrs = sgh.otherrs + 1; sgh.vlogs = sgh.vlogs + "\n"+e;} } } } } } }
-    			//try {
-    				myWriterp = new FileWriter(sgh.git.getRepository().getDirectory().getParent() + File.separator+"chatindex", true);
-    				 myWriterp.write("\n" + bodytext);
-    	 	       myWriterp.close();
+            		if (!new File(sgh.git.getRepository().getDirectory().getParent() + File.separator+"chat"+File.separator+bodytext).exists()) {
+            			myWriterp = new FileWriter(sgh.git.getRepository().getDirectory().getParent() + File.separator+"chat"+File.separator+bodytext);
+       				 myWriterp.write("---beginning of chat---\n");
+       	 	       myWriterp.close();
+       			//} catch (Exception e) {e.printStackTrace(); if (e.toString().contains("EOFException")) {sgh.ee = sgh.ee + 1;} else { if (e.toString().contains("SocketException: Connection reset")) {sgh.cr = sgh.cr + 1;} else { if (e.toString().contains("UTFDataFormatException")) {sgh.utfe = sgh.utfe + 1;} else { if (e.toString().contains("TransportException")) {sgh.te = sgh.te + 1;} else { if (e.toString().contains("Broken pipe")) { sgh.bp = sgh.bp + 1; } else { {sgh.otherrs = sgh.otherrs + 1; sgh.vlogs = sgh.vlogs + "\n"+e;} } } } } } }
+       			//try {
+       				myWriterp = new FileWriter(sgh.git.getRepository().getDirectory().getParent() + File.separator+"chatindex", true);
+       				 myWriterp.write("\n" + bodytext);
+       	 	       myWriterp.close();
+            		}
+    				
        			writing = false;
        			req = req + 1;
        			
