@@ -508,6 +508,9 @@ class stuff {
 	        	if (varim == false) {
 	        		getstream4.dataoutp = (getstream4.encodedString.length()+1) + " ";
 	        	}
+	        	else {
+	        		getstream4.dataoutp = "";
+	        	}
 	            byte[] datadata = getstream4.dataoutp.getBytes();
 	            
 				getstream4.dataout.write(datadata);
@@ -1339,7 +1342,7 @@ public class mainclass {
 		getstream4.termconnect = false;
 
 
-		getstream4.softver = "v132";
+		getstream4.softver = "v133";
 		System.out.println("Starting RWS server (version " + getstream4.softver + ")");
 		System.out.println("Fetching backend IPs...");
 		stuff.intaccess = true;
@@ -1745,7 +1748,7 @@ public class mainclass {
 					getstream4.cmdsoutp = "MYCALL "+getstream4.callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rCLEANTXBUFFER\rBW500\rCOMPRESSION FILES\r";
 				}
 				else {
-					getstream4.cmdsoutp = "MYCALL "+getstream4.callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rCLEANTXBUFFER\rBW2300\rCOMPRESSION FILES\r";
+					getstream4.cmdsoutp = "MYCALL "+getstream4.callsign+"\rPUBLIC ON\rLISTEN ON\rCHAT ON\rCLEANTXBUFFER\rBW2750\rCOMPRESSION FILES\r";
 				}
 				getstream4.cmdsdata = getstream4.cmdsoutp.getBytes();
 				getstream4.cmdsout.write(getstream4.cmdsdata);
@@ -2974,7 +2977,7 @@ public class mainclass {
 							
 							if (getstream4.bwcheck == true) {
 								if (getstream4.lbm == false) {
-									getstream4.cmdsoutp = "BW2300\r";
+									getstream4.cmdsoutp = "BW2750\r";
 								}
 								else {
 									getstream4.cmdsoutp = "BW500\r";
@@ -3080,10 +3083,7 @@ public class mainclass {
 								getstream4.cmdsoutp = "";
 								String cqusablec = getstream4.usablec.substring(getstream4.usablec.lastIndexOf("CQFRAME"));
 								String[] cqcqframestrings = cqusablec.split("\r");
-									if (cqcqframestrings[0].contains(" 500") && getstream4.lbm == false) {
-										pcqbw = "BW500\r";
-									}
-									if (cqcqframestrings[0].contains(" 2300") && getstream4.lbm == true) {
+									if (getstream4.lbm == true) {
 										pcqbw = "BW500\r";
 									}
 									String[] cqrx = cqcqframestrings[0].split(" ");
