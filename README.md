@@ -20,7 +20,7 @@ If you have any questions, email me at jpradiophone@gmail.com or ask in our Disc
 
 ### Compatible modems
 
-**VARA (recommended)**: VARA HF (500 and 2300 Hz) and VARA FM
+**VARA (recommended)**: VARA HF (500, 2300, and 2750 Hz) and VARA FM
 
 FLDigi: Any digital mode that supports full ASCII text
 
