@@ -1342,7 +1342,7 @@ public class mainclass {
 		getstream4.termconnect = false;
 
 
-		getstream4.softver = "v133";
+		getstream4.softver = "v134";
 		System.out.println("Starting RWS server (version " + getstream4.softver + ")");
 		System.out.println("Fetching backend IPs...");
 		stuff.intaccess = true;
@@ -2082,20 +2082,22 @@ public class mainclass {
 										    if (href != "") {
 										    	
 										    	if (text != "") {
-										    		elem.replaceWith(new TextNode(text.strip() + " [" + href + "]"));
+										    		elem.replaceWith(new TextNode(">" + text.strip() + "< [" + href + "]\n"));
 										    	}
 										    	else {
-										    		elem.replaceWith(new TextNode("[" + href + "]"));
+										    		elem.replaceWith(new TextNode("\n[" + href + "]\n"));
 										    	}
 										    	
 										    }
 										    
-										    	if (elem.hasText()) {
-											    	elem.appendText("\n");
-											    }
-										    	if (text.isBlank()) {
-										    		elem.remove();
-										    	}
+										    if (elem.hasText()) {
+										    	elem.appendText("\n");
+										    } else {
+										    	elem.remove();
+										    }
+									    	if (text.isBlank()) {
+									    		elem.remove();
+									    	}
 										    
 										    
 										}
@@ -2104,10 +2106,13 @@ public class mainclass {
 									} catch (Exception e) { wstext = e.toString(); }
 			                        wstext = wstext.replaceAll("	", " ");
 			                        while (wstext.contains("  ")) {
-				                        wstext = wstext.replaceAll("  ", " ");
+			                        	wstext = wstext.replaceAll("  ", " ");
 			                        }
 			                        while (wstext.contains("\n \n")) {
 			                        	wstext = wstext.replaceAll("\n \n", "\n");
+			                        }
+			                        while (wstext.contains("\n ")) {
+			                        	wstext = wstext.replaceAll("\n ", "\n");
 			                        }
 			                        while (wstext.contains("\n\n")) {
 			                        	wstext = wstext.replaceAll("\n\n", "\n");
@@ -2140,29 +2145,32 @@ public class mainclass {
 								getstream4.usabled = URLEncoder.encode(getstream4.usabled, StandardCharsets.UTF_8);
 								getstream4.usabled = getstream4.usabled.replaceAll("\\+", "%20");
 
-								try {
-									wstext = "Unfortunately, bots use DuckDuckGo too";
-									while (wstext.contains("Unfortunately, bots use DuckDuckGo too")) { // sorry lmao
-										Document document = Jsoup.connect("https://lite.duckduckgo.com/lite?q=" + URLEncoder.encode(getstream4.usabled, "UTF-8")).get();
+								
+									wstext = "Error";
+									//while (wstext.contains("Unfortunately, bots use DuckDuckGo too") || wstext.contains("Status=403")) { // sorry lmao
+										try {
+										Document document = Jsoup.connect("https://search.brave.com/search?q=" + getstream4.usabled).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0").referrer("http://www.google.com").get();
 										for (Element elem : document.getAllElements()) {
 										    String href = elem.absUrl("href");
 										    String text = elem.wholeText();
 										    
 										    if (href != "") {
-										    	if (!href.startsWith("http")) {
-											        elem.remove(); // Ads/news/etc.
-											    }
+										    	//if (!href.contains("r.bing.com")) {
+											        //elem.remove(); // Ads/news/etc.
+											    //}
 										    	if (text != "") {
-										    		elem.replaceWith(new TextNode(text.strip() + " [" + href + "]"));
+										    		elem.replaceWith(new TextNode(">" + text.strip() + "< [" + href + "]\n"));
 										    	}
 										    	else {
-										    		elem.replaceWith(new TextNode("[" + href + "]"));
+										    		elem.replaceWith(new TextNode("\n[" + href + "]\n"));
 										    	}
 										    	
 										    }
 										    
 										    	if (elem.hasText()) {
 											    	elem.appendText("\n");
+											    } else {
+											    	elem.remove();
 											    }
 										    	if (text.isBlank()) {
 										    		elem.remove();
@@ -2170,22 +2178,29 @@ public class mainclass {
 										    
 										}
 										wstext = document.wholeText().strip();
-									}
+										} catch (Exception e) { wstext = e.toString(); }
+									//}
 									
 
-								} catch (Exception e) { wstext = e.toString(); }
+								
+			                        try {
+			                        wstext = wstext.substring(wstext.indexOf(" Goggles [https://search.brave.com/goggles?q="));
+			                        wstext = wstext.substring(wstext.indexOf("\n"));
+			                        wstext = wstext.substring(0, wstext.indexOf("     Resources")).stripTrailing();
+			                        
 			                        wstext = wstext.replaceAll("	", " ");
 			                        while (wstext.contains("  ")) {
-				                        wstext = wstext.replaceAll("  ", " ");
+			                        	wstext = wstext.replaceAll("  ", " ");
 			                        }
 			                        while (wstext.contains("\n \n")) {
 			                        	wstext = wstext.replaceAll("\n \n", "\n");
 			                        }
+			                        while (wstext.contains("\n ")) {
+			                        	wstext = wstext.replaceAll("\n ", "\n");
+			                        }
 			                        while (wstext.contains("\n\n")) {
 			                        	wstext = wstext.replaceAll("\n\n", "\n");
 			                        }
-			                        try {
-			                        wstext = wstext.substring(wstext.indexOf("1.")).stripTrailing();
 			                        } catch (Exception e) {
 			                        	e.printStackTrace();
 			                        }
