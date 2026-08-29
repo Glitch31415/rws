@@ -2184,7 +2184,7 @@ public class mainclass {
 
 								
 			                        try {
-			                        wstext = wstext.substring(wstext.indexOf(" Goggles [https://search.brave.com/goggles?q="));
+			                        wstext = wstext.substring(wstext.indexOf(" Goggles< [https://search.brave.com/goggles?q="));
 			                        wstext = wstext.substring(wstext.indexOf("\n"));
 			                        wstext = wstext.substring(0, wstext.indexOf("     Resources")).stripTrailing();
 			                        
