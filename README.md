@@ -27,6 +27,7 @@ FLDigi: Any digital mode that supports full ASCII text
 *~~FreeDATA~~ (not yet implemented, coming soon)*\
 
 
+
 *For developers (contact me):*
 
 Serial: Any port and baud rate
