@@ -48,7 +48,7 @@ VARA Chat (https://downloads.winlink.org/VARA%20Products/)
 
 Follow the instructions on those sites to get the chat client and the VARA modem.
 
-Since VARA is the recommended modem and 14.109 is the main calling frequency, you can just call CQ on that frequency and wait for a server to respond back. However, if no servers are able to reach you in that way, pick a VARA server from the activeservers list (linked above) , go to its listed frequency (on the list, the frequency is the number to the right of its callsign, in MHz), and send a connection request to the callsign directly.
+Since VARA is the recommended modem and 14.109 is the main calling frequency, you can just call CQ on that frequency and wait for a server to respond back. However, if no servers are able to reach you in that way, pick a VARA server from the activeservers list (linked above), go to its listed frequency (on the list, the frequency is the number to the right of its callsign, in MHz), and send a connection request to the callsign directly.
 
 After you're connected, the server will automatically reply back with a list of commands, and you're good to go.
 
