@@ -6,17 +6,17 @@ If you have any questions, email me at jpradiophone@gmail.com or ask in our Disc
 
 ### Features
 
-**|website : Fetches text or raw html from a given URL**
+**|website - Fetches text or raw html from a given URL**
 
-**|search : Quick text-only search using DuckDuckGo**
+**|search - Quick text-only search using DuckDuckGo**
 
-**|weather : Get weather forecast for any location**
+**|weather - Get weather forecast for any location**
 
-**|download : Download a file at a given URL, encoded and sent through base64**
+**|download - Download a file at a given URL, encoded and sent through base64**
 
-**|forum : View or create threads in the forum hosted on a private GitHub repo**
+**|forum - View or create threads in the forum hosted on a private GitHub repo**
 
-**|chat : Send and receive direct messages with a callsign in real time, with messages also saved on the private GitHub repo**
+**|chat - Send and receive direct messages with a callsign in real time, with messages also saved on the private GitHub repo**
 
 ### Compatible modems
 
