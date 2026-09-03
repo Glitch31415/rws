@@ -34,7 +34,7 @@ TCP: Any port
 
 ## Connecting to a server
 
-The main calling frequency for the project is 14.109 MHz USB. Look at the active servers list in the status channel on the discord to see what frequency each server is on and what modem it's using.
+The main calling frequency for the project is 14.109 MHz USB. If you wish, you can look at the active servers list in the status channel on the discord to see what frequency each server is on and what modem it's using, or how to connect to it otherwise.
 
 If you want an external tool for dealing with the downloads and base64, KC3VPB has created a helper that can decode base64 automatically and save it to a file. https://github.com/Caleb-J773/rws-tools-release/releases
 
