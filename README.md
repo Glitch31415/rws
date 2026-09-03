@@ -25,6 +25,9 @@ If you have any questions, email me at jpradiophone@gmail.com or ask in our Disc
 FLDigi: Any digital mode that supports full ASCII text
 
 *~~FreeDATA~~ (not yet implemented, coming soon)*
+
+\n
+
 *For developers (contact me):*
 
 Serial: Any port and baud rate
