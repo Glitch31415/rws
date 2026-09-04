@@ -67,9 +67,16 @@ class stuff {
 	public static boolean inchat = false;
 	public static int charlimit = 0;
 	public static String homestring = "";
-	public static String commandslist = "-----\nCommands:\n|home : Exits commands and reprints this page\n|website : Fetch text or raw html from a website\n|search : Quick text-only search\n|weather : Get weather forecast for given city+state\n|download : Download a given url through base64\n|forum : View or create threads in the forum folder on the github\n|chat : Send and receive direct messages with a callsign\n|info : Print server info\n|charlimit : Set maximum length of responses from the server (useful for slow connections)\r";
-	public static String commandslistshort = "\nCommands: |home |website |search |weather |download |forum |chat |info |charlimit\r";
+	public static String commandslist = "-----\nCommands:\n|home - Exits commands and reprints this page\n|website - Fetch text or raw html from a website\n|search - Quick text-only search\n|weather - Get weather forecast for given city+state\n|download - Download a given url through base64\n|forum - View or create threads in the forum folder on the github\n|chat - Send and receive direct messages with a callsign\n|info - Print server info\n|charlimit - Set maximum length of responses from the server (useful for slow connections)\n|updatepass - Update your password\r";
+	public static String commandslistshort = "\nCommands: |home |website |search |weather |download |forum |chat |info |charlimit |updatepass\r";
 	public static boolean varim = false;
+	public static double timeoutwait = 0.1;
+	public static boolean linkregistered = false;
+	public static String passwords = "";
+	public static boolean loggedin = false;
+	public static boolean fakelogin = false;
+	public static boolean transmitting = false;
+	public static boolean changingpass = false;
 	static String prevusabled = "";
 	static String backend(String option, String body) throws SocketException {
 		String output = "";
@@ -82,6 +89,13 @@ class stuff {
 								stuff.intaccess = true;
 								System.out.println("Internet access found!");
 								getstream4.logs = getstream4.logs + "Internet access found\n";
+								if (stuff.fakelogin == true && (option != "gc" || body != "passwords")) {
+									String testpasswords = stuff.backend("gc", "passwords");
+							        if (testpasswords.contains("validpasswordfile")) {
+							        	stuff.passwords = testpasswords;
+							        	stuff.loggedin = false;
+							        }
+								}
 							}
 
 						} catch (Exception e) {
@@ -94,8 +108,16 @@ class stuff {
 						}
 				}
 				else {
+					if (stuff.fakelogin == true && (option != "gc" || body != "passwords")) {
+						String testpasswords = stuff.backend("gc", "passwords");
+				        if (testpasswords.contains("validpasswordfile")) {
+				        	stuff.passwords = testpasswords;
+				        	stuff.loggedin = false;
+				        }
+					}
 					boolean success = false;
 					int attempt = 0;
+					timeoutwait = 0.1;
 					while (success == false && stuff.intaccess == true) {
 						try {
 							Socket socket = new Socket();
@@ -132,7 +154,9 @@ class stuff {
 							//if(getstream4.debug==true){System.out.println(e.toString() + "\nbackend down or busy, refetching backendips, waiting, and retrying...");}
 							attempt = attempt + 1;
 							if(getstream4.debug==true){e.printStackTrace();System.out.println("\nbackend down or busy, refetching backendips, waiting, and retrying with randomized port, attempt " + attempt + "...");}
-							
+							if(getstream4.debug==true){System.out.println("waiting " + timeoutwait + " seconds");}
+							Thread.sleep((long)(timeoutwait * 1000));
+							timeoutwait = timeoutwait * 2;
 							
 							
 							try {
@@ -213,7 +237,6 @@ class stuff {
 							getstream4.conn = true;
 							getstream4.termconnect = true;
 							getstream4.rcall = getstream4.callsign.replaceAll("[^a-zA-Z0-9 -]", "").toUpperCase();
-							getstream4.connmsg = true;
 							stuff.connectinit(true);
 						}
 						
@@ -330,6 +353,7 @@ class stuff {
 
 	}
 	static void connectinit(boolean isconnect) throws InterruptedException, IOException, XmlRpcException {
+		stuff.changingpass = false;
 		getstream4.rcall = getstream4.rcall.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", "").toUpperCase();
 		if (getstream4.rcall.contains("-")) {
 			getstream4.rcall = getstream4.rcall.substring(0, getstream4.rcall.indexOf("-"));
@@ -353,7 +377,6 @@ class stuff {
         	intaccess = true;
         }
 		getstream4.conn = true;
-		getstream4.connmsg = true;
 		
 		
 		int ind = 0;
@@ -366,71 +389,78 @@ class stuff {
         	}
         	ind = ind + 1;
         }
-		if (fc == false) { // banned calls
-			String notifs = stuff.backend("cn", getstream4.rcall);
-			if (welcomemessage != "") {
-				getstream4.encodedString = "-----\nWelcome, " + getstream4.rcall + "\n" + welcomemessage + notifs;
-			}
-			else {
-				getstream4.encodedString = "-----\nWelcome, " + getstream4.rcall + notifs;
-			}
-		
-				Thread.sleep(1000);
-				if (stuff.modem == 1) {
-					if (getstream1.gcmdsin != null) {
-						if (getstream4.readyforreadingc == true) {
-							if (getstream1.gcmdsin.length() > 0) {
-								getstream4.usablec = getstream1.gcmdsin;
-								//getstream4.cind = tgcsl;
-							} else {
-								//getstream4.usablec = "";
-							}
+        String testpasswords = stuff.backend("gc", "passwords");
+        if (testpasswords.contains("validpasswordfile")) {
+        	stuff.passwords = testpasswords;
+        }
+        
+        if (fc == false) { // banned calls
+					if (stuff.loggedin == true) {
+						String notifs = stuff.backend("cn", getstream4.rcall);
+						if (welcomemessage != "") {
+							getstream4.encodedString = "-----\nWelcome, " + getstream4.rcall + "\n" + welcomemessage + notifs;
 						}
 						else {
-							//getstream4.usablec = "";
+							getstream4.encodedString = "-----\nWelcome, " + getstream4.rcall + notifs;
 						}
-
-					}
-					if (getstream1.gcmdsin.contains("LINK UNREGISTERED")) {
-						if (getstream4.varalicensed == true) {
-							getstream4.encodedString = getstream4.encodedString + "(This server uses a registered copy of VARA, but you don't, and you manually connected to this server. This means transfer speeds will be limited to speed level 4.)\n";
-							
-						} else {
-							getstream4.encodedString = getstream4.encodedString + "(This server uses an unregistered copy of VARA. You are also using an unregistered copy, and manually connected to this server. This means transfer speeds will be limited to speed level 4.)\n";
-							
-						}
-					}
-
-				}
-				if (stuff.intaccess == false) {
-					getstream4.encodedString = getstream4.encodedString + "\nThis server appears to not be connected to the Internet. If you have trouble accessing websites, the forum, chats, etc, try a different server.\n";
-				}
-				getstream4.encodedString = getstream4.encodedString + stuff.commandslist;
-				if (stuff.modem == 0 || stuff.modem == 3 || stuff.modem == 4) {
-					// manual connection, not modem controlled, so inform about |disc
-					getstream4.encodedString = getstream4.encodedString.replaceAll("\r", "") + "\n|disc : Disconnects from the server\r";
 					
-				}
-				stuff.homestring = getstream4.encodedString;
-				
-				if (getstream4.flrig == true && getstream4.flrigfc == true && getstream4.flrigmfreq != getstream4.flrigsfreq) {
-					getstream4.encodedString = getstream4.encodedString.replaceAll("\r", "");
-					String tempqsys = "" + (long)getstream4.flrigmfreq;
-					int nzqsy = 12-tempqsys.length();
-					for (int zzqsy = 0; zzqsy < nzqsy; zzqsy++) {
-						if(getstream4.debug==true){System.out.println("loopingfor2");}
-                		tempqsys = "0" + tempqsys;
-                	}
-					getstream4.encodedString = getstream4.encodedString + "\nPlease QSY to " + getstream4.flrigmfreq/1000000 + " to use the server.\n<QSYF>"+ tempqsys + "</QSYF>\r";
-				}
-				if (isconnect) {
-					getstream4.logs = getstream4.logs + getstream4.rcall + " connected\n";
-					totalconnections = totalconnections + 1;
-				}
+							Thread.sleep(1000);
+							if (stuff.modem == 1) {
+								if (getstream1.gcmdsin != null) {
+									if (getstream4.readyforreadingc == true) {
+										if (getstream1.gcmdsin.length() > 0) {
+											getstream4.usablec = getstream1.gcmdsin;
+											//getstream4.cind = tgcsl;
+										} else {
+											//getstream4.usablec = "";
+										}
+									}
+									else {
+										//getstream4.usablec = "";
+									}
 
-				stuff.transmit();
-				stuff.interactiontimeout = System.currentTimeMillis() + 300000;
-				getstream4.connmsg = false;
+								}
+								if (stuff.linkregistered == false) {
+									if (getstream4.varalicensed == true) {
+										getstream4.encodedString = getstream4.encodedString + "(This server uses a registered copy of VARA, but you don't, and you manually connected to this server. This means transfer speeds will be limited to speed level 4.)\n";
+										
+									} else {
+										getstream4.encodedString = getstream4.encodedString + "(This server uses an unregistered copy of VARA. You are also using an unregistered copy, and manually connected to this server. This means transfer speeds will be limited to speed level 4.)\n";
+										
+									}
+								}
+
+							}
+							if (stuff.intaccess == false) {
+								getstream4.encodedString = getstream4.encodedString + "\nThis server appears to not be connected to the Internet. If you have trouble accessing websites, the forum, chats, etc, try a different server.\n";
+							}
+							getstream4.encodedString = getstream4.encodedString + stuff.commandslist;
+							if (stuff.modem == 0 || stuff.modem == 3 || stuff.modem == 4) {
+								// manual connection, not modem controlled, so inform about |disc
+								getstream4.encodedString = getstream4.encodedString.replaceAll("\r", "") + "\n|disc - Disconnects from the server\r";
+								
+							}
+							stuff.homestring = getstream4.encodedString;
+							
+							if (getstream4.flrig == true && getstream4.flrigfc == true && getstream4.flrigmfreq != getstream4.flrigsfreq) {
+								getstream4.encodedString = getstream4.encodedString.replaceAll("\r", "");
+								String tempqsys = "" + (long)getstream4.flrigmfreq;
+								int nzqsy = 12-tempqsys.length();
+								for (int zzqsy = 0; zzqsy < nzqsy; zzqsy++) {
+									if(getstream4.debug==true){System.out.println("loopingfor2");}
+			                		tempqsys = "0" + tempqsys;
+			                	}
+								getstream4.encodedString = getstream4.encodedString + "\nPlease QSY to " + getstream4.flrigmfreq/1000000 + " to use the server.\n<QSYF>"+ tempqsys + "</QSYF>\r";
+							}
+							if (isconnect) {
+								getstream4.logs = getstream4.logs + getstream4.rcall + " connected\n";
+								totalconnections = totalconnections + 1;
+							}
+							getstream4.option = 0;
+							stuff.transmit();
+							stuff.interactiontimeout = System.currentTimeMillis() + 300000;
+					}
+	
 	}
 	else {
 		getstream4.encodedString = getstream4.encodedString + "\n-----\nSorry, but you are banned from using RWS. Talk to KJ7QQG if you want to be unbanned, email jpradiophone@gmail.com\r";
@@ -438,7 +468,6 @@ class stuff {
 		getstream4.logs = getstream4.logs + getstream4.rcall + " connected, but they are banned, so we kicked them off\n";
 		stuff.transmit();
 		stuff.charlimit = 0;
-		getstream4.connmsg = false;
 		getstream4.conn = false;
 		if (modem == 1) {
 			Thread.sleep(5000);
@@ -489,13 +518,19 @@ class stuff {
 		getstream4.usabled = "";
 		getstream4.rcall = "";
 		stuff.varim = false;
-
+		stuff.loggedin = false;
+		stuff.fakelogin = false;
 		
 	}
 	static void transmit() throws IOException, InterruptedException, XmlRpcException {
 		try {
-		if (stuff.charlimit > 0 && getstream4.encodedString.length() > stuff.charlimit) {
-			getstream4.encodedString = getstream4.encodedString.substring(0, stuff.charlimit);
+		while (stuff.transmitting == true) {
+			Thread.sleep(1);
+		}
+		stuff.transmitting = true;
+		String totransmit = getstream4.encodedString;
+		if (stuff.charlimit > 0 && totransmit.length() > stuff.charlimit) {
+			totransmit = totransmit.substring(0, stuff.charlimit);
 		}
 		getstream4.usabled = "";
 		if (getstream4.termconnect == false) {
@@ -503,10 +538,10 @@ class stuff {
 			if (stuff.modem == 1) {
 				// vara
 				getstream1.gcmdsin = getstream1.gcmdsin.replaceAll("DISCONNECTED", ""); // please stop triggering dkill somehow
-	        	getstream4.filebytesleft = getstream4.encodedString.length();
+	        	getstream4.filebytesleft = totransmit.length();
 	        	//System.out.println("total length of tranfer: " + (int)(getstream4.encodedString.length()+2) + " bytes");
 	        	if (varim == false) {
-	        		getstream4.dataoutp = (getstream4.encodedString.length()+1) + " ";
+	        		getstream4.dataoutp = (totransmit.length()+1) + " ";
 	        	}
 	        	else {
 	        		getstream4.dataoutp = "";
@@ -518,7 +553,7 @@ class stuff {
 				getstream4.dataoutp = "";
 					if (getstream4.filebytesleft < 31743) {
 						//getstream4.encodedStringpart = getstream4.encodedString.substring(getstream4.encodedString.length()-getstream4.filebytesleft, getstream4.encodedString.length());
-						getstream4.dataoutp = getstream4.dataoutp + getstream4.encodedString + "\r";
+						getstream4.dataoutp = getstream4.dataoutp + totransmit + "\r";
 		                datadata = getstream4.dataoutp.getBytes();
 		                getstream4.dataout.write(datadata);
 		                getstream4.dataoutp = "";
@@ -527,51 +562,7 @@ class stuff {
 					else {
 						while (getstream4.filebytesleft > 1024 && getstream1.dkill == false) {
 							if(getstream4.debug==true){System.out.println("looping17");}
-							if (getstream1.readingcmds == getstream4.prevrcind) {
-								Thread.sleep(101);
-								if (getstream1.readingcmds == getstream4.prevrcind) {
-									getstream4.readyforreadingc = true;
-
-								}
-
-							}
-							else {
-								getstream4.readyforreadingc = false;
-								getstream1.readingcmds = 0;
-								getstream4.prevrcind = getstream1.readingcmds;
-							}
-							if (getstream1.gcmdsin != null) {
-								if (getstream4.readyforreadingc == true) {
-									if (getstream1.gcmdsin.length() > 0) {
-
-										getstream4.usablec = getstream1.gcmdsin;
-
-										//getstream4.cind = tgcsl;
-									} else {
-										//getstream4.usablec = "";
-									}
-								}
-								else {
-									//getstream4.usablec = "";
-								}
-
-							}
-		    					if (getstream4.usablec.length() > getstream4.usablec.lastIndexOf("BUFFER")+6) {
-		    						if (getstream4.usablec.charAt(getstream4.usablec.lastIndexOf("BUFFER")+6) == ' ') {
-		    							int thing = 7;
-		    							String thingcounter = "";
-		    							while (Character.isDigit(getstream4.usablec.charAt(getstream4.usablec.lastIndexOf("BUFFER")+thing))) {
-		    								if(getstream4.debug==true){System.out.println("looping18");}
-		    								thingcounter = thingcounter + getstream4.usablec.charAt(getstream4.usablec.lastIndexOf("BUFFER")+thing);
-		    								thing = thing + 1;
-		    							}
-		    							if (thingcounter != "") {
-		    								getstream4.curbuf = Integer.parseInt(thingcounter);
-		    								//System.out.println("\n\n\n\n\n" + getstream4.curbuf + "\n\n\n\n\n");
-		    							}
-		    						}
-		    					}
-		    					getstream4.usablec = "";
+								    					
 							//if (getstream4.usablec.contains("BUFFER")) {
 							//	int i = 7;
 								//String numbuild = "";
@@ -593,27 +584,9 @@ class stuff {
 								//}
 
 							//}
-							if (getstream4.usablec.contains("DISCONNECTED")) {
-								stuff.disconnect();
-								getstream1.gcmdsin = getstream1.gcmdsin.replaceAll("DISCONNECTED", "");
-								getstream4.filebytesleft = 0;
-								getstream4.dataoutp = "";
-								getstream4.option = 0;
-								getstream4.bwcheck = true; getstream1.dkill = false;
-								getstream4.conn = false;
-								getstream1.gcmdsin = getstream1.gcmdsin.replaceAll("DISCONNECTED", "");
-								getstream4.option = 0;
-								getstream4.dataoutp = "";
-								getstream4.cmdsoutp = "CLEANTXBUFFER\r";
-								getstream4.cmdsdata = getstream4.cmdsoutp.getBytes();
-								//if (stuff.modem == 1) {
-									getstream4.cmdsout.write(getstream4.cmdsdata);
-								//}
-								getstream4.bwcheck = true; getstream1.dkill = false;
-								
-							}
+							
 							if (getstream4.curbuf < 31743) {
-								getstream4.encodedStringpart = getstream4.encodedString.substring(getstream4.encodedString.length()-getstream4.filebytesleft, getstream4.encodedString.length()-getstream4.filebytesleft+1024);
+								getstream4.encodedStringpart = totransmit.substring(totransmit.length()-getstream4.filebytesleft, totransmit.length()-getstream4.filebytesleft+1024);
 								getstream4.dataoutp = getstream4.dataoutp + getstream4.encodedStringpart;
 		                        datadata = getstream4.dataoutp.getBytes();
 		                        getstream4.dataout.write(datadata);
@@ -631,7 +604,7 @@ class stuff {
 							getstream1.dkill = false;
 						}
 						else {
-							getstream4.encodedStringpart = getstream4.encodedString.substring(getstream4.encodedString.length()-getstream4.filebytesleft);
+							getstream4.encodedStringpart = totransmit.substring(totransmit.length()-getstream4.filebytesleft);
 							getstream4.dataoutp = getstream4.dataoutp + getstream4.encodedStringpart + "\r";
 			                datadata = getstream4.dataoutp.getBytes();
 			                getstream4.dataout.write(datadata);
@@ -639,7 +612,12 @@ class stuff {
 			                getstream4.filebytesleft = 0;
 						}
 					}
-				stuff.interactiontimeout = System.currentTimeMillis() + 300000;
+					while (getstream4.curbuf > 0) {
+						Thread.sleep(1);
+						stuff.interactiontimeout = System.currentTimeMillis() + 300000;
+					}
+					getstream4.curbuf = 0;
+				
 			}
 			if (stuff.modem == 2) {
 				// freedata
@@ -654,7 +632,7 @@ class stuff {
                     stuff.interactiontimeout = System.currentTimeMillis() + 300000;
 					getstream4.usabled = "";
                 }
-				fldigihandler.client.execute("text.add_tx", new Object[]{"\n\n" + getstream4.encodedString + "\n\n^r"});
+				fldigihandler.client.execute("text.add_tx", new Object[]{"\n\n" + totransmit + "\n\n^r"});
 				fldigihandler.client.execute("main.tx", new Object[]{""});
                 while (fldigihandler.client.execute("main.get_trx_status", new Object[]{""}).equals("rx") == false) {
                     Thread.sleep(1000L);
@@ -674,7 +652,7 @@ class stuff {
 				getstream4.usabled = "";
 				getstream4.curbuf = 1;
 				try {
-				serialhandler.outs.writeBytes(getstream4.encodedString);
+				serialhandler.outs.writeBytes(totransmit);
 				} catch (Exception e) {
 					if(getstream4.debug == true) {e.printStackTrace();}
 				}
@@ -686,9 +664,9 @@ class stuff {
 				// tcp
 				getstream4.usabled = "";
 				getstream4.curbuf = 1;
-				getstream4.encodedString = getstream4.encodedString + "\n";
+				totransmit = totransmit + "\n";
 				try {
-				tcphandler.tcpout.write(getstream4.encodedString.getBytes());
+				tcphandler.tcpout.write(totransmit.getBytes());
 				} catch (Exception e) {
 					if(getstream4.debug == true) {e.printStackTrace();}
 				}
@@ -700,8 +678,9 @@ class stuff {
 
         }
         else {
-        	System.out.println(getstream4.encodedString);
+        	System.out.println(totransmit);
         }
+		stuff.transmitting = false;
 		getstream4.usabled = "";
 		} catch (Exception e) {
 			if(getstream4.debug == true) {e.printStackTrace();}
@@ -737,15 +716,23 @@ class getstream1 implements Runnable {  // reads commands from modem
 					readingcmds = readingcmds + 1;
 
 					    gcmdsin = gcmdsin + (char)gcmds;
-							if (gcmdsin.contains("PTT OFF") && getstream4.flrig == true) {
+							if (gcmdsin.contains("PTT OFF")) {
 								gcmdsin = gcmdsin.replaceAll("PTT OFF", "");
-								getstream4.client.execute("rig.set_ptt", new Object[]{0});		
-								getstream4.ptt = false;
+								getstream4.offtime = System.currentTimeMillis();
+								if (getstream4.flrig == true) {
+									getstream4.client.execute("rig.set_ptt", new Object[]{0});		
+									getstream4.ptt = false;
+								}
+								
 							}
-							if (gcmdsin.contains("PTT ON") && getstream4.flrig == true) {
+							if (gcmdsin.contains("PTT ON")) {
 								gcmdsin = gcmdsin.replaceAll("PTT ON", "");
-								getstream4.client.execute("rig.set_ptt", new Object[]{1});
-								getstream4.ptt = true;
+								getstream4.offtime = System.currentTimeMillis()+60000;
+								if (getstream4.flrig == true) {
+									getstream4.client.execute("rig.set_ptt", new Object[]{1});
+									getstream4.ptt = true;
+								}
+								
 							}
 							if (gcmdsin.contains("DISCONNECTED")) {
 								stuff.disconnect();
@@ -770,11 +757,32 @@ class getstream1 implements Runnable {  // reads commands from modem
 								gcmdsin = gcmdsin.replaceAll("REGISTERED " + getstream4.callsign, "");
 								getstream4.varalicensed = true;
 							}
+							if (gcmdsin.contains("LINK UNREGISTERED")) {
+								stuff.linkregistered = false;
+							}
+							if (gcmdsin.contains("LINK REGISTERED")) {
+								stuff.linkregistered = true;
+							}
 							if (gcmdsin.contains("IAMALIVE")) {
 								gcmdsin = gcmdsin.replaceAll("IAMALIVE", "");
 								lvupdate = System.currentTimeMillis();
 								
 							}
+							if (gcmdsin.contains("BUFFER ") && (gcmdsin.length() > gcmdsin.lastIndexOf("BUFFER ")+7)) {
+	    							int thing = 0;
+	    							String thingcounter = gcmdsin.substring(gcmdsin.lastIndexOf("BUFFER ")+7);
+	    							
+	    							while ((thingcounter.length() > thing) && Character.isDigit(thingcounter.charAt(thing))) {
+	    								if(getstream4.debug==true){System.out.println("looping18");}
+	    								thing = thing + 1;
+	    							}
+	    							if (thingcounter != "" && thing != 0) {
+	    								thingcounter = thingcounter.substring(0, thing);
+	    								getstream4.curbuf = Integer.parseInt(thingcounter);
+	    								//System.out.println("\n\n\n\n\n" + getstream4.curbuf + "\n\n\n\n\n");
+	    							}
+	    						gcmdsin = gcmdsin.replaceAll("BUFFER ", "");
+	    					}
 					    if (getstream4.bwcheck == true) {
 							if (gcmdsin.contains("OK")) { // bandwidth change command accepted
 								gcmdsin.replaceAll("OK", "");
@@ -1023,7 +1031,6 @@ class getstream4 implements Runnable { // handles timing things
 	public static String usabled = "";
 	public static String prevdatainthing = "";
 	public static String rcall = "";
-	public static boolean connmsg = false;
     public static boolean flrig = false;
     public static boolean ptt = false;
     public static XmlRpcClient client = new XmlRpcClient();
@@ -1036,6 +1043,7 @@ class getstream4 implements Runnable { // handles timing things
     public static boolean lbm = false;
 	public static String pathToClone = null;
 	public static List<String> bannedcalls = new ArrayList<>();
+	public static long offtime = 0;
 	
 	
 	public void run() {
@@ -1337,12 +1345,11 @@ public class mainclass {
 		String weatherend = "";
 		String[] latLng = null;
 		getstream4.conn = false;
-		getstream4.connmsg = false;
 
 		getstream4.termconnect = false;
 
 
-		getstream4.softver = "v134";
+		getstream4.softver = "v135";
 		System.out.println("Starting RWS server (version " + getstream4.softver + ")");
 		System.out.println("Fetching backend IPs...");
 		stuff.intaccess = true;
@@ -1414,6 +1421,7 @@ public class mainclass {
         	boolean ssaved = false;
     	      boolean filethere = false;
     	      boolean serror = false;
+    	      
   			stuff.ova = false;
     		File myObjps;
   	      myObjps = new File(System.getProperty("user.home")+File.separator+"rwsdata"+File.separator, "rws.conf");
@@ -1765,8 +1773,9 @@ public class mainclass {
 			getstream4.updatecycle = 0;
 			String openedchat = "";
 			Thread object4 = new Thread(new getstream4());
+			String savingpass = "";
 			object4.start();
-			System.out.println("The server has started. You may interact with the server from this terminal by entering a command:\n"+ stuff.commandslist.replaceAll("\r", "") + "\n|disc : Disconnects from the server\r");
+			System.out.println("The server has started. You may interact with the server from this terminal by entering a command:\n"+ stuff.commandslist.replaceAll("\r", "") + "\n|disc - Disconnects from the server\r");
 			
 			while (0==0) {
 
@@ -1819,6 +1828,12 @@ public class mainclass {
 							getstream4.client.execute("rig.set_frequency", new Object[]{getstream4.flrigmfreq});
 							getstream4.client.execute("rig.set_frequency", new Object[]{getstream4.flrigmfreq});
 							getstream4.flrigfreq = getstream4.flrigmfreq;
+						}
+						if (stuff.loggedin == false && (getstream4.option != 100 && getstream4.option != 101)) {
+							getstream4.encodedString = "Please enter your password:";
+							stuff.transmit();
+							getstream4.option = 100;
+							stuff.interactiontimeout = System.currentTimeMillis() + 300000;
 						}
 						if (getstream4.usabled.contains("|website")) {
 							
@@ -1878,7 +1893,9 @@ public class mainclass {
 					}
 					if (getstream4.usabled.contains("|info")) {
 						cmdoption = "";
+
 						if (getstream4.curbuf == 0) {
+
 							getstream4.option = 4;
 							String totserv = "";
 							int actservs = 0;
@@ -1906,7 +1923,7 @@ public class mainclass {
 								logstring = logstring.substring(thing+1);
 							}
 							getstream4.encodedString = "Total connections: " + stuff.totalconnections + "\nUptime: " + uptimestring + "\nServer version: " + getstream4.softver + "\n\nGlobal active servers: "+actservs+"\n-----\n" + totserv + "-----\n\nMost recent logs:\n-----\n" + logstring + "-----\n\nBackend status:\n-----\n" + backendstats + "\n-----\n" + stuff.commandslistshort;
-	                        stuff.transmit();
+							stuff.transmit();
 							getstream4.option = 0;
 							
 						}
@@ -2040,6 +2057,36 @@ public class mainclass {
 						}
 						getstream4.usabled = "";
 						stuff.interactiontimeout = System.currentTimeMillis() + 300000;
+					}
+					if (getstream4.usabled.contains("|updatepass")) {
+						cmdoption = "";
+						if (stuff.fakelogin == true || stuff.intaccess == false) {
+							String testpasswords = stuff.backend("gc", "passwords");
+					        if (testpasswords.contains("validpasswordfile")) {
+					        	stuff.passwords = testpasswords;
+					        	stuff.loggedin = false;
+					        }
+					        else {
+					        	getstream4.encodedString = "You are unable to set your password at this time. Try again later.";
+								stuff.transmit();
+					        }
+							
+						}
+						else {
+							if (getstream4.usabled.contains("|updatepass ") && getstream4.usabled != "|updatepass ") {
+								cmdoption = getstream4.usabled.substring(getstream4.usabled.indexOf("|updatepass ")+12);
+								getstream4.encodedString = "Enter your new password again:";
+								stuff.transmit();
+							}
+							else {
+								getstream4.encodedString = "Please enter your new password.";
+								stuff.transmit();
+							}
+							savingpass = cmdoption;
+							stuff.changingpass = true;
+							getstream4.option = 101;
+						}
+						
 					}
 						if (getstream4.option == 1) {
 							if (cmdoption != "") {
@@ -2743,7 +2790,7 @@ public class mainclass {
 										}
 										openedchat = getstream4.usabled;
 										getstream4.option = 11;
-										getstream4.logs = getstream4.logs + getstream4.rcall + " opened the chat " + cmdoption + "\n";
+										getstream4.logs = getstream4.logs + getstream4.rcall + " opened a chat\n";
 									}
 
 									stuff.interactiontimeout = System.currentTimeMillis() + 900000;
@@ -2929,12 +2976,70 @@ public class mainclass {
 					        		        }
 
 					    				} catch (Exception e) { System.out.print("");if(getstream4.debug==true){e.printStackTrace();} }
-					    				getstream4.logs = getstream4.logs + getstream4.rcall + " sent a chat to " + cmdoption + "\n";
+					    				//getstream4.logs = getstream4.logs + getstream4.rcall + " sent a chat to " + cmdoption + "\n";
 					    				stuff.interactiontimeout = System.currentTimeMillis() + 900000;
 							}
 						}
 						else {
 							stuff.inchat = false;
+						}
+						if (getstream4.option == 100) {
+							boolean haspass = stuff.passwords.contains("\n" + getstream4.rcall + ":");
+							if (!haspass) {
+								if (stuff.intaccess == false) {
+									getstream4.encodedString = "We don't know your password and can't fetch it right now. You will need to properly log in when the server regains internet access.";
+									stuff.transmit();
+									stuff.fakelogin = true;
+									stuff.loggedin = true;
+									getstream4.option = 0;
+									stuff.connectinit(true);
+								}
+								else {
+									getstream4.encodedString = "You don't have a password yet. Please enter your new password. Make sure to type it correctly, you will need to contact KJ7QQG to change it if you can't login (email jpradiophone@gmail.com). Don't choose anything sensitive as your password; nothing sent to or from the server should be encrypted, and all of it is visible to hams watching this frequency.";
+									stuff.transmit();
+									savingpass = "";
+									getstream4.option = 101;
+								}
+							}
+							if (getstream4.usabled != "") {
+								String curpass = getstream4.usabled;
+								if (stuff.passwords.contains("\n" + getstream4.rcall + ":" + curpass + "\n")) { // valid login for whichever reason
+										boolean fl = stuff.fakelogin;
+										stuff.fakelogin = false;
+										stuff.loggedin = true;
+										getstream4.option = 0;
+										stuff.connectinit(!fl);
+								}
+								else {
+									getstream4.encodedString = "Incorrect password. If you forgot your password, you will need to contact KJ7QQG to change it (email jpradiophone@gmail.com). Please retry:";
+									stuff.transmit();
+								}
+							}
+							getstream4.usabled = "";
+						}
+						if (getstream4.option == 101) {
+							if (getstream4.usabled != "") {
+								if (!savingpass.equals(getstream4.usabled.strip())) {
+									if (savingpass == "") {
+										savingpass = getstream4.usabled.strip();
+										getstream4.encodedString = "Enter your new password again:";
+										stuff.transmit();
+									}
+									else {
+										savingpass = "";
+										getstream4.encodedString = "Your two entries didn't match, try again. Enter your new password:";
+										stuff.transmit();
+									}
+								}
+								else {
+									stuff.backend("wp", getstream4.rcall + stuff.rwskey2 + stuff.rwskey1 + savingpass);
+									stuff.fakelogin = false;
+									stuff.loggedin = true;
+									getstream4.option = 0;
+									stuff.connectinit(!stuff.changingpass);
+								}
+							}
+							getstream4.usabled = "";
 						}
 						if (stuff.modem == 3 || stuff.modem == 4) {
 							if (System.currentTimeMillis() > stuff.interactiontimeout || getstream4.usabled.contains("|disc")) {
@@ -3054,20 +3159,6 @@ public class mainclass {
 						//if (getstream1.cfgci == true) {
 							if (getstream4.debug == true && getstream4.usablec != "") {
 								System.out.println("usablec: '" + getstream4.usablec + "'");
-							}
-							if (getstream4.usablec.length() > getstream4.usablec.lastIndexOf("BUFFER")+6) {
-								if (getstream4.usablec.charAt(getstream4.usablec.lastIndexOf("BUFFER")+6) == ' ') {
-									int thing = 7;
-									String thingcounter = "";
-									while (Character.isDigit(getstream4.usablec.charAt(getstream4.usablec.lastIndexOf("BUFFER")+thing))) {
-										thingcounter = thingcounter + getstream4.usablec.charAt(getstream4.usablec.lastIndexOf("BUFFER")+thing);
-										thing = thing + 1;
-										if(getstream4.debug==true){System.out.println("looping1");}
-									}
-									if (thingcounter != "") {
-										getstream4.curbuf = Integer.parseInt(thingcounter);
-									}
-								}
 							}
 						if (getstream4.usablec.contains("REGISTERED " + getstream4.callsign)) {
 							getstream4.varalicensed = true;
