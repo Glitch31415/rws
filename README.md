@@ -34,7 +34,7 @@ If you have any questions, email me at jpradiophone@gmail.com or ask in our Disc
 
 ## Connecting to a server
 
-The main calling frequency for the project is 14.109 MHz USB. If you wish, you can look at the active servers list in the status channel on the discord to see what frequency each server is on and what modem it's using, or other info on how to connect to it.
+The main calling frequency for the project is 14.109 MHz USB. You can look at the `activeservers` file to see a list of all servers, what frequency and modem they're using, and other info on how to connect to them.
 
 If you want an external tool for dealing with the downloads and base64, KC3VPB has created a helper that can decode base64 automatically and save it to a file. https://github.com/Caleb-J773/rws-tools-release/releases
 
@@ -50,7 +50,7 @@ Follow the instructions on those sites to get the chat client and the VARA modem
 
 Since VARA is the recommended modem and 14.109 is the main calling frequency, you can just call CQ on that frequency and wait for a server to respond back. However, if no servers are able to reach you in that way, pick a VARA server from the active servers list (linked above), go to its listed frequency (on the list, the frequency is the number to the right of its callsign, in MHz), and send a connection request to the callsign directly.
 
-After you're connected, the server will automatically reply back with a list of commands, and you're good to go.
+After you're connected, the server will ask you to set your password. After doing so, you'll see the welcome message with a list of commands, and you're good to go.
 
 ### Connecting to a FLDigi server
 
@@ -60,7 +60,7 @@ All data sent to the server needs to be between two equal signs in order to be r
 
 If the server is hearing you correctly, it will respond back and ask for your callsign. Respond back using the format above. Example: "==KJ7QQG=="
 
-You are now fully connected to the server, and it will respond back with a list of commands. You can go from there, remembering to put every message between double equal signs.
+You are now fully connected to the server. It will ask you for a password, then give you a welcome message with a list of commands. You can go from there, remembering to put every message between double equal signs.
 
 Some things to be aware of:
 
@@ -84,7 +84,7 @@ First, install the latest Java Runtime Environment (JRE). The server will work o
 
 Next, download the latest rws.jar. https://github.com/Glitch31415/rws/releases
 
-Try running the server by opening Command Prompt and typing `java -jar .\rws.jar`. If it starts asking for you to enter information, good, just close the program for now. If the command errors, contact me for help.
+Try running the server by opening Command Prompt and typing `java -jar .\rws.jar`. If it starts asking you to enter information, good, just close the program for now. If the command errors, contact me for help.
 
 ### 2. Choosing a modem
 
@@ -134,7 +134,7 @@ It will ask you to start inputting information. Here's what to enter:
 
 *Server welcome message*: Banner message that's displayed when a person connects to your server and when they use |home.
 
-*Server frequency*: Set this to the frequency you are putting your server on. Include any other information for how to connect to the server; for example, if you're using FLDigi, set the frequency to something like "14.109 PSK125 2000 Hz", showing the radio's frequency, the mode, and the audio frequency.
+*Server frequency*: Set this to the frequency you are putting your server on. Include any other information for how to connect to the server; for example, if you're using FLDigi, set the frequency to something like "14.109 USB PSK125 2000 Hz", showing the radio's frequency, the mode, and the audio frequency.
 
 *Server location*: Your gridsquare. Does not need all 6 characters, just the 4 character will be fine. Examples: "CN84" or "CN84OR"
 
@@ -158,7 +158,7 @@ It will ask you to start inputting information. Here's what to enter:
 
 *TCP port*: Leave as default.
 
-*Save settings automatically*: This will write the above configuration to [home]\rwsdata\rws.conf. I recommend doing this.
+*Save settings automatically*: This will write the above configuration to [user directory]\rwsdata\rws.conf. I recommend doing this.
 
 The server should now start. You can interact with it from the terminal just like clients would from the radio side; just remember to disconnect from the server by typing |disc after messing around from the terminal so you allow outside connections again.
 
