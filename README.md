@@ -84,7 +84,7 @@ First, install the latest Java Runtime Environment (JRE). The server will work o
 
 Next, download the latest rws.jar. https://github.com/Glitch31415/rws/releases
 
-Try running the server by opening Command Prompt and typing `java -jar .\rws.jar`. If it starts asking you to enter information, good, just close the program for now. If the command errors, contact me for help.
+Try running the server by opening Command Prompt, entering the same directory as the jar file, and typing `java -jar .\rws.jar`. If it starts asking you to enter information, good, just close the program for now. If the command errors, contact me for help.
 
 ### 2. Choosing a modem
 
@@ -118,7 +118,7 @@ Make sure AFC and squelch are turned off on whatever mode you choose to use.
 
 Make sure your modem of choice is started before you start RWS.
 
-Start RWS using `java -jar .\rws.jar`.
+Start RWS using `java -jar .\rws.jar` Make sure you're in the same directory as the jar file.
 
 It will ask you to start inputting information. Here's what to enter:
 
@@ -158,7 +158,11 @@ It will ask you to start inputting information. Here's what to enter:
 
 *TCP port*: Leave as default.
 
-*Save settings automatically*: This will write the above configuration to [user directory]\rwsdata\rws.conf. I recommend doing this.
+*Information for active servers listing*: Leave blank, or add very brief additional information about your server.
+
+*Noisy data mode*: Enable if using a modem that will send unfiltered, noisy text to the server, such as FLDigi. Otherwise, leave disabled.
+
+*Save settings automatically*: This will write the above configuration to [jar directory]\rwsdata\rws.conf. I recommend doing this.
 
 The server should now start. You can interact with it from the terminal just like clients would from the radio side; just remember to disconnect from the server by typing |disc after messing around from the terminal so you allow outside connections again.
 
