@@ -19,7 +19,6 @@ import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
@@ -45,7 +44,6 @@ import org.jsoup.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
-import org.jsoup.select.Elements;
 
 import gnu.io.NRSerialPort;
 
@@ -77,6 +75,9 @@ class stuff {
 	public static boolean fakelogin = false;
 	public static boolean transmitting = false;
 	public static boolean changingpass = false;
+	public static boolean noisydata = false;
+	public static String asnotes = "";
+	public static String jarlocation = "";
 	static String prevusabled = "";
 	static String backend(String option, String body) throws SocketException {
 		String output = "";
@@ -201,38 +202,7 @@ class stuff {
 			else {
 
 
-					if (getstream3.termin.contains("|disc")) {
-						//if (getstream4.termconnect == true) { // commented, sending |disc remotely is now allowed as a last resort in case something breaks spectacularly and it doesn't instantly disconnect you
-						stuff.disconnect();	
-						getstream4.termconnect = false;
-							getstream4.conn = false;
-							
-							System.out.println("Logs:\n-----\n" + getstream4.logs + "\n-----");
-							getstream4.option = 0;
-							stuff.charlimit = 0;
-							getstream4.dataoutp = "";
-							getstream4.cmdsoutp = "CLEANTXBUFFER\r";
-							getstream4.cmdsdata = getstream4.cmdsoutp.getBytes();
-							if (stuff.modem == 1) {
-								getstream4.cmdsout.write(getstream4.cmdsdata);
-							}
-							getstream4.conn = false;
-							getstream1.gcmdsin = getstream1.gcmdsin.replaceAll("DISCONNECTED", "");
-							getstream4.option = 0;
-							getstream4.dataoutp = "";
-							getstream4.cmdsoutp = "CLEANTXBUFFER\r";
-							getstream4.cmdsdata = getstream4.cmdsoutp.getBytes();
-							if (stuff.modem == 1) {
-								getstream4.cmdsout.write(getstream4.cmdsdata);
-							}
-							getstream4.bwcheck = true; getstream1.dkill = false;
-						//}
-
-						getstream3.termin = "";
-						
-
-					}
-					else {
+					//if (!getstream3.termin.contains("|disc")) {
 						if (getstream4.conn == false) {
 							getstream4.conn = true;
 							getstream4.termconnect = true;
@@ -247,8 +217,9 @@ class stuff {
 						else {
 							getstream4.usabled = getstream3.termin;
 						}
-						getstream3.termin = "";
-					}
+						
+					//}
+					getstream3.termin = "";
 					
 			}
 			
@@ -342,7 +313,7 @@ class stuff {
 		}
 		if (stuff.modem == 5) {
 			// tcp stuff
-			System.out.println("Attempting to initialize TCP at port 127.0.0.1:" + tcphandler.tcpport);
+			System.out.println("Attempting to initialize TCP at port " + tcphandler.tcpport);
 			tcphandler.tcpsocket = new ServerSocket();
 			InetSocketAddress socketAddress = new InetSocketAddress(tcphandler.tcpport);  
 		    tcphandler.tcpsocket.bind(socketAddress); 
@@ -435,10 +406,19 @@ class stuff {
 								getstream4.encodedString = getstream4.encodedString + "\nThis server appears to not be connected to the Internet. If you have trouble accessing websites, the forum, chats, etc, try a different server.\n";
 							}
 							getstream4.encodedString = getstream4.encodedString + stuff.commandslist;
-							if (stuff.modem == 0 || stuff.modem == 3 || stuff.modem == 4) {
+							if (stuff.modem == 0 || stuff.modem == 3 || stuff.modem == 4 || getstream4.termconnect == true) {
 								// manual connection, not modem controlled, so inform about |disc
 								getstream4.encodedString = getstream4.encodedString.replaceAll("\r", "") + "\n|disc - Disconnects from the server\r";
+								if (!stuff.commandslistshort.contains("|disc")) {
+									stuff.commandslistshort = stuff.commandslistshort.replaceAll("\r", "") + " |disc\r"; // planning ahead for changing modem during runtime?!1!?! nah lol
+								}
 								
+								
+							}
+							else {
+								if (stuff.commandslistshort.contains("|disc")) {
+									stuff.commandslistshort = stuff.commandslistshort.replaceAll(" |disc\r", "\r");
+								}
 							}
 							stuff.homestring = getstream4.encodedString;
 							
@@ -470,7 +450,6 @@ class stuff {
 		stuff.charlimit = 0;
 		getstream4.conn = false;
 		if (modem == 1) {
-			Thread.sleep(5000);
 			getstream4.cmdsoutp = "DISCONNECT\r";
 			getstream4.cmdsdata = getstream4.cmdsoutp.getBytes();
 			//if (stuff.modem == 1) {
@@ -503,6 +482,7 @@ class stuff {
 			getstream4.usabled = "";
 			getstream4.rcall = "";
 			stuff.varim = false;
+			stuff.disconnect();
 		}
 	}
 		
@@ -512,6 +492,7 @@ class stuff {
 		getstream4.conn = false;
 		stuff.charlimit = 0;
 		stuff.inchat = false;
+		if (!getstream4.rcall.isBlank())
 		getstream4.logs = getstream4.logs + getstream4.rcall + " disconnected\n";
 		System.out.println("Logs:\n-----\n" + getstream4.logs + "\n-----");
 		getstream4.option = 0;
@@ -520,6 +501,8 @@ class stuff {
 		stuff.varim = false;
 		stuff.loggedin = false;
 		stuff.fakelogin = false;
+		getstream1.dkill = false;
+		getstream4.filebytesleft = 0;
 		
 	}
 	static void transmit() throws IOException, InterruptedException, XmlRpcException {
@@ -533,8 +516,9 @@ class stuff {
 			totransmit = totransmit.substring(0, stuff.charlimit);
 		}
 		getstream4.usabled = "";
+		stuff.interactiontimeout = System.currentTimeMillis() + 300000;
 		if (getstream4.termconnect == false) {
-			stuff.interactiontimeout = System.currentTimeMillis() + 300000;
+			
 			if (stuff.modem == 1) {
 				// vara
 				getstream1.gcmdsin = getstream1.gcmdsin.replaceAll("DISCONNECTED", ""); // please stop triggering dkill somehow
@@ -626,7 +610,7 @@ class stuff {
 				// fldigi
 				getstream4.usabled = "";
 				getstream4.curbuf = 1;
-				Thread.sleep(15000);
+				Thread.sleep(7500);
 				while (fldigihandler.client.execute("main.get_trx_status", new Object[]{""}).equals("rx") == false) {
                     Thread.sleep(1000L);
                     stuff.interactiontimeout = System.currentTimeMillis() + 300000;
@@ -689,9 +673,47 @@ class stuff {
 			getstream4.usabled = "";
 		}
 	}
+	static String noisydatahandler(String input) throws XmlRpcException {
+		if (stuff.noisydata == true) {
+			if (input.length() > 0) {
+				input = input.replaceAll("=====", "-----");
+				input = input.replaceAll("====", "----");
+				input = input.replaceAll("===", "---");
+				String[] callsignsplit = (input + " ").split("==");
+				if (callsignsplit.length > 2) {
+					// data fully received, set usabled and clear
+					stuff.interactiontimeout = System.currentTimeMillis() + 300000;
+					getstream4.usabled = callsignsplit[callsignsplit.length-2];
+					if (stuff.modem == 3) {
+						fldigihandler.client.execute("text.clear_rx", new Object[0]);
+					}
+					input = "";
+					
+				}
+				if (callsignsplit.length == 2) {
+					// data reception in progress
+					stuff.interactiontimeout = System.currentTimeMillis() + 300000;
+				}
+				if (callsignsplit.length == 1 && input.charAt(input.length()-1) != '=') {
+					// just gibberish, clear
+					if (stuff.modem == 3) {
+						fldigihandler.client.execute("text.clear_rx", new Object[0]);
+					}
+					input = "";
+
+				}
+				
+			}
+		}
+		else {
+			getstream4.usabled = input;
+			input = "";
+		}
+		return input;
+	}
 }
 
-class getstream1 implements Runnable {  // reads commands from modem
+class getstream1 implements Runnable {  // reads commands from vara modem
 	public static String gcmdsin = "";
 	public static Socket cmds = null;
 	public static int readingcmds = 0;
@@ -832,7 +854,7 @@ class getstream1 implements Runnable {  // reads commands from modem
 	}
 }
 
-class getstream2 implements Runnable { // reads data from modem
+class getstream2 implements Runnable { // reads data from vara modem
 	public static String gdatain = "";
 	public static String gdataout;
 	public static Socket data = null;
@@ -966,7 +988,7 @@ class getstream2 implements Runnable { // reads data from modem
 	}
 }
 
-class getstream3 implements Runnable { // reads commands from terminal
+class getstream3 implements Runnable { // reads from terminal
 	public static String termin = "";
 
 	public void run() {
@@ -1076,12 +1098,18 @@ class getstream4 implements Runnable { // handles timing things
 					        	   mtype = "TCP";
 					           }
 						            if (varalicensed == false && stuff.modem == 1) {
-						            	pas = serverid + " " + callsign + " " + servfreq + " " + servlocator + " " + softver + " VARA unlicensed\n";
+						            	pas = "id:" + serverid + " - callsign:" + callsign + " - connect-using:" + servfreq + " - locator:" + servlocator + " - version:" + softver + " - modem:VARA - notes:<(unlicensed ";
 						            }
 						            else {
-						            	pas = serverid + " " + callsign + " " + servfreq + " " + servlocator + " " + softver + " " + mtype + "\n";
+						            	pas = "id:" + serverid + " - callsign:" + callsign + " - connect-using:" + servfreq + " - locator:" + servlocator + " - version:" + softver + " - modem:" + mtype + " - notes:<(";
 						            }
-
+						      if (stuff.modem == 1 && getstream4.lbm == true) {
+						    	  pas = pas + "500 hz only ";
+						      }
+						      if (!stuff.asnotes.isEmpty()) {
+						    	  pas = pas + "'" + stuff.asnotes.strip() + "'";
+						      }
+						   pas = pas + ")>\n";
 						   stuff.backend("wa", pas);
 					       
 					       if (logs.length() > loglength) {
@@ -1176,21 +1204,7 @@ class fldigihandler implements Runnable {
 					rx = (byte[])client.execute("text.get_rx", new Object[]{0, (int)(client.execute("text.get_rx_length", new Object[]{""}))});
 					rxstr = new String(rx, StandardCharsets.UTF_8);
 					rxstr = rxstr.replaceAll("\\r|\\n", "");
-					if (rxstr.length() > 0) {
-						String[] callsignsplit = (rxstr + " ").split("==");
-						if (callsignsplit.length > 2) {
-							stuff.interactiontimeout = System.currentTimeMillis() + 300000;
-							getstream4.usabled = callsignsplit[callsignsplit.length-2];
-							fldigihandler.client.execute("text.clear_rx", new Object[0]);
-						}
-						if (callsignsplit.length == 2) {
-							stuff.interactiontimeout = System.currentTimeMillis() + 300000;
-						}
-						if (callsignsplit.length == 1 && rxstr.charAt(rxstr.length()-1) != '=') {
-							fldigihandler.client.execute("text.clear_rx", new Object[0]);
-						}
-						
-					}
+					rxstr = stuff.noisydatahandler(rxstr);
 				}
 				else {
 					stuff.interactiontimeout = System.currentTimeMillis() + 300000;
@@ -1220,25 +1234,11 @@ class serialhandler implements Runnable {
 		while (0==0) {
 		try {
 			while(ins.available()==0) {
+				rxstr = stuff.noisydatahandler(rxstr);
 				Thread.sleep(100);
 			};
 				rxstr = rxstr + (char)ins.read();
-				rxstr = rxstr.replaceAll("\\r|\\n", "");
-				if (rxstr.length() > 0) {
-					String[] callsignsplit = (rxstr + " ").split("==");
-					if (rxstr.contains("===")) {
-						getstream4.usabled = " "; // something other than nothing
-					}
-					if (callsignsplit.length > 2) {
-						stuff.interactiontimeout = System.currentTimeMillis() + 300000;
-						getstream4.usabled = callsignsplit[callsignsplit.length-2];
-						rxstr = "";
-					}
-					if (callsignsplit.length == 2) {
-						stuff.interactiontimeout = System.currentTimeMillis() + 300000;
-					}
-					
-				}
+				
 				//outs.write((byte)b);
 			
 		} catch (Exception e) {
@@ -1291,8 +1291,7 @@ class tcphandler implements Runnable {
 						while (rxstr.charAt(rxstr.length() - 1) == '\n' || rxstr.charAt(rxstr.length() - 1) == '\r') {
 							rxstr = rxstr.substring(0, rxstr.length()-1);
 						}
-							getstream4.usabled = rxstr;
-							rxstr = "";
+							rxstr = stuff.noisydatahandler(rxstr);
 					}
 					
 						
@@ -1329,7 +1328,7 @@ public class mainclass {
 	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException, NoFilepatternException, GitAPIException, XmlRpcException, URISyntaxException {
 
 		
-		
+		stuff.jarlocation = mainclass.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString().replaceAll("rsrc:", "").replaceAll("file:", "");
 		String wstext = "";
 		getstream4.option = 0;
 
@@ -1349,7 +1348,7 @@ public class mainclass {
 		getstream4.termconnect = false;
 
 
-		getstream4.softver = "v135";
+		getstream4.softver = "v136";
 		System.out.println("Starting RWS server (version " + getstream4.softver + ")");
 		System.out.println("Fetching backend IPs...");
 		stuff.intaccess = true;
@@ -1424,7 +1423,7 @@ public class mainclass {
     	      
   			stuff.ova = false;
     		File myObjps;
-  	      myObjps = new File(System.getProperty("user.home")+File.separator+"rwsdata"+File.separator, "rws.conf");
+  	      myObjps = new File(stuff.jarlocation+"rwsdata"+File.separator, "rws.conf");
   		try {
   	      Scanner myReaderps = new Scanner(myObjps);
   	      int templine = 0;
@@ -1516,7 +1515,7 @@ public class mainclass {
   	    	if (templine == 16) {
   	    		stuff.modem = Integer.valueOf(sline);
   	    		if (stuff.modem == 0) {
-  	    			System.out.println("\nYou have chosen to link no modem to the server. This means the server is inaccessible outside of your terminal. You can change this in " + System.getProperty("user.home")+File.separator+"rwsdata"+File.separator+"rws.conf\n");
+  	    			System.out.println("\nYou have chosen to link no modem to the server. This means the server is inaccessible outside of your terminal. You can change this in " + stuff.jarlocation+"rwsdata"+File.separator+"rws.conf\n");
   	    		}
   	    	}
   	    	if (templine == 17) {
@@ -1527,9 +1526,19 @@ public class mainclass {
   	    	}
   	    	if (templine == 19) {
   	    		tcphandler.tcpport = Integer.valueOf(sline);
+  	    		
+  	    	}
+  	    	if (templine == 20) {
+  	    		stuff.asnotes = sline;
+  	    		
+  	    	}
+  	    	if (templine == 21) {
+  	    		if (sline.contains("yes")) {
+  	    			stuff.noisydata = true;
+  	    		  }
   	    		ssaved = true;
   	    	}
-  	    	  if (templine > 19) {
+  	    	  if (templine > 21) {
   	    		  ssaved = false;
   	    	  }
 
@@ -1546,10 +1555,10 @@ public class mainclass {
   	  }
   	  else {
   		  ssaved = false;
-  		System.out.println("Configuration file doesn't exist");
+  		System.out.println("Configuration file doesn't exist at " + stuff.jarlocation+"rwsdata"+File.separator+"rws.conf");
   	  } }
 	      if (ssaved == true) {
-    		System.out.println("Using saved configuration located at " + System.getProperty("user.home")+File.separator+"rwsdata"+File.separator+"rws.conf");
+    		System.out.println("Using saved configuration located at " + stuff.jarlocation+"rwsdata"+File.separator+"rws.conf");
 	      }
 	      else {
 	    	  if (filethere == true && serror == false) {
@@ -1694,18 +1703,27 @@ public class mainclass {
     			else {
     				System.out.println("Defaulting to 127.0.0.1:3141");
     			}
+    			System.out.println("Enter additional brief information that you wish to include in your active servers listing");
+    			stuff.asnotes = callinp.nextLine();
+    			System.out.println("Require double equal signs (==) before and after data sent to the server for it to be recognized? Useful for if the server be fed noisy data from the modem. Highly recommended if using FLDigi. Disabled for VARA and the terminal. (Leave blank for no, any input is yes)");
+    			tempenterstr = callinp.nextLine();
+    			if (tempenterstr != "") {
+    				stuff.noisydata = true;
+    				System.out.println("Enabling noisy data mode");
+    			}
     			System.out.println("Would you like to save these settings to use automatically in the future? (Leave blank for no, any input is yes)");
     			tempenterstr = callinp.nextLine();
     			if (tempenterstr != "") {
-    				System.out.println("The settings file will be saved to " + System.getProperty("user.home")+File.separator+"rwsdata"+File.separator+"rws.conf");
-    				new File(System.getProperty("user.home")+File.separator+"rwsdata").mkdirs();
+    				System.out.println("The settings file will be saved to " + stuff.jarlocation+"rwsdata"+File.separator+"rws.conf");
+    				new File(stuff.jarlocation+"rwsdata"+File.separator+"rws.conf").mkdirs();
 		            FileWriter myWriterps;
-			            myWriterps = new FileWriter(System.getProperty("user.home")+File.separator+"rwsdata"+File.separator+"rws.conf");
+			            myWriterps = new FileWriter(stuff.jarlocation+"rwsdata"+File.separator+"rws.conf");
 			            String tempdebugs = "no";
 			            String ovas = "no";
 			            String flrigs = "no";
 			            String flrigfcs = "no";
 			            String lbms = "no";
+			            String nd = "no";
 			            if (getstream4.debug == true) {
 			            	tempdebugs = "yes";
 			            }
@@ -1721,7 +1739,10 @@ public class mainclass {
 			            if (getstream4.lbm == true) {
 			            	lbms = "yes";
 			            }
-				        myWriterps.write("This is the config file for your RWS server. In order, the values for each line are for: VARA command port, VARA data port, VARA KISS port, debug mode (yes/no), callsign, server welcome message, server frequency, server 6 character locator, open VARA automatically (yes/no), use flrig + ptt control (yes/no), use freq control when using flrig (yes/no), flrig freq control standby freq, flrig freq control traffic freq, 500 hz only mode when using VARA (yes/no), modem type (0 for none, 1 for VARA, 2 for FreeDATA, 3 for FLDigi, 4 for Serial, 5 for TCP), serial port, serial baudrate, TCP port\n" + stuff.cmdport + "\n" + stuff.dataport + "\n" + stuff.kissport + "\n" + tempdebugs + "\n" + getstream4.callsign + "\n" + stuff.welcomemessage + "\n" + getstream4.servfreq + "\n" + getstream4.servlocator + "\n" + ovas + "\n" + flrigs + "\n" + flrigfcs + "\n" + Long.toString(getstream4.flrigsfreq) + "\n" + Long.toString(getstream4.flrigmfreq) + "\n" + lbms + "\n" + stuff.modem + "\n" + serialhandler.serialport + "\n" + serialhandler.serialbaud + "\n" + tcphandler.tcpport);
+			            if (stuff.noisydata == true) {
+			            	nd = "yes";
+			            }
+				        myWriterps.write("This is the config file for your RWS server. In order, the values for each line are for: VARA command port, VARA data port, VARA KISS port, debug mode (yes/no), callsign, server welcome message, server frequency, server 6 character locator, open VARA automatically (yes/no), use flrig + ptt control (yes/no), use freq control when using flrig (yes/no), flrig freq control standby freq, flrig freq control traffic freq, 500 hz only mode when using VARA (yes/no), modem type (0 for none, 1 for VARA, 2 for FreeDATA, 3 for FLDigi, 4 for Serial, 5 for TCP), serial port, serial baudrate, TCP port, information for active servers listing, noisy data mode (require double equal signs before and after inputs to the server, yes/no)\n" + stuff.cmdport + "\n" + stuff.dataport + "\n" + stuff.kissport + "\n" + tempdebugs + "\n" + getstream4.callsign + "\n" + stuff.welcomemessage + "\n" + getstream4.servfreq + "\n" + getstream4.servlocator + "\n" + ovas + "\n" + flrigs + "\n" + flrigfcs + "\n" + Long.toString(getstream4.flrigsfreq) + "\n" + Long.toString(getstream4.flrigmfreq) + "\n" + lbms + "\n" + stuff.modem + "\n" + serialhandler.serialport + "\n" + serialhandler.serialbaud + "\n" + tcphandler.tcpport + "\n" + stuff.asnotes + "\n" + nd);
 
 			       myWriterps.close();
     			}
@@ -2086,7 +2107,8 @@ public class mainclass {
 							stuff.changingpass = true;
 							getstream4.option = 101;
 						}
-						
+						getstream4.usabled = "";
+						stuff.interactiontimeout = System.currentTimeMillis() + 300000;
 					}
 						if (getstream4.option == 1) {
 							if (cmdoption != "") {
@@ -2231,9 +2253,9 @@ public class mainclass {
 
 								
 			                        try {
-			                        wstext = wstext.substring(wstext.indexOf(" Goggles< [https://search.brave.com/goggles?q="));
+			                        wstext = wstext.substring(wstext.indexOf(">Goggles< [https://search.brave.com/goggles?q="));
 			                        wstext = wstext.substring(wstext.indexOf("\n"));
-			                        wstext = wstext.substring(0, wstext.indexOf("     Resources")).stripTrailing();
+			                        wstext = wstext.substring(0, wstext.indexOf("Resources\n >Brave Search Premium<")).stripTrailing();
 			                        
 			                        wstext = wstext.replaceAll("	", " ");
 			                        while (wstext.contains("  ")) {
@@ -3014,6 +3036,7 @@ public class mainclass {
 									getstream4.encodedString = "Incorrect password. If you forgot your password, you will need to contact KJ7QQG to change it (email jpradiophone@gmail.com). Please retry:";
 									stuff.transmit();
 								}
+								stuff.interactiontimeout = System.currentTimeMillis() + 300000;
 							}
 							getstream4.usabled = "";
 						}
@@ -3038,14 +3061,39 @@ public class mainclass {
 									getstream4.option = 0;
 									stuff.connectinit(!stuff.changingpass);
 								}
+								stuff.interactiontimeout = System.currentTimeMillis() + 300000;
 							}
 							getstream4.usabled = "";
 						}
-						if (stuff.modem == 3 || stuff.modem == 4) {
+						if (stuff.modem == 0 || stuff.modem == 3 || stuff.modem == 4 || getstream4.termconnect == true) {
 							if (System.currentTimeMillis() > stuff.interactiontimeout || getstream4.usabled.contains("|disc")) {
 								getstream4.encodedString = "You have been disconnected from the server. Reconnect if you want to continue using RWS.";
 								stuff.transmit();
-								stuff.disconnect();
+								stuff.disconnect();	
+								getstream4.termconnect = false;
+									getstream4.conn = false;
+									
+									getstream4.option = 0;
+									stuff.charlimit = 0;
+									getstream4.dataoutp = "";
+									getstream4.cmdsoutp = "CLEANTXBUFFER\r";
+									getstream4.cmdsdata = getstream4.cmdsoutp.getBytes();
+									if (stuff.modem == 1) {
+										getstream4.cmdsout.write(getstream4.cmdsdata);
+									}
+									getstream4.conn = false;
+									getstream1.gcmdsin = getstream1.gcmdsin.replaceAll("DISCONNECTED", "");
+									getstream4.option = 0;
+									getstream4.dataoutp = "";
+									getstream4.cmdsoutp = "CLEANTXBUFFER\r";
+									getstream4.cmdsdata = getstream4.cmdsoutp.getBytes();
+									if (stuff.modem == 1) {
+										getstream4.cmdsout.write(getstream4.cmdsdata);
+									}
+									getstream4.bwcheck = true; getstream1.dkill = false;
+								//}
+
+								getstream3.termin = "";
 								
 							}
 						}
@@ -3062,7 +3110,7 @@ public class mainclass {
 							getstream4.client.execute("rig.set_frequency", new Object[]{getstream4.flrigfreq});
 						}
 						if (getstream4.usabled != "" && getstream4.option == 0) {
-							if (stuff.modem != 5) {
+							if (stuff.noisydata == true) {
 								getstream4.encodedString = "Please enter your callsign. Remember to send all data between two sets of two equal signs. Example: ==KJ7QQG==";
 							} else {
 								getstream4.encodedString = "Please enter your callsign. Example: KJ7QQG";
