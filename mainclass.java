@@ -206,7 +206,7 @@ class stuff {
 						if (getstream4.conn == false) {
 							getstream4.conn = true;
 							getstream4.termconnect = true;
-							getstream4.rcall = getstream4.callsign.replaceAll("[^a-zA-Z0-9 -]", "").toUpperCase();
+							getstream4.rcall = getstream4.callsign.replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
 							stuff.connectinit(true);
 						}
 						
@@ -325,7 +325,7 @@ class stuff {
 	}
 	static void connectinit(boolean isconnect) throws InterruptedException, IOException, XmlRpcException {
 		stuff.changingpass = false;
-		getstream4.rcall = getstream4.rcall.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", "").toUpperCase();
+		getstream4.rcall = getstream4.rcall.replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
 		if (getstream4.rcall.contains("-")) {
 			getstream4.rcall = getstream4.rcall.substring(0, getstream4.rcall.indexOf("-"));
 		}
@@ -3121,15 +3121,10 @@ public class mainclass {
 							getstream4.option = -1;
 						}
 						if (getstream4.option == -1 && getstream4.usabled != "") {
-							getstream4.rcall = getstream4.usabled.replaceAll("\n", "");
-							if (getstream4.rcall.length() > 10) {
-								getstream4.rcall = "";
-								getstream4.option = 0;
+							getstream4.rcall = getstream4.usabled.replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
 
-							} else {
 								getstream4.option = 0;
 								stuff.connectinit(true);
-							}
 
 						}
 						if (getstream4.option == -1 && System.currentTimeMillis() > stuff.interactiontimeout) {
