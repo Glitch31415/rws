@@ -1,2 +1,4 @@
+1788870585492 id:nykrmiacjvgvpuke - callsign:KJ7QQG - connect-using:14.109 USB - locator:CN84OR - version:v136 - modem:VARA - notes:<(unlicensed 'dev server')>
+1788870574768 id:ncmkctjdnnilquno - callsign:KJ7QQG - connect-using:209.172.10.5:3141 - locator:CN84OR - version:v136 - modem:TCP - notes:<('dev server')>
+1788870342701 id:wttuvbdallzgyvjf - callsign:KJ7QQG - connect-using:209.172.10.5:3141 - locator:CN84OR - version:v136 - modem:TCP - notes:<('dev server')>
 1788870216142 qbjkjbwtsdtrwigy KJ7QQG 3.595 CN84OR v135 VARA
-1788869891872 id:wttuvbdallzgyvjf - callsign:KJ7QQG - connect-using:209.172.10.5:3141 - locator:CN84OR - version:v136 - modem:TCP - notes:<('dev server')>
