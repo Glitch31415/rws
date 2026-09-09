@@ -114,7 +114,7 @@ RWS will try to talk to FLDigi using port 7362, so make sure that port isn't alr
 
 Make sure AFC and squelch are turned off on whatever mode you choose to use.
 
-### 3. Choosing the frequency
+### 3. Choosing a frequency
 
 The recommended frequency to host your server on is 14.109 MHz USB, preferably using VARA. However, if the frequency is too crowded (or you're unable to host the server there for other reasons), you can choose another frequency and provide it in the "server frequency" config, explained in part 4.
 
