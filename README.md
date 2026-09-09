@@ -52,23 +52,23 @@ Since VARA is the recommended modem and 14.109 is the main calling frequency, yo
 
 After you're connected, the server will ask you to set your password. After doing so, you'll see the welcome message with a list of commands, and you're good to go.
 
-### Connecting to a FLDigi server
+### Connecting to a FLDigi (or other modem type) server
 
 Server hosters are supposed to include the mode they're using alongside their frequency in the activeservers list, so if they do, go onto that frequency and mode.
 
-All data sent to the server needs to be between two equal signs in order to be recognized. Send a test message to get the attention of the server. Example: "==hi==" (the contents of this message doesn't matter)
+If a server's listing in the activeservers list contains "noisy data, == required" in the notes section, then all data sent to the server needs to be between two equal signs in order to be recognized. Send a test message to get the attention of the server. Example: "==hi==" (the contents of this message doesn't matter)
 
 If the server is hearing you correctly, it will respond back and ask for your callsign. Respond back using the format above. Example: "==KJ7QQG=="
 
-You are now fully connected to the server. It will ask you for a password, then give you a welcome message with a list of commands. You can go from there, remembering to put every message between double equal signs.
+You are now fully connected to the server. It will ask you for a password, then give you a welcome message with a list of commands. You can go from there, remembering to put every message between double equal signs if needed.
 
 Some things to be aware of:
 
-Your connection will time out after 5 minutes of inactivity (or 15 minutes if you're waiting for a chat message). If it times out, you will need to reconnect from the beginning.
+If you aren't connecting over TCP or VARA, your connection will time out after 5 minutes of inactivity (or 15 minutes if you're waiting for a chat message). If it times out, you will need to reconnect from the beginning.
 
-All newlines are removed from the messages you send, as a workaround due to how FLDigi reads text.
+If you're connecting using FLDigi, all newlines are removed from the data you send to the server, as a workaround due to how FLDigi reads text.
 
-FLDigi's digital modes don't provide 100% guaranteed integrity of transferred text (unlike VARA), so file transfers, HTML, etc is *very very* likely to get corrupted.
+Noisy digital modes, such as FLDigi's modes, don't provide 100% guaranteed integrity of transferred text (unlike VARA), so file transfers, HTML, etc is *very very* likely to get corrupted.
 
 ## Hosting a server
 
