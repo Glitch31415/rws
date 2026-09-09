@@ -870,7 +870,7 @@ class p1 implements Runnable {
 
 public class startbackend {
 	public static void main(String[] args) throws IOException, URISyntaxException {
-		sgh.jarlocation = startbackend.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString().replaceAll("rsrc:", "").replaceAll("file:", "");
+		sgh.jarlocation = Paths.get(startbackend.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString().replaceAll("rsrc:", "").replaceAll("file:", "")).toAbsolutePath().toUri().getPath();
 		byte[] fileContentgcn = FileUtils.readFileToByteArray(new File(sgh.jarlocation+"rwsdata"+File.separator+"discordkey"));
 		sgh.discordkey = new String(fileContentgcn, StandardCharsets.UTF_8).replaceAll("\\n|\\r", "");;
 		fileContentgcn = FileUtils.readFileToByteArray(new File(sgh.jarlocation+"rwsdata"+File.separator+"githubkey"));
