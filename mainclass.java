@@ -1328,7 +1328,7 @@ public class mainclass {
 	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException, NoFilepatternException, GitAPIException, XmlRpcException, URISyntaxException {
 
 		
-		stuff.jarlocation = Paths.get(mainclass.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString().replaceAll("rsrc:", "").replaceAll("file:", "")).toAbsolutePath().toUri().getPath();
+		stuff.jarlocation = Paths.get(mainclass.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString().replaceAll("rsrc:", "").replaceAll("file:", "")).toAbsolutePath().toUri().getPath().replaceAll("\\.", "").replaceAll("/./", "/");
 		String wstext = "";
 		getstream4.option = 0;
 
