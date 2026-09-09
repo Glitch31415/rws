@@ -137,7 +137,7 @@ class sgh implements Runnable {
 	    	        	      while (myReaderp.hasNextLine()) {
 	    	        	    	String servupdtemp = myReaderp.nextLine();
 
-	    	        	    	if (servupdtemp != "") { 
+	    	        	    	if (!servupdtemp.isEmpty()) { 
 
 	    			        	        stp = stp + servupdtemp + "\n"; // read into stp
 
@@ -200,14 +200,14 @@ class sgh implements Runnable {
         		while(writing==true){Thread.sleep(0);}writing=true;
         		byte[] fileContentgc = {};
         		if (!bodytext.equals("activeservers")) {
-        			if (new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder", bodytext).exists() && bodytext != "") {
+        			if (new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder", bodytext).exists() && !bodytext.isEmpty()) {
                 		try {
                 		fileContentgc = FileUtils.readFileToByteArray(new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"+File.separator+bodytext));
                 		} catch (Exception e) {e.printStackTrace(); if (e.toString().contains("EOFException")) {sgh.ee = sgh.ee + 1;} else { if (e.toString().contains("SocketException: Connection reset")) {sgh.cr = sgh.cr + 1;} else { if (e.toString().contains("UTFDataFormatException")) {sgh.utfe = sgh.utfe + 1;} else { if (e.toString().contains("TransportException")) {sgh.te = sgh.te + 1;} else { if (e.toString().contains("Broken pipe")) { sgh.bp = sgh.bp + 1; } else { {sgh.otherrs = sgh.otherrs + 1; sgh.vlogs = sgh.vlogs + "\n"+e;} } } } } } }
                 		}
         		}
         		else {
-        			if (new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "mrfolder", bodytext).exists() && bodytext != "") {
+        			if (new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "mrfolder", bodytext).exists() && !bodytext.isEmpty()) {
                 		try {
                 		fileContentgc = FileUtils.readFileToByteArray(new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "mrfolder"+File.separator+bodytext));
                 		} catch (Exception e) {e.printStackTrace(); if (e.toString().contains("EOFException")) {sgh.ee = sgh.ee + 1;} else { if (e.toString().contains("SocketException: Connection reset")) {sgh.cr = sgh.cr + 1;} else { if (e.toString().contains("UTFDataFormatException")) {sgh.utfe = sgh.utfe + 1;} else { if (e.toString().contains("TransportException")) {sgh.te = sgh.te + 1;} else { if (e.toString().contains("Broken pipe")) { sgh.bp = sgh.bp + 1; } else { {sgh.otherrs = sgh.otherrs + 1; sgh.vlogs = sgh.vlogs + "\n"+e;} } } } } } }
@@ -235,7 +235,7 @@ class sgh implements Runnable {
     	        	      while (myReaderp.hasNextLine()) {
     	        	    	String servupdtemp = myReaderp.nextLine();
 
-    	        	    	if (servupdtemp != "") { 
+    	        	    	if (!servupdtemp.isEmpty()) { 
 
     			        	        stp = stp + servupdtemp + "\n"; // read into stp
 
@@ -264,7 +264,7 @@ class sgh implements Runnable {
     	        	      while (myReaderp.hasNextLine()) {
     	        	    	String servupdtemp = myReaderp.nextLine();
 
-    	        	    	if (servupdtemp != "") {
+    	        	    	if (!servupdtemp.isEmpty()) {
     		        	    	String[] sutstuff = servupdtemp.split(" ");
     		        	    	if (Long.parseLong(servupdtemp.substring(0, servupdtemp.indexOf(" "))) < (System.currentTimeMillis()-900000) || (sutlist.contains((sutstuff[1])))) {
     		        	    		
@@ -370,7 +370,7 @@ class sgh implements Runnable {
     	        	      while (myReaderp.hasNextLine()) {
     	        	    	String servupdtemp = myReaderp.nextLine();
 
-    	        	    	if (servupdtemp != "") { 
+    	        	    	if (!servupdtemp.isEmpty()) { 
 
     			        	        stp = stp + "\n" + servupdtemp; // read into stp
 
@@ -399,7 +399,7 @@ class sgh implements Runnable {
     		        	    	  if (listedposts.contains("'"+tempnextname+"'")) {
     		        	    	  }
     		        	    	  else {
-    		        	    		  if (stp == "") {
+    		        	    		  if (stp.isEmpty()) {
     			        	    		    stp = servupdtemp;
     		        	    		  }
     		        	    		  else {
@@ -442,13 +442,13 @@ class sgh implements Runnable {
         				
         				String filecontentwfb = "";
         				byte[] fileContentgcwfb = {};
-        				if (new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"+File.separator+"forum", caname).exists() && caname != "") {
+        				if (new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"+File.separator+"forum", caname).exists() && !caname.isEmpty()) {
         				try {
         				fileContentgcwfb = FileUtils.readFileToByteArray(new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"+File.separator+"forum"+File.separator+caname));
             			filecontentwfb = new String(fileContentgcwfb, StandardCharsets.UTF_8);
         				} catch (Exception e) {e.printStackTrace(); if (e.toString().contains("EOFException")) {sgh.ee = sgh.ee + 1;} else { if (e.toString().contains("SocketException: Connection reset")) {sgh.cr = sgh.cr + 1;} else { if (e.toString().contains("UTFDataFormatException")) {sgh.utfe = sgh.utfe + 1;} else { if (e.toString().contains("TransportException")) {sgh.te = sgh.te + 1;} else { if (e.toString().contains("Broken pipe")) { sgh.bp = sgh.bp + 1; } else { {sgh.otherrs = sgh.otherrs + 1; sgh.vlogs = sgh.vlogs + "\n"+e;} } } } } } }
         				}
-        				if (filecontentwfb == "") {
+        				if (filecontentwfb.isEmpty()) {
         					// empty thread
         					String rcallwfb = bodytext.substring(0, bodytext.indexOf(", ")).replaceAll("\n", "").replaceAll(" ", "");;
 
@@ -537,7 +537,7 @@ class sgh implements Runnable {
     					    				   servupdtempl = ccall + ": " + ccallcs;
     					    			   }
 
-    				        	    	if (servupdtempl == "") { 
+    				        	    	if (servupdtempl.isEmpty()) { 
     				        	    		if (foundtitle == false) {
     				        	    			servupdtempl = "All connections to servers v92 and up: 1\n";
     				        	    			foundtitle = true;
@@ -549,7 +549,7 @@ class sgh implements Runnable {
     						        	        //stpl = stpl + servupdtempl + "\n"; // read into stp
     				        	    	}
     						            
-    				        	    	if (servupdtempl != "") {
+    				        	    	if (!servupdtempl.isEmpty()) {
     					        	    	servupdtemplt = servupdtemplt + servupdtempl + "\n";
     				        	    	}
     				        	      }
@@ -629,7 +629,7 @@ class sgh implements Runnable {
             		
         			String filecontentn = "";
         			
-        			if (new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"+File.separator+"userdata", bodytext).exists() && (!bodytext.replaceAll(" ", "").isBlank())) {
+        			if (new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"+File.separator+"userdata", bodytext).exists() && (!bodytext.replaceAll(" ", "").chars().noneMatch(Character::isLetterOrDigit))) {
         				try {
                 			byte[] fileContentgcn = FileUtils.readFileToByteArray(new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"+File.separator+"userdata"+File.separator+bodytext));
                 			filecontentn = new String(fileContentgcn, StandardCharsets.UTF_8);
@@ -680,7 +680,7 @@ class sgh implements Runnable {
         			while(writing==true){Thread.sleep(0);}writing=true;
             		
         			String filecontentn = "";
-        			if (new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"+File.separator+"userdata", ncall).exists() && ncall != "") {
+        			if (new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"+File.separator+"userdata", ncall).exists() && !ncall.isEmpty()) {
         				try {
                 			byte[] fileContentgcn = FileUtils.readFileToByteArray(new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"+File.separator+"userdata"+File.separator+ncall));
                 			filecontentn = new String(fileContentgcn, StandardCharsets.UTF_8);
@@ -713,7 +713,7 @@ class sgh implements Runnable {
         			while(writing==true){Thread.sleep(0);}writing=true;
             		
         			String filecontentn = "";
-        			if (new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"+File.separator+"userdata", ncall).exists() && ncall != "") {
+        			if (new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"+File.separator+"userdata", ncall).exists() && !ncall.isEmpty()) {
         			try {
         			byte[] fileContentgcn = FileUtils.readFileToByteArray(new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"+File.separator+"userdata"+File.separator+ncall));
         			filecontentn = new String(fileContentgcn, StandardCharsets.UTF_8);
@@ -743,7 +743,7 @@ class sgh implements Runnable {
         	case "k":
         		// get api keys or other sensitive stuff
         		while(writing==true){Thread.sleep(0);}writing=true;
-        		if (new File(sgh.jarlocation+"rwsbackenddata", bodytext).exists() && bodytext != "") {
+        		if (new File(sgh.jarlocation+"rwsbackenddata", bodytext).exists() && !bodytext.isEmpty()) {
         			try {
         			byte[] fileContentgcn = FileUtils.readFileToByteArray(new File(sgh.jarlocation+"rwsbackenddata"+File.separator+bodytext));
         			String filecontentn = new String(fileContentgcn, StandardCharsets.UTF_8).replaceAll("\\n|\\r", "");;
@@ -769,7 +769,7 @@ class sgh implements Runnable {
         		    	byte[] fileContentgcn = FileUtils.readFileToByteArray(new File(sgh.git.getRepository().getDirectory().getParent() + File.separator+"passwords"));
             			prevpass = new String(fileContentgcn, StandardCharsets.UTF_8);
         		    }
-            		if (ncall != "[error]" && ncall != "" && nfile != "") {
+            		if (!ncall.equals("[error]") && !ncall.isEmpty() && !nfile.isEmpty()) {
             			if (!prevpass.contains("\n" + ncall + ":")) {
             				FileWriter myWriterp;
         		            myWriterp = new FileWriter(sgh.git.getRepository().getDirectory().getParent() + File.separator+"passwords", true);
@@ -779,7 +779,7 @@ class sgh implements Runnable {
             			else {
             				int pasind = prevpass.indexOf("\n" + ncall + ":") + ncall.length() + 2;
             				String oldpass = prevpass.substring(pasind);
-            				oldpass = oldpass.substring(0, oldpass.indexOf("\n")).strip();
+            				oldpass = oldpass.substring(0, oldpass.indexOf("\n"));
             				prevpass = prevpass.replaceAll(oldpass, nfile);
             				FileWriter myWriterp;
         		            myWriterp = new FileWriter(sgh.git.getRepository().getDirectory().getParent() + File.separator+"passwords", false);
