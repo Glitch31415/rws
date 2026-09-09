@@ -114,7 +114,13 @@ RWS will try to talk to FLDigi using port 7362, so make sure that port isn't alr
 
 Make sure AFC and squelch are turned off on whatever mode you choose to use.
 
-### 3. Getting everything started and configured
+### 3. Choosing the frequency
+
+The recommended frequency to host your server on is 14.109 MHz USB, preferably using VARA. However, if the frequency is too crowded (or you're unable to host the server there for other reasons), you can choose another frequency and provide it in the "server frequency" config, explained in part 4.
+
+**If you are hosting the server in the United States:** You are only allowed to operate automatic stations (like RWS) on: "the 6 m or shorter wavelength bands, and on the 28.120-28.189 MHz, 24.925-24.930 MHz, 21.090-21.100 MHz, 18.105-18.110 MHz, 14.0950-14.0995 MHz, 14.1005-14.112 MHz, 10.140-10.150 MHz, 7.100-7.105 MHz, or 3.585-3.600 MHz segments." (FCC 97.221b). *In addition,* if you are going to leave your server running unattended, you are required to use a bandwidth no wider than 500 Hz. If you're using the VARA modem, enable the "500 hz only" option when configuring the server. If you're using FLDigi or a different modem, make sure whatever mode you choose has a bandwidth of 500 Hz or less (FCC 97.221c2).
+
+### 4. Getting everything started and configured
 
 Make sure your modem of choice is started before you start RWS.
 
@@ -148,7 +154,7 @@ It will ask you to start inputting information. Here's what to enter:
 
 *Traffic frequency*: Same as above.
 
-*500 Hz connections*: Only applies if you're using VARA. Enable if you're in the US and you're going to leave your server unattended.
+*500 Hz connections*: Only applies if you're using VARA. Enable if you're in the US and you're going to leave your server unattended, as mentioned above.
 
 *Modem*: Say 1 if you're using VARA, 3 if you're using FLDigi.
 
