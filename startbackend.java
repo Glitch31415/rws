@@ -23,7 +23,6 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.math.*;
-
 import java.util.List;
 class sgh implements Runnable {
 	public static Git git = null;
