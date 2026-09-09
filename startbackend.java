@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -870,7 +871,7 @@ class p1 implements Runnable {
 
 public class startbackend {
 	public static void main(String[] args) throws IOException, URISyntaxException {
-		sgh.jarlocation = Paths.get(startbackend.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString().replaceAll("rsrc:", "").replaceAll("file:", "")).toAbsolutePath().toUri().getPath();
+		sgh.jarlocation = Paths.get(startbackend.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString().replaceAll("rsrc:", "").replaceAll("file:", "")).toAbsolutePath().toUri().getPath().replaceAll("\\.", "").replaceAll("/./", "/");
 		byte[] fileContentgcn = FileUtils.readFileToByteArray(new File(sgh.jarlocation+"rwsdata"+File.separator+"discordkey"));
 		sgh.discordkey = new String(fileContentgcn, StandardCharsets.UTF_8).replaceAll("\\n|\\r", "");;
 		fileContentgcn = FileUtils.readFileToByteArray(new File(sgh.jarlocation+"rwsdata"+File.separator+"githubkey"));
