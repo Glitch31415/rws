@@ -38,8 +38,6 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfig;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.jsoup.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -82,7 +80,7 @@ class stuff {
 	static String backend(String option, String body) throws SocketException {
 		String output = "";
 			try {
-				if (backendips == "" || stuff.intaccess == false) {
+				if (backendips.isEmpty() || stuff.intaccess == false) {
 						try {
 							stuff.backendips = Jsoup.parse(new URI("https://raw.githubusercontent.com/Glitch31415/rws/refs/heads/main/backendips").toURL(), 10000).wholeText().replaceAll("\n", "").replaceAll("\r", "");
 							System.out.println("Found " + stuff.backendips);
@@ -194,7 +192,7 @@ class stuff {
 	}
 	static void updusabled() throws IOException, InterruptedException, XmlRpcException {
 
-		if (getstream3.termin != "" && getstream3.termin != null) {
+		if (!getstream3.termin.isEmpty() && getstream3.termin != null) {
 			if (getstream4.conn == true && getstream4.termconnect == false) {
 				System.out.println("You can't interact with the server locally right now, there is someone who is connected to it externally.");
 				getstream3.termin = "";
@@ -211,7 +209,7 @@ class stuff {
 						}
 						
 						getstream4.curbuf = 0;
-						if (getstream4.usabled != "") {
+						if (!getstream4.usabled.isEmpty()) {
 							getstream4.usabled = getstream4.usabled + "\n" + getstream3.termin;
 						}
 						else {
@@ -225,12 +223,12 @@ class stuff {
 			
 		}
 		if (getstream4.termconnect == false && stuff.modem == 1) {
-			if (getstream2.gdatain != "") {
+			if (!getstream2.gdatain.isEmpty()) {
 				if (getstream2.gdatain.contains("&IT&") || getstream2.gdatain.contains(getstream4.rcall + " <R") ) {
 					//getstream4.usabled = "";
 				}
 				else {
-					if (getstream4.usabled != "") {
+					if (!getstream4.usabled.isEmpty()) {
 						getstream4.usabled = getstream4.usabled + "\n" + getstream2.gdatain;
 					}
 					else {
@@ -246,7 +244,7 @@ class stuff {
 			prevusabled = "";
 		}
 		prevusabled = getstream4.usabled;
-		if (getstream4.usabled != "" && getstream4.debug == true) {
+		if (!getstream4.usabled.isEmpty() && getstream4.debug == true) {
 			System.out.println("usabled: '" + getstream4.usabled + "'");
 		}
 
@@ -329,7 +327,7 @@ class stuff {
 		if (getstream4.rcall.contains("-")) {
 			getstream4.rcall = getstream4.rcall.substring(0, getstream4.rcall.indexOf("-"));
 		}
-		if (getstream4.rcall != "") {
+		if (!getstream4.rcall.isEmpty()) {
 			
 		getstream4.option = 0;
 		String dummyload = "";
@@ -368,7 +366,7 @@ class stuff {
         if (fc == false) { // banned calls
 					if (stuff.loggedin == true) {
 						String notifs = stuff.backend("cn", getstream4.rcall);
-						if (welcomemessage != "") {
+						if (!welcomemessage.isEmpty()) {
 							getstream4.encodedString = "-----\nWelcome, " + getstream4.rcall + "\n" + welcomemessage + notifs;
 						}
 						else {
@@ -492,9 +490,11 @@ class stuff {
 		getstream4.conn = false;
 		stuff.charlimit = 0;
 		stuff.inchat = false;
-		if (!getstream4.rcall.isBlank())
+		if (!getstream4.rcall.chars().noneMatch(Character::isLetterOrDigit)) {
+			
 		getstream4.logs = getstream4.logs + getstream4.rcall + " disconnected\n";
 		System.out.println("Logs:\n-----\n" + getstream4.logs + "\n-----");
+	}
 		getstream4.option = 0;
 		getstream4.usabled = "";
 		getstream4.rcall = "";
@@ -798,7 +798,7 @@ class getstream1 implements Runnable {  // reads commands from vara modem
 	    								if(getstream4.debug==true){System.out.println("looping18");}
 	    								thing = thing + 1;
 	    							}
-	    							if (thingcounter != "" && thing != 0) {
+	    							if (!thingcounter.isEmpty() && thing != 0) {
 	    								thingcounter = thingcounter.substring(0, thing);
 	    								getstream4.curbuf = Integer.parseInt(thingcounter);
 	    								//System.out.println("\n\n\n\n\n" + getstream4.curbuf + "\n\n\n\n\n");
@@ -885,9 +885,9 @@ class getstream2 implements Runnable { // reads data from vara modem
 				if (stuff.varim == false) {
 					if (Character.isDigit(datachar)) {
 						if (buildingtotalnum == true) {
-							if (pgdi == "") {
+							if (pgdi.isEmpty()) {
 								buildingtotalnum = true;
-								if (totalnumbuild == "") {
+								if (totalnumbuild.isEmpty()) {
 									if (datachar == '0') {
 										varacfuckedup = true;
 										erasenext = true;
@@ -965,7 +965,7 @@ class getstream2 implements Runnable { // reads data from vara modem
 					while (isr2.ready()) {
 						pgdi = pgdi + (char)isr2.read();
 					}
-					if (pgdi != "") {
+					if (!pgdi.isEmpty()) {
 						if ((int)pgdi.charAt(pgdi.length()-1) == 10 && (int)pgdi.charAt(pgdi.length()-2) == 13) {
 							pgdi = pgdi.substring(0, pgdi.length()-2);
 						} else {
@@ -1106,8 +1106,11 @@ class getstream4 implements Runnable { // handles timing things
 						      if (stuff.modem == 1 && getstream4.lbm == true) {
 						    	  pas = pas + "500 hz only ";
 						      }
+						      if (stuff.noisydata == true) {
+						    	  pas = pas + "== required ";
+						      }
 						      if (!stuff.asnotes.isEmpty()) {
-						    	  pas = pas + "'" + stuff.asnotes.strip() + "'";
+						    	  pas = pas + "'" + stuff.asnotes + "'";
 						      }
 						   pas = pas + ")>\n";
 						   stuff.backend("wa", pas);
@@ -1325,7 +1328,7 @@ class tcphandler implements Runnable {
 }
 
 public class mainclass {
-	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException, NoFilepatternException, GitAPIException, XmlRpcException, URISyntaxException {
+	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException, XmlRpcException, URISyntaxException {
 
 		
 		stuff.jarlocation = ClassLoader.getSystemClassLoader().getResource(".").getPath();
@@ -1576,25 +1579,25 @@ public class mainclass {
         		stuff.ova = false;
         		System.out.println("Enter VARA command port (default: 8300)");
     			String tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				stuff.cmdport = Integer.valueOf(tempenterstr);
     				tempenterstr = "";
     			}
     			System.out.println("Enter VARA data port (default: 8301)");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				stuff.dataport = Integer.valueOf(tempenterstr);
     				tempenterstr = "";
     			}
     			System.out.println("Enter VARA KISS port (default: 8100)");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				stuff.kissport = Integer.valueOf(tempenterstr);
     				tempenterstr = "";
     			}
     			System.out.println("Enable debug mode? (Leave blank for no, any input is yes)");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				getstream4.debug = true;
     			}
     			System.out.println("Enter callsign without suffixes or prefixes (example: KJ7QQG)");
@@ -1610,14 +1613,14 @@ public class mainclass {
     			getstream4.servlocator = callinp.nextLine();
     			System.out.println("Would you like to open VARA automatically on startup? May not work on Linux. (Leave blank for no, any input is yes)");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				System.out.println("VARA will try to open automatically");
     				stuff.ova = true;
     			}
 
     			System.out.println("Attempt to connect to flrig at 127.0.0.1:12345? includes PTT control (BETA) (Leave blank for no, any input is yes)");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				getstream4.flrig = true;
     				System.out.println("Connecting to flrig...");
         	        getstream4.config.setServerURL(new URI("http://127.0.0.1:12345/RPC2").toURL());
@@ -1632,13 +1635,13 @@ public class mainclass {
     			}
     			System.out.println("If flrig is enabled, also use automatic frequency control? (BETA) (Leave blank for no, any input is yes)");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				getstream4.flrigfc = true;
     				System.out.println("Using frequency control");
     			}
     			System.out.println("If using frequency control, what frequency do you want to use for standby (in hz)? default: 14109000 (BETA)");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				getstream4.flrigsfreq = Long.parseLong(tempenterstr);
     				System.out.println("Standby freq: " + getstream4.flrigsfreq);
     				if (getstream4.flrig == true && getstream4.flrigfc == true) {
@@ -1649,7 +1652,7 @@ public class mainclass {
     			}
     			System.out.println("If using frequency control, what frequency do you want to use for traffic (in hz)? default: 14109000 (BETA)");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				getstream4.flrigmfreq = Long.parseLong(tempenterstr);
     				System.out.println("Traffic freq: " + getstream4.flrigmfreq);
     			}
@@ -1658,13 +1661,13 @@ public class mainclass {
 				}
     			System.out.println("Should the server be limited to 500 hz connections only? (in order to comply with FCC 97.221 in the US, for example) (Leave blank for no, any input is yes)");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				getstream4.lbm = true;
     				System.out.println("Limiting bandwidth to 500 hz");
     			}
     			System.out.println("Which modem would you like to use for your server? Type a number:\n0: None (for testing purposes)\n1: VARA\n2: FreeDATA\n3: FLDigi (not recommended)\n4: Serial\n5: TCP\ndefault: VARA");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				stuff.modem = Integer.valueOf(tempenterstr);
     				System.out.println("Using option " + stuff.modem);
     			}
@@ -1678,7 +1681,7 @@ public class mainclass {
     				System.out.println(s);
     			}
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				serialhandler.serialport = tempenterstr;
     				System.out.println("Using port " + serialhandler.serialport);
     			}
@@ -1687,7 +1690,7 @@ public class mainclass {
     			}
     			System.out.println("What baudrate would you like to use if you choose serial? default: 9600");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				serialhandler.serialbaud = Integer.valueOf(tempenterstr);
     				System.out.println("Using " + serialhandler.serialbaud + " baud");
     			}
@@ -1696,7 +1699,7 @@ public class mainclass {
     			}
     			System.out.println("What port would you like to use if you choose TCP? default: 3141");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				tcphandler.tcpport = Integer.valueOf(tempenterstr);
     				System.out.println("Using 127.0.0.1:" + tcphandler.tcpport);
     			}
@@ -1707,15 +1710,17 @@ public class mainclass {
     			stuff.asnotes = callinp.nextLine();
     			System.out.println("Require double equal signs (==) before and after data sent to the server for it to be recognized? Useful for if the server be fed noisy data from the modem. Highly recommended if using FLDigi. Disabled for VARA and the terminal. (Leave blank for no, any input is yes)");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				stuff.noisydata = true;
     				System.out.println("Enabling noisy data mode");
     			}
     			System.out.println("Would you like to save these settings to use automatically in the future? (Leave blank for no, any input is yes)");
     			tempenterstr = callinp.nextLine();
-    			if (tempenterstr != "") {
+    			if (!tempenterstr.isEmpty()) {
     				System.out.println("The settings file will be saved to " + stuff.jarlocation+"rwsdata"+File.separator+"rws.conf");
-    				new File(stuff.jarlocation+"rwsdata"+File.separator+"rws.conf").mkdirs();
+    				File thingy = new File(stuff.jarlocation+"rwsdata"+File.separator+"rws.conf");
+    				thingy.getParentFile().mkdirs();
+    				thingy.createNewFile();
 		            FileWriter myWriterps;
 			            myWriterps = new FileWriter(stuff.jarlocation+"rwsdata"+File.separator+"rws.conf");
 			            String tempdebugs = "no";
@@ -2111,11 +2116,11 @@ public class mainclass {
 						stuff.interactiontimeout = System.currentTimeMillis() + 300000;
 					}
 						if (getstream4.option == 1) {
-							if (cmdoption != "") {
+							if (!cmdoption.isEmpty()) {
 								getstream4.usabled = cmdoption;
 								cmdoption = "";
 							}
-							if (getstream4.usabled != "" && getstream4.usabled.charAt(0) != '|') {
+							if (!getstream4.usabled.isEmpty() && getstream4.usabled.charAt(0) != '|') {
 								if (getstream4.usabled.contains("^")) {
 									getstream4.dataoutp = "Here is the raw HTML from the website you provided.\n-----\n";
 									getstream4.usabled = getstream4.usabled.replace("^", "");
@@ -2148,10 +2153,10 @@ public class mainclass {
 										for (Element elem : document.getAllElements()) {
 										    String href = elem.absUrl("href");
 										    String text = elem.wholeText();
-										    if (href != "") {
+										    if (!href.isEmpty()) {
 										    	
-										    	if (text != "") {
-										    		elem.replaceWith(new TextNode(">" + text.strip() + "< [" + href + "]\n"));
+										    	if (!text.isEmpty()) {
+										    		elem.replaceWith(new TextNode(">" + text + "< [" + href + "]\n"));
 										    	}
 										    	else {
 										    		elem.replaceWith(new TextNode("\n[" + href + "]\n"));
@@ -2164,13 +2169,13 @@ public class mainclass {
 										    } else {
 										    	elem.remove();
 										    }
-									    	if (text.isBlank()) {
+									    	if (text.chars().noneMatch(Character::isLetterOrDigit)) {
 									    		elem.remove();
 									    	}
 										    
 										    
 										}
-										wstext = document.wholeText().strip();
+										wstext = document.wholeText();
 
 									} catch (Exception e) { wstext = e.toString(); }
 			                        wstext = wstext.replaceAll("	", " ");
@@ -2204,14 +2209,14 @@ public class mainclass {
 							}
 						}
 						if (getstream4.option == 2) {
-							if (cmdoption != "") {
+							if (!cmdoption.isEmpty()) {
 								getstream4.usabled = cmdoption;
 								cmdoption = "";
 							}
-							if (getstream4.usabled != "" && getstream4.usabled.charAt(0) != '|') {
+							if (!getstream4.usabled.isEmpty() && getstream4.usabled.charAt(0) != '|') {
 								getstream4.dataoutp = "Here are the results of your search.\n-----\n";
 								searchthing = getstream4.usabled;
-								getstream4.usabled = URLEncoder.encode(getstream4.usabled, StandardCharsets.UTF_8);
+								getstream4.usabled = URLEncoder.encode(getstream4.usabled, StandardCharsets.UTF_8.toString());
 								getstream4.usabled = getstream4.usabled.replaceAll("\\+", "%20");
 
 								
@@ -2223,12 +2228,12 @@ public class mainclass {
 										    String href = elem.absUrl("href");
 										    String text = elem.wholeText();
 										    
-										    if (href != "") {
+										    if (!href.isEmpty()) {
 										    	//if (!href.contains("r.bing.com")) {
 											        //elem.remove(); // Ads/news/etc.
 											    //}
-										    	if (text != "") {
-										    		elem.replaceWith(new TextNode(">" + text.strip() + "< [" + href + "]\n"));
+										    	if (!text.isEmpty()) {
+										    		elem.replaceWith(new TextNode(">" + text + "< [" + href + "]\n"));
 										    	}
 										    	else {
 										    		elem.replaceWith(new TextNode("\n[" + href + "]\n"));
@@ -2241,12 +2246,12 @@ public class mainclass {
 											    } else {
 											    	elem.remove();
 											    }
-										    	if (text.isBlank()) {
+										    	if (text.chars().noneMatch(Character::isLetterOrDigit)) {
 										    		elem.remove();
 										    	}
 										    
 										}
-										wstext = document.wholeText().strip();
+										wstext = document.wholeText();
 										} catch (Exception e) { wstext = e.toString(); }
 									//}
 									
@@ -2255,7 +2260,7 @@ public class mainclass {
 			                        try {
 			                        wstext = wstext.substring(wstext.indexOf(">Goggles< [https://search.brave.com/goggles?q="));
 			                        wstext = wstext.substring(wstext.indexOf("\n"));
-			                        wstext = wstext.substring(0, wstext.indexOf("Resources\n >Brave Search Premium<")).stripTrailing();
+			                        wstext = wstext.substring(0, wstext.indexOf("Resources\n >Brave Search Premium<"));
 			                        
 			                        wstext = wstext.replaceAll("	", " ");
 			                        while (wstext.contains("  ")) {
@@ -2290,11 +2295,11 @@ public class mainclass {
 							}
 						}
 						if (getstream4.option == 3) {
-							if (cmdoption != "") {
+							if (!cmdoption.isEmpty()) {
 								getstream4.usabled = cmdoption;
 								cmdoption = "";
 							}
-							if (getstream4.usabled != "" && getstream4.usabled.charAt(0) != '|') {
+							if (!getstream4.usabled.isEmpty() && getstream4.usabled.charAt(0) != '|') {
 								getstream4.dataoutp = "Here is the raw weather forecast data for the location you provided.\n-----\n";
 								weatherbroke = false;
 								weatherend = "";
@@ -2385,11 +2390,11 @@ public class mainclass {
 							}
 						}
 						if (getstream4.option == 5) {
-							if (cmdoption != "") {
+							if (!cmdoption.isEmpty()) {
 								getstream4.usabled = cmdoption;
 								cmdoption = "";
 							}
-							if (getstream4.usabled != "" && getstream4.usabled.charAt(0) != '|') {
+							if (!getstream4.usabled.isEmpty() && getstream4.usabled.charAt(0) != '|') {
 								try {
 										InputStream in = new URI(getstream4.usabled).toURL().openStream();
 										Files.copy(in, Paths.get("tempdownload"), StandardCopyOption.REPLACE_EXISTING);
@@ -2410,11 +2415,11 @@ public class mainclass {
 							}
 						}
 						if (getstream4.option == 6) {
-							if (cmdoption != "") {
+							if (!cmdoption.isEmpty()) {
 								getstream4.usabled = cmdoption;
 								cmdoption = "";
 							}
-							if (getstream4.usabled != "" && getstream4.usabled.charAt(0) != '|') {
+							if (!getstream4.usabled.isEmpty() && getstream4.usabled.charAt(0) != '|') {
 									if (getstream4.usabled.contains("view")) {
 										if (getstream4.usabled.contains("view ")) {
 											cmdoption = getstream4.usabled.substring(getstream4.usabled.indexOf("view ")+5);
@@ -2449,11 +2454,11 @@ public class mainclass {
 							}
 						}
 						if (getstream4.option == 7) {
-							if (cmdoption != "") {
+							if (!cmdoption.isEmpty()) {
 								getstream4.usabled = cmdoption;
 								cmdoption = "";
 							}
-							if (getstream4.usabled != "") {
+							if (!getstream4.usabled.isEmpty()) {
 								if (getstream4.usabled.contains("|")) {
 									if (getstream4.usabled.contains("|all")) {
 										//view posts
@@ -2511,7 +2516,7 @@ public class mainclass {
 									getstream4.dataoutp = "";
 									searchthing = getstream4.usabled;
 									stuff.backend("cln", getstream4.rcall + stuff.rwskey2 + stuff.rwskey1 + "forum-" + searchthing);
-										getstream4.usabled = URLEncoder.encode(getstream4.usabled, StandardCharsets.UTF_8);
+										getstream4.usabled = URLEncoder.encode(getstream4.usabled, StandardCharsets.UTF_8.toString());
 										getstream4.usabled = getstream4.usabled.replaceAll("\\+", "%20");
 										wstext = stuff.backend("gc", "forum/"+getstream4.usabled);
 								
@@ -2575,11 +2580,11 @@ public class mainclass {
 							}
 						}
 						if (getstream4.option == 8) {
-							if (cmdoption != "") {
+							if (!cmdoption.isEmpty()) {
 								getstream4.usabled = cmdoption;
 								cmdoption = "";
 							}
-							if (getstream4.usabled != "" && getstream4.usabled.charAt(0) != '|') {
+							if (!getstream4.usabled.isEmpty() && getstream4.usabled.charAt(0) != '|') {
 								if (getstream4.usabled.contains(".") || getstream4.usabled.contains("~") || getstream4.usabled.contains("|") || getstream4.usabled.contains("/") || getstream4.usabled.contains("\\") || getstream4.usabled.contains(" ") || getstream4.usabled.length() > 100) {
 									getstream4.encodedString = "That title is invalid. Make sure your title does not include ' ', '.', '~', '/', '\' or '|' and is not longer than 100 characters.\r";
 									stuff.transmit();
@@ -2601,11 +2606,11 @@ public class mainclass {
 							
 						}
 						if (getstream4.option == 9) {
-							if (cmdoption != "") {
+							if (!cmdoption.isEmpty()) {
 								getstream4.usabled = cmdoption;
 								cmdoption = "";
 							}
-							if (getstream4.usabled != "" && getstream4.usabled.charAt(0) != '|') {
+							if (!getstream4.usabled.isEmpty() && getstream4.usabled.charAt(0) != '|') {
 								//boolean postsafe = true;
 								getstream4.dataoutp = "";
 								postbody = getstream4.usabled;
@@ -2713,11 +2718,11 @@ public class mainclass {
 							getstream4.usabled = "";
 						}
 						if (getstream4.option == 10) {
-							if (cmdoption != "") {
+							if (!cmdoption.isEmpty()) {
 								getstream4.usabled = cmdoption;
 								cmdoption = "";
 							}
-							if (getstream4.usabled != "" && getstream4.usabled.charAt(0) != '|' && getstream4.curbuf == 0) {
+							if (!getstream4.usabled.isEmpty() && getstream4.usabled.charAt(0) != '|' && getstream4.curbuf == 0) {
 								// look at the chat index
 								getstream4.dataoutp = "";
 
@@ -2897,7 +2902,7 @@ public class mainclass {
 				                	wstext = wstext.replaceAll("\\r", "");
 				                	if (!wstext.equals(lastchat)) {
 				                		//System.out.println(wstext);
-				                		if (lastchat == "") {
+				                		if (lastchat.isEmpty()) {
 					                		lastchat = wstext;
 					                        if (chatlines != -1) {
 					                        	String[] wstextlines = wstext.split("\n");
@@ -2986,7 +2991,7 @@ public class mainclass {
 				                }
 				                } catch (Exception e) { System.out.print("");if(getstream4.debug==true){e.printStackTrace();} }
 							}
-							if (getstream4.usabled != "" && getstream4.usabled.charAt(0) != '|') {
+							if (!getstream4.usabled.isEmpty() && getstream4.usabled.charAt(0) != '|') {
 								//send a chat -----
 			        				
 
@@ -3023,7 +3028,7 @@ public class mainclass {
 									getstream4.option = 101;
 								}
 							}
-							if (getstream4.usabled != "") {
+							if (!getstream4.usabled.isEmpty()) {
 								String curpass = getstream4.usabled;
 								if (stuff.passwords.contains("\n" + getstream4.rcall + ":" + curpass + "\n")) { // valid login for whichever reason
 										boolean fl = stuff.fakelogin;
@@ -3041,10 +3046,10 @@ public class mainclass {
 							getstream4.usabled = "";
 						}
 						if (getstream4.option == 101) {
-							if (getstream4.usabled != "") {
-								if (!savingpass.equals(getstream4.usabled.strip())) {
-									if (savingpass == "") {
-										savingpass = getstream4.usabled.strip();
+							if (!getstream4.usabled.isEmpty()) {
+								if (!savingpass.equals(getstream4.usabled)) {
+									if (savingpass.isEmpty()) {
+										savingpass = getstream4.usabled;
 										getstream4.encodedString = "Enter your new password again:";
 										stuff.transmit();
 									}
@@ -3109,7 +3114,7 @@ public class mainclass {
 							getstream4.client.execute("rig.set_frequency", new Object[]{getstream4.flrigfreq});
 							getstream4.client.execute("rig.set_frequency", new Object[]{getstream4.flrigfreq});
 						}
-						if (getstream4.usabled != "" && getstream4.option == 0) {
+						if (!getstream4.usabled.isEmpty() && getstream4.option == 0) {
 							if (stuff.noisydata == true) {
 								getstream4.encodedString = "Please enter your callsign. Remember to send all data between two sets of two equal signs. Example: ==KJ7QQG==";
 							} else {
@@ -3120,7 +3125,7 @@ public class mainclass {
 							stuff.interactiontimeout = System.currentTimeMillis() + 300000;
 							getstream4.option = -1;
 						}
-						if (getstream4.option == -1 && getstream4.usabled != "") {
+						if (getstream4.option == -1 && !getstream4.usabled.isEmpty()) {
 							getstream4.rcall = getstream4.usabled.replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
 
 								getstream4.option = 0;
@@ -3200,7 +3205,7 @@ public class mainclass {
 						//System.out.println(getstream4.lastresponse);
 						//Thread.sleep(100);
 						//if (getstream1.cfgci == true) {
-							if (getstream4.debug == true && getstream4.usablec != "") {
+							if (getstream4.debug == true && !getstream4.usablec.isEmpty()) {
 								System.out.println("usablec: '" + getstream4.usablec + "'");
 							}
 						if (getstream4.usablec.contains("REGISTERED " + getstream4.callsign)) {
