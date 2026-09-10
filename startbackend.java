@@ -5,7 +5,6 @@ import java.net.Socket;
 import java.net.URISyntaxException;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -15,8 +14,8 @@ import java.util.Scanner;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.apache.commons.io.FileUtils;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -56,13 +55,11 @@ class sgh implements Runnable {
 				git = Git.cloneRepository()
 			                .setURI("https://github.com/Glitch31415/rwsbackend.git")
 			                .setDirectory(new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "repofolder"))
-			                .setDepth(1)
 			                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(githubkey, ""))
 			                .call();
 				git2 = Git.cloneRepository()
 		                .setURI("https://github.com/Glitch31415/rws.git")
 		                .setDirectory(new File(sgh.jarlocation+"rwsbackenddata" + File.separator + "mrfolder"))
-		                .setDepth(1)
 		                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(githubkey, ""))
 		                .call();
 				} catch (Exception e) {e.printStackTrace(); if (e.toString().contains("EOFException")) {sgh.ee = sgh.ee + 1;} else { if (e.toString().contains("SocketException: Connection reset")) {sgh.cr = sgh.cr + 1;} else { if (e.toString().contains("UTFDataFormatException")) {sgh.utfe = sgh.utfe + 1;} else { if (e.toString().contains("TransportException")) {sgh.te = sgh.te + 1;} else { if (e.toString().contains("Broken pipe")) { sgh.bp = sgh.bp + 1; } else { {sgh.otherrs = sgh.otherrs + 1; sgh.vlogs = sgh.vlogs + "\n"+e;} } } } } } }
