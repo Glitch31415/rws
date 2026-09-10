@@ -204,7 +204,12 @@ class stuff {
 						if (getstream4.conn == false) {
 							getstream4.conn = true;
 							getstream4.termconnect = true;
-							getstream4.rcall = getstream4.callsign.replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
+							if (getstream4.callsign.contains("-")) {
+								getstream4.rcall = getstream4.callsign.substring(0, getstream4.callsign.indexOf("-")).replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
+							}
+							else {
+								getstream4.rcall = getstream4.callsign.replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
+							}
 							stuff.connectinit(true);
 						}
 						
@@ -323,9 +328,11 @@ class stuff {
 	}
 	static void connectinit(boolean isconnect) throws InterruptedException, IOException, XmlRpcException {
 		stuff.changingpass = false;
-		getstream4.rcall = getstream4.rcall.replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
 		if (getstream4.rcall.contains("-")) {
-			getstream4.rcall = getstream4.rcall.substring(0, getstream4.rcall.indexOf("-"));
+			getstream4.rcall = getstream4.rcall.substring(0, getstream4.rcall.indexOf("-")).replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
+		}
+		else {
+			getstream4.rcall = getstream4.rcall.replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
 		}
 		if (!getstream4.rcall.isEmpty()) {
 			
@@ -473,6 +480,8 @@ class stuff {
 
 		}
 		else {
+			
+			stuff.disconnect();
 			getstream4.termconnect = false;
 			getstream4.conn = false;
 			stuff.charlimit = 0;
@@ -480,21 +489,21 @@ class stuff {
 			getstream4.usabled = "";
 			getstream4.rcall = "";
 			stuff.varim = false;
-			stuff.disconnect();
 		}
 	}
 		
 	static void disconnect() {
 
 		getstream4.termconnect = false;
-		getstream4.conn = false;
+		
 		stuff.charlimit = 0;
 		stuff.inchat = false;
-		if (!getstream4.rcall.chars().noneMatch(Character::isLetterOrDigit)) {
+		if (!getstream4.rcall.chars().noneMatch(Character::isLetterOrDigit) && getstream4.conn == true) {
 			
 		getstream4.logs = getstream4.logs + getstream4.rcall + " disconnected\n";
 		System.out.println("Logs:\n-----\n" + getstream4.logs + "\n-----");
 	}
+		getstream4.conn = false;
 		getstream4.option = 0;
 		getstream4.usabled = "";
 		getstream4.rcall = "";
@@ -512,6 +521,9 @@ class stuff {
 		}
 		stuff.transmitting = true;
 		String totransmit = getstream4.encodedString;
+		if (totransmit.charAt(totransmit.length()-1) == '\r') {
+			totransmit = totransmit.substring(0, totransmit.length()-1);
+		}
 		if (stuff.charlimit > 0 && totransmit.length() > stuff.charlimit) {
 			totransmit = totransmit.substring(0, stuff.charlimit);
 		}
@@ -525,7 +537,7 @@ class stuff {
 	        	getstream4.filebytesleft = totransmit.length();
 	        	//System.out.println("total length of tranfer: " + (int)(getstream4.encodedString.length()+2) + " bytes");
 	        	if (varim == false) {
-	        		getstream4.dataoutp = (totransmit.length()+1) + " ";
+	        		getstream4.dataoutp = (totransmit.length() + 1) + " ";
 	        	}
 	        	else {
 	        		getstream4.dataoutp = "";
@@ -676,10 +688,10 @@ class stuff {
 	static String noisydatahandler(String input) throws XmlRpcException {
 		if (stuff.noisydata == true) {
 			if (input.length() > 0) {
-				input = input.replaceAll("=====", "-----");
-				input = input.replaceAll("====", "----");
-				input = input.replaceAll("===", "---");
-				String[] callsignsplit = (input + " ").split("==");
+				input = input.replaceAll("``````", "------");
+				input = input.replaceAll("`````", "-----");
+				input = input.replaceAll("````", "----");
+				String[] callsignsplit = (input + " ").split("```");
 				if (callsignsplit.length > 2) {
 					// data fully received, set usabled and clear
 					stuff.interactiontimeout = System.currentTimeMillis() + 300000;
@@ -694,7 +706,7 @@ class stuff {
 					// data reception in progress
 					stuff.interactiontimeout = System.currentTimeMillis() + 300000;
 				}
-				if (callsignsplit.length == 1 && input.charAt(input.length()-1) != '=') {
+				if (callsignsplit.length == 1 && input.charAt(input.length()-1) != '`') {
 					// just gibberish, clear
 					if (stuff.modem == 3) {
 						fldigihandler.client.execute("text.clear_rx", new Object[0]);
@@ -878,11 +890,14 @@ class getstream2 implements Runnable { // reads data from vara modem
         boolean lookingforletters = false;
         boolean buildingtotalnum = true;
         boolean varacfuckedup = false;
+        String raw = "";
 		while (0==0) {
 
 	        try {
 	        	datachar = (char)isr2.read();
+	        	
 				if (stuff.varim == false) {
+					raw = raw + datachar;
 					if (Character.isDigit(datachar)) {
 						if (buildingtotalnum == true) {
 							if (pgdi.isEmpty()) {
@@ -909,6 +924,7 @@ class getstream2 implements Runnable { // reads data from vara modem
 							if (charnum == totalnum) {
 								gdatain = pgdi;
 								pgdi = "";
+								raw = "";
 								totalnum = 0;
 								erasenext = false;
 								totalnumbuild = "";
@@ -922,16 +938,23 @@ class getstream2 implements Runnable { // reads data from vara modem
 					}
 					else {
 						if (erasenext == true) {
-							if (varacfuckedup == true) {
-								erasenext = false;
-								varacfuckedup = false;
+							if (datachar == ' ') {
+								if (varacfuckedup == true) {
+									erasenext = false;
+									varacfuckedup = false;
+								}
+								else {
+									erasenext = false;
+									buildingtotalnum = false;
+									lookingforletters = true;
+									totalnum = Integer.parseInt(totalnumbuild);
+								}
 							}
 							else {
-								erasenext = false;
-								buildingtotalnum = false;
-								lookingforletters = true;
-								totalnum = Integer.parseInt(totalnumbuild);
+								stuff.varim = true;
+								pgdi = pgdi + datachar;
 							}
+							
 
 						}
 						else {
@@ -941,6 +964,7 @@ class getstream2 implements Runnable { // reads data from vara modem
 									if (charnum == totalnum) {
 										gdatain = pgdi;
 										pgdi = "";
+										raw = "";
 										totalnum = 0;
 										erasenext = false;
 										totalnumbuild = "";
@@ -961,6 +985,10 @@ class getstream2 implements Runnable { // reads data from vara modem
 					}
 				}
 				else {
+					if (!raw.isEmpty()) {
+						pgdi = raw;
+						raw = "";
+					}
 					pgdi = pgdi + datachar;
 					while (isr2.ready()) {
 						pgdi = pgdi + (char)isr2.read();
@@ -1107,7 +1135,7 @@ class getstream4 implements Runnable { // handles timing things
 						    	  pas = pas + "500 hz only ";
 						      }
 						      if (stuff.noisydata == true) {
-						    	  pas = pas + "== required ";
+						    	  pas = pas + "triple-backticks required ";
 						      }
 						      if (!stuff.asnotes.isEmpty()) {
 						    	  pas = pas + "'" + stuff.asnotes + "'";
@@ -1291,7 +1319,7 @@ class tcphandler implements Runnable {
 						while(tcpin.available() > 0) {
 							rxstr = rxstr + (char)tcpin.read();
 						};
-						while (rxstr.charAt(rxstr.length() - 1) == '\n' || rxstr.charAt(rxstr.length() - 1) == '\r') {
+						while (rxstr.charAt(rxstr.length() - 1) == '\r') {
 							rxstr = rxstr.substring(0, rxstr.length()-1);
 						}
 							rxstr = stuff.noisydatahandler(rxstr);
@@ -1351,7 +1379,7 @@ public class mainclass {
 		getstream4.termconnect = false;
 
 
-		getstream4.softver = "v136";
+		getstream4.softver = "v137";
 		System.out.println("Starting RWS server (version " + getstream4.softver + ")");
 		System.out.println("Fetching backend IPs...");
 		stuff.intaccess = true;
@@ -1708,7 +1736,7 @@ public class mainclass {
     			}
     			System.out.println("Enter additional brief information that you wish to include in your active servers listing");
     			stuff.asnotes = callinp.nextLine();
-    			System.out.println("Require double equal signs (==) before and after data sent to the server for it to be recognized? Useful for if the server be fed noisy data from the modem. Highly recommended if using FLDigi. Disabled for VARA and the terminal. (Leave blank for no, any input is yes)");
+    			System.out.println("Require triple backticks (```) before and after data sent to the server for it to be recognized? Useful for if the server be fed noisy data from the modem. Highly recommended if using FLDigi. Disabled for VARA and the terminal. (Leave blank for no, any input is yes)");
     			tempenterstr = callinp.nextLine();
     			if (!tempenterstr.isEmpty()) {
     				stuff.noisydata = true;
@@ -1747,7 +1775,7 @@ public class mainclass {
 			            if (stuff.noisydata == true) {
 			            	nd = "yes";
 			            }
-				        myWriterps.write("This is the config file for your RWS server. In order, the values for each line are for: VARA command port, VARA data port, VARA KISS port, debug mode (yes/no), callsign, server welcome message, server frequency, server 6 character locator, open VARA automatically (yes/no), use flrig + ptt control (yes/no), use freq control when using flrig (yes/no), flrig freq control standby freq, flrig freq control traffic freq, 500 hz only mode when using VARA (yes/no), modem type (0 for none, 1 for VARA, 2 for FreeDATA, 3 for FLDigi, 4 for Serial, 5 for TCP), serial port, serial baudrate, TCP port, information for active servers listing, noisy data mode (require double equal signs before and after inputs to the server, yes/no)\n" + stuff.cmdport + "\n" + stuff.dataport + "\n" + stuff.kissport + "\n" + tempdebugs + "\n" + getstream4.callsign + "\n" + stuff.welcomemessage + "\n" + getstream4.servfreq + "\n" + getstream4.servlocator + "\n" + ovas + "\n" + flrigs + "\n" + flrigfcs + "\n" + Long.toString(getstream4.flrigsfreq) + "\n" + Long.toString(getstream4.flrigmfreq) + "\n" + lbms + "\n" + stuff.modem + "\n" + serialhandler.serialport + "\n" + serialhandler.serialbaud + "\n" + tcphandler.tcpport + "\n" + stuff.asnotes + "\n" + nd);
+				        myWriterps.write("This is the config file for your RWS server. In order, the values for each line are for: VARA command port, VARA data port, VARA KISS port, debug mode (yes/no), callsign, server welcome message, server frequency, server 6 character locator, open VARA automatically (yes/no), use flrig + ptt control (yes/no), use freq control when using flrig (yes/no), flrig freq control standby freq, flrig freq control traffic freq, 500 hz only mode when using VARA (yes/no), modem type (0 for none, 1 for VARA, 2 for FreeDATA, 3 for FLDigi, 4 for Serial, 5 for TCP), serial port, serial baudrate, TCP port, information for active servers listing, noisy data mode (require triple backticks before and after inputs to the server, yes/no)\n" + stuff.cmdport + "\n" + stuff.dataport + "\n" + stuff.kissport + "\n" + tempdebugs + "\n" + getstream4.callsign + "\n" + stuff.welcomemessage + "\n" + getstream4.servfreq + "\n" + getstream4.servlocator + "\n" + ovas + "\n" + flrigs + "\n" + flrigfcs + "\n" + Long.toString(getstream4.flrigsfreq) + "\n" + Long.toString(getstream4.flrigmfreq) + "\n" + lbms + "\n" + stuff.modem + "\n" + serialhandler.serialport + "\n" + serialhandler.serialbaud + "\n" + tcphandler.tcpport + "\n" + stuff.asnotes + "\n" + nd);
 
 			       myWriterps.close();
     			}
@@ -3010,6 +3038,39 @@ public class mainclass {
 						else {
 							stuff.inchat = false;
 						}
+						
+						if (stuff.modem == 0 || stuff.modem == 3 || stuff.modem == 4 || getstream4.termconnect == true) {
+							if (System.currentTimeMillis() > stuff.interactiontimeout || getstream4.usabled.contains("|disc")) {
+								getstream4.encodedString = "You have been disconnected from the server. Reconnect if you want to continue using RWS.";
+								stuff.transmit();
+								stuff.disconnect();	
+								getstream4.termconnect = false;
+									getstream4.conn = false;
+									
+									getstream4.option = 0;
+									stuff.charlimit = 0;
+									getstream4.dataoutp = "";
+									getstream4.cmdsoutp = "CLEANTXBUFFER\r";
+									getstream4.cmdsdata = getstream4.cmdsoutp.getBytes();
+									if (stuff.modem == 1) {
+										getstream4.cmdsout.write(getstream4.cmdsdata);
+									}
+									getstream4.conn = false;
+									getstream1.gcmdsin = getstream1.gcmdsin.replaceAll("DISCONNECTED", "");
+									getstream4.option = 0;
+									getstream4.dataoutp = "";
+									getstream4.cmdsoutp = "CLEANTXBUFFER\r";
+									getstream4.cmdsdata = getstream4.cmdsoutp.getBytes();
+									if (stuff.modem == 1) {
+										getstream4.cmdsout.write(getstream4.cmdsdata);
+									}
+									getstream4.bwcheck = true; getstream1.dkill = false;
+								//}
+
+								getstream3.termin = "";
+								
+							}
+						}
 						if (getstream4.option == 100) {
 							boolean haspass = stuff.passwords.contains("\n" + getstream4.rcall + ":");
 							if (!haspass) {
@@ -3070,38 +3131,6 @@ public class mainclass {
 							}
 							getstream4.usabled = "";
 						}
-						if (stuff.modem == 0 || stuff.modem == 3 || stuff.modem == 4 || getstream4.termconnect == true) {
-							if (System.currentTimeMillis() > stuff.interactiontimeout || getstream4.usabled.contains("|disc")) {
-								getstream4.encodedString = "You have been disconnected from the server. Reconnect if you want to continue using RWS.";
-								stuff.transmit();
-								stuff.disconnect();	
-								getstream4.termconnect = false;
-									getstream4.conn = false;
-									
-									getstream4.option = 0;
-									stuff.charlimit = 0;
-									getstream4.dataoutp = "";
-									getstream4.cmdsoutp = "CLEANTXBUFFER\r";
-									getstream4.cmdsdata = getstream4.cmdsoutp.getBytes();
-									if (stuff.modem == 1) {
-										getstream4.cmdsout.write(getstream4.cmdsdata);
-									}
-									getstream4.conn = false;
-									getstream1.gcmdsin = getstream1.gcmdsin.replaceAll("DISCONNECTED", "");
-									getstream4.option = 0;
-									getstream4.dataoutp = "";
-									getstream4.cmdsoutp = "CLEANTXBUFFER\r";
-									getstream4.cmdsdata = getstream4.cmdsoutp.getBytes();
-									if (stuff.modem == 1) {
-										getstream4.cmdsout.write(getstream4.cmdsdata);
-									}
-									getstream4.bwcheck = true; getstream1.dkill = false;
-								//}
-
-								getstream3.termin = "";
-								
-							}
-						}
 
 					}
 					else {
@@ -3116,7 +3145,7 @@ public class mainclass {
 						}
 						if (!getstream4.usabled.isEmpty() && getstream4.option == 0) {
 							if (stuff.noisydata == true) {
-								getstream4.encodedString = "Please enter your callsign. Remember to send all data between two sets of two equal signs. Example: ==KJ7QQG==";
+								getstream4.encodedString = "Please enter your callsign. Remember to send all data between two sets of three backticks. Example: ```KJ7QQG```";
 							} else {
 								getstream4.encodedString = "Please enter your callsign. Example: KJ7QQG";
 							}
@@ -3126,7 +3155,13 @@ public class mainclass {
 							getstream4.option = -1;
 						}
 						if (getstream4.option == -1 && !getstream4.usabled.isEmpty()) {
-							getstream4.rcall = getstream4.usabled.replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
+							if (getstream4.usabled.contains("-")) {
+								getstream4.rcall = getstream4.usabled.substring(0, getstream4.usabled.indexOf("-")).replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
+							}
+							else {
+								getstream4.rcall = getstream4.usabled.replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
+							}
+							
 
 								getstream4.option = 0;
 								stuff.connectinit(true);
@@ -3311,10 +3346,20 @@ public class mainclass {
 									if(getstream4.debug==true){System.out.println("loopingfor1");}
 									if (rcallcutcall[rcind].contains(getstream4.callsign)) {
 										if (rcind == 1) {
-											getstream4.rcall = rcallcutcall[2].replaceAll("[^a-zA-Z0-9 -]", "").toUpperCase();
+											if (rcallcutcall[2].contains("-")) {
+												getstream4.rcall = rcallcutcall[2].substring(0, rcallcutcall[2].indexOf("-")).replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
+											}
+											else {
+												getstream4.rcall = rcallcutcall[2].replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
+											}
 										}
 										if (rcind == 2) {
-											getstream4.rcall = rcallcutcall[1].replaceAll("[^a-zA-Z0-9 -]", "").toUpperCase();
+											if (rcallcutcall[1].contains("-")) {
+												getstream4.rcall = rcallcutcall[1].substring(0, rcallcutcall[1].indexOf("-")).replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
+											}
+											else {
+												getstream4.rcall = rcallcutcall[1].replaceAll("\n", "").replaceAll("[^A-Za-z0-9]", "").toUpperCase();
+											}
 										}
 									}
 								}
