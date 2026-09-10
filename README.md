@@ -60,7 +60,7 @@ After you're connected, the server will ask you to set your password. After doin
 
 Server hosters are supposed to include the mode they're using alongside their frequency in the activeservers list, so if they do, go onto that frequency and mode.
 
-If a server's listing in the activeservers list contains "noisy data, \``` required" in the notes section, then all data sent to the server needs to be between three backticks in order to be recognized. Send a test message to get the attention of the server. Example: "\```hi\```" (the contents of this message doesn't matter)
+If a server's listing in the activeservers list contains "triple-backticks required" in the notes section, then all data sent to the server needs to be between three backticks in order to be recognized. Send a test message to get the attention of the server. Example: "\```hi\```" (the contents of this message doesn't matter)
 
 If the server is hearing you correctly, it will respond back and ask for your callsign. Respond back using the format above. Example: "\```KJ7QQG\```"
 
