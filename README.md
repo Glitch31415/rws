@@ -40,11 +40,15 @@ If you want an external tool for dealing with the downloads and base64, KC3VPB h
 
 ### Connecting to a VARA server (recommended)
 
-Any VARA chat client will work for talking to the server. Some examples:
+Most VARA chat clients will work for talking to the server. Some examples:
 
 VarAC (https://www.varac-hamradio.com/)
 
-VARA Chat (https://downloads.winlink.org/VARA%20Products/)
+vARIM (https://www.whitemesa.net/varim/varim.html)
+
+VARA Terminal (https://downloads.winlink.org/VARA%20Products/)
+
+VARA Chat works to varying extents, but it is extremely buggy and not recommended. Use one of the the other options given above.
 
 Follow the instructions on those sites to get the chat client and the VARA modem.
 
